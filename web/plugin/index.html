@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Wildy Slayer plugin</title>
   <meta name="theme-color" content="#0c0a09" />
-  <meta name="description" content="The RuneLite companion plugin for Wildy Slayer: what it syncs, how to build and sideload it, how pairing works, and what it never does." />
+  <meta name="description" content="The RuneLite companion plugin for Wildy Slayer: what it syncs, how to run it from source, how pairing works, and what it never does." />
   <link rel="icon" href="/icons/icon-192.png" />
   <link rel="stylesheet" href="/style.css" />
   <style>
@@ -51,22 +51,17 @@
 
     <section class="card" id="install">
       <h2>Install</h2>
-      <p>The plugin is not on the Plugin Hub yet, so for now it is built from source and sideloaded. The source is the <a href="https://github.com/Zlerp/wildy-slayer">Zlerp/wildy-slayer</a> repository (the plugin at the root, the web app under <code>web/</code>), a normal RuneLite Gradle project laid out like RuneLite's <a href="https://github.com/runelite/example-plugin" rel="noopener">example-plugin</a>. Java 11 or newer is needed to build it.</p>
-      <h3>A0. Download the prebuilt jar</h3>
-      <p><a class="btn primary" href="/plugin/wildy-slayer.jar" download>Download wildy-slayer.jar</a></p>
-      <p>Built from this repository's source against the RuneLite client API at commit <code>e98399f</code> (1.13.3), Java 11 bytecode. Then follow steps 1 to 3 below with this file instead of a build of your own.</p>
-      <h3>A. Build the jar and sideload it</h3>
-      <pre><code>./gradlew jar</code></pre>
+      <p>The plugin is not on the Plugin Hub yet. Current RuneLite only turns on developer mode, which sideloading needs, when the client was <b>not</b> started by the RuneLite launcher and Java assertions are on (<code>RuneLite.java</code>: <code>options.has("developer-mode") &amp;&amp; RuneLiteProperties.getLauncherVersion() == null</code>, then an <code>-ea</code> check). So a jar dropped into <code>~/.runelite/sideloaded-plugins/</code> is never loaded by the RuneLite you install from runelite.net or start from the Jagex Launcher, whatever its settings. Until the plugin is on the Plugin Hub, you run it in a development client built from this source.</p>
+      <h3>Run it from source (macOS, Linux, Windows)</h3>
       <ol class="steps">
-        <li>Copy <code>build/libs/wildy-slayer.jar</code> to <code>~/.runelite/sideloaded-plugins/</code> (create the folder if it does not exist; on Windows it is <code>%USERPROFILE%\.runelite\sideloaded-plugins\</code>).</li>
-        <li>RuneLite only loads sideloaded jars in developer mode: in the RuneLite launcher's settings add <code>--developer-mode</code> to "Client arguments", then restart the client.</li>
-        <li>The plugin shows up in the plugin list as <b>Wildy Slayer</b>.</li>
+        <li><b>Java 17.</b> macOS with Homebrew: <code>brew install --cask temurin@17</code>. Otherwise install Temurin 17 from <a href="https://adoptium.net/temurin/releases/?version=17" rel="noopener">adoptium.net</a>. Check with <code>java -version</code>; if several are installed, on macOS run <code>export JAVA_HOME=$(/usr/libexec/java_home -v 17)</code> first.</li>
+        <li><b>The source.</b> <code>git clone https://github.com/Zlerp/wildy-slayer</code>, or on the repository page use Code, Download ZIP and unzip it.</li>
+        <li><b>Run it.</b> In that folder: <code>chmod +x gradlew</code> once, then <code>./gradlew run</code> (Windows: <code>gradlew.bat run</code>). The first run downloads Gradle and the RuneLite client, a few minutes. A RuneLite window opens with <b>Wildy Slayer</b> already in the plugin list.</li>
+        <li><b>Log in.</b> An old-style username and password account logs in as usual. A <b>Jagex account</b> cannot log in to a development client directly: once, start your normal RuneLite from the Jagex Launcher with the client argument <code>--insecure-write-credentials</code> (set it in the launcher's configuration window, <code>/Applications/RuneLite.app/Contents/MacOS/RuneLite --configure</code> on macOS, launcher 2.6.3 or newer), log in, and it writes <code>~/.runelite/credentials.properties</code>. The development client then logs in with that file. It is a login token: keep it private, and delete it and remove the argument when you are done. Details: <a href="https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts" rel="noopener">Using Jagex Accounts</a>.</li>
+        <li>Install <b>Shortest Path</b> from the Plugin Hub inside that client for "Walk there".</li>
       </ol>
-      <h3>B. Run from source</h3>
-      <pre><code>./gradlew run</code></pre>
-      <p>Starts a development RuneLite client with the plugin already loaded. Log in with a Jagex account by following <a href="https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts" rel="noopener">Using Jagex Accounts</a>.</p>
-      <h3>C. Plugin Hub</h3>
-      <p>Once it has had real-world use, the plan is to submit it to the <a href="https://github.com/runelite/plugin-hub" rel="noopener">Plugin Hub</a> so it installs from the client's plugin list like any other.</p>
+      <h3>Plugin Hub</h3>
+      <p>Once it has had real-world use, the plan is to submit it to the <a href="https://github.com/runelite/plugin-hub" rel="noopener">Plugin Hub</a>, after which it installs from the normal client's plugin list like any other and none of the above is needed.</p>
     </section>
 
     <section class="card" id="pairing">

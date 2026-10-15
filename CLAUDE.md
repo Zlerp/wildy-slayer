@@ -13,7 +13,7 @@ ask whether to deploy.
   are Vercel serverless functions (hiscore, img, prices, wiki proxies and the
   `sync` endpoint). `web/vercel.json` sets `trailingSlash: true`, so API
   routes are called as `/api/slayer/x/`. `web/pwa.js` + `web/sw.js` make it
-  installable. `web/plugin/` is the plugin's install page and prebuilt jar.
+  installable. `web/plugin/` is the plugin's install page.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep
@@ -51,7 +51,9 @@ ask whether to deploy.
   -processorpath lombok.jar -XDshould-stop.ifError=FLOW -implicit:class
   -sourcepath api:client:stubs -cp <Maven Central deps>` on `src/main/java`.
   Zero errors in plugin files is the bar; jar only `com/zlerp/wildyslayer/**`
-  plus resources into `web/plugin/wildy-slayer.jar`. If the environment
+  plus resources into a scratch jar to check packaging (do not publish it: current
+  RuneLite never loads sideloaded jars when started by its launcher, see README
+  Install). If the environment
   allows repo.runelite.net, `./gradlew jar` is the real build.
 - Nothing in-game can be verified from the sandbox and automating the game is
   forbidden; tell the user what to test in RuneLite.

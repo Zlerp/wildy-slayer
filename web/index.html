@@ -59,10 +59,9 @@
       <details id="rl-help">
         <summary>How to install the plugin</summary>
         <ol class="steps">
-          <li>Download <a href="/plugin/wildy-slayer.jar" download>wildy-slayer.jar</a> (or build it from the <a href="https://github.com/Zlerp/wildy-slayer">Zlerp/wildy-slayer</a> repository with <code>./gradlew jar</code>; <a href="/plugin/">the plugin page</a> has the details).</li>
-          <li>Copy the jar into <code>~/.runelite/sideloaded-plugins/</code> (Windows: <code>%USERPROFILE%\.runelite\sideloaded-plugins\</code>).</li>
-          <li>RuneLite only loads sideloaded jars in developer mode: in the launcher's settings add <code>--developer-mode</code> to "Client arguments", then restart. See the <a href="/plugin/#install">sideloading note on the plugin page</a>. (Or run <code>./gradlew run</code> for a development client with the plugin already loaded.)</li>
-          <li>Turn on <b>Wildy Slayer</b> in the plugin list, paste the code above into its settings and enable sync. Open your bank once so the plugin can read it.</li>
+          <li>Until it is on the Plugin Hub, the plugin runs in a RuneLite development client: install Java 17, get the <a href="https://github.com/Zlerp/wildy-slayer">source</a> and run <code>./gradlew run</code>. The normal RuneLite does not load sideloaded plugins. Full steps, including logging in with a Jagex account: <a href="/plugin/#install">the plugin page</a>.</li>
+          <li>In that client, open <b>Wildy Slayer</b> in the plugin list, paste the code above into its settings and enable sync.</li>
+          <li>Log in and open your bank once so the plugin can read it.</li>
         </ol>
       </details>
     </section>

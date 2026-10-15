@@ -11,8 +11,8 @@ plugin.
   endpoint the plugin talks to (one row per pairing code in Supabase).
 - **RuneLite plugin**: this repository root is a standard RuneLite plugin
   Gradle project (`build.gradle`, `src/`, `runelite-plugin.properties`), so it
-  can be submitted to the Plugin Hub as is. Prebuilt jar: https://wildy-slayer.vercel.app/plugin/wildy-slayer.jar,
-  install page: https://wildy-slayer.vercel.app/plugin/.
+  can be submitted to the Plugin Hub as is. Until then it runs in a RuneLite
+  development client (`./gradlew run`); install page: https://wildy-slayer.vercel.app/plugin/.
 - **Wire format** between the two: [PROTOCOL.md](PROTOCOL.md).
 
 Started in the [playground](https://github.com/Zlerp/playground) and
@@ -53,44 +53,32 @@ The wire format is in [PROTOCOL.md](PROTOCOL.md).
 
 ### Install
 
-The plugin is not on the Plugin Hub yet, so for now it is sideloaded.
+The plugin is not on the Plugin Hub yet. Current RuneLite only turns on developer mode, which sideloading needs, when the client was **not** started by the RuneLite launcher and Java assertions are on (`RuneLite.java`: `options.has("developer-mode") && RuneLiteProperties.getLauncherVersion() == null`, then an `-ea` check). So a jar dropped into `~/.runelite/sideloaded-plugins/` is never loaded by the RuneLite you install from runelite.net or start from the Jagex Launcher, whatever its settings. Until the plugin is on the Plugin Hub, you run it in a development client built from this source.
 
-**A0. Download the prebuilt jar**
+**Run it from source**
 
-`web/plugin/wildy-slayer.jar` (served at
-https://wildy-slayer.vercel.app/plugin/wildy-slayer.jar)
-is built from this source against the RuneLite client API at commit `e98399f`
-(1.13.3), Java 11 bytecode. Use it with the sideload steps below instead of a
-build of your own.
+1. Java 17. macOS with Homebrew: `brew install --cask temurin@17`; otherwise
+   Temurin 17 from https://adoptium.net. If several JDKs are installed, on macOS
+   `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` first.
+2. `git clone https://github.com/Zlerp/wildy-slayer` (or Code, Download ZIP).
+3. In that folder: `chmod +x gradlew` once, then `./gradlew run`
+   (Windows: `gradlew.bat run`). The first run downloads Gradle and the
+   RuneLite client. A RuneLite window opens with **Wildy Slayer** loaded.
+4. Log in. A username and password account logs in as usual. A **Jagex
+   account** needs a one-time credentials file: start your normal RuneLite from
+   the Jagex Launcher with the client argument `--insecure-write-credentials`
+   (launcher configuration window: `RuneLite --configure`, launcher 2.6.3 or
+   newer), log in once, and it writes `~/.runelite/credentials.properties`,
+   which the development client then uses. Treat that file as a password and
+   delete it when done. See
+   [Using Jagex Accounts](https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts).
+5. Install Shortest Path from the Plugin Hub inside that client.
 
-**A. Build the jar and sideload it**
-
-```sh
-./gradlew jar
-```
-
-Copy `build/libs/wildy-slayer.jar` to `~/.runelite/sideloaded-plugins/`
-(create the folder if it does not exist; on Windows it is
-`%USERPROFILE%\.runelite\sideloaded-plugins\`). RuneLite only loads sideloaded
-jars in developer mode, so add `--developer-mode` to the client arguments in
-the RuneLite launcher (Launcher settings, "Client arguments"), then restart
-the client. The plugin shows up in the plugin list as **Wildy Slayer**.
-
-**B. Run from source**
-
-```sh
-./gradlew run
-```
-
-This starts a development RuneLite client with the plugin loaded. Log in with
-a Jagex account by following
-[Using Jagex Accounts](https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts).
-
-**C. Plugin Hub**
+**Plugin Hub**
 
 Once it has had real-world use, the plan is to submit it to the
-[Plugin Hub](https://github.com/runelite/plugin-hub) so it installs from the
-client's plugin list like any other.
+[Plugin Hub](https://github.com/runelite/plugin-hub), after which it installs
+from the normal client's plugin list and none of the above is needed.
 
 ### Pairing
 
