@@ -30,7 +30,7 @@ ask whether to deploy.
   project's env (production and preview).
 - Vercel: pushes to `main` deploy production; `?teamId=team_5aPlADHwZtwuCWXoiRKTbbnN`
   on every API call. Force a deploy: `POST /v13/deployments` with
-  `{"name":"wildy-slayer","project":"<PROJECT_ID>","target":"production","gitSource":{"type":"github","ref":"main","repoId":<REPO_ID>}}`.
+  `{"name":"wildy-slayer","project":"prj_yeFWpHiVnyZXEigAMSd3KQrGNp0I","target":"production","gitSource":{"type":"github","ref":"main","repoId":1420117501}}`.
 - The sandbox cannot reach oldschool.runescape.wiki; use the production proxy
   `/api/slayer/wiki/?page=` when game data is needed.
 
