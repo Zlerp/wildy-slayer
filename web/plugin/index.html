@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Wildy Slayer plugin</title>
+  <meta name="theme-color" content="#0c0a09" />
+  <meta name="description" content="The RuneLite companion plugin for Wildy Slayer: what it syncs, how to build and sideload it, how pairing works, and what it never does." />
+  <link rel="icon" href="/icons/icon-192.png" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .doc h2 { margin-top: 22px; }
+    .doc h3 { margin: 14px 0 6px; }
+    .doc p, .doc li { color: var(--muted); font-size: 14px; }
+    .doc li { margin: 6px 0; }
+    .doc b { color: var(--fg); }
+    .doc code, .doc pre { background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; color: var(--fg); font-size: 12px; }
+    .doc code { padding: 1px 6px; word-break: break-all; }
+    .doc pre { padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+    .doc pre code { border: 0; padding: 0; background: none; }
+    .doc .links { margin-top: 14px; }
+    .doc table { margin-top: 8px; }
+    .doc td { font-size: 13px; color: var(--muted); }
+    .doc td:first-child { color: var(--fg); font-weight: 700; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <a class="home" href="https://playground-zlerps-projects.vercel.app/">← playground</a>
+  <main class="doc">
+    <header class="top">
+      <p class="eyebrow">Wildy Slayer · RuneLite companion</p>
+      <h1>The <span>plugin</span></h1>
+      <p class="lede">Syncs your own levels, bank and current task to the <a href="/">Wildy Slayer</a> app, outlines the gear it picked in your bank, lists your saved setups and hands the spot to Shortest Path.</p>
+      <div class="links">
+        <a class="btn primary" href="/">Open the app</a>
+        <a class="btn" href="https://github.com/Zlerp/wildy-slayer#readme">README (plain text)</a>
+        <a class="btn" href="https://github.com/Zlerp/blob/main/PROTOCOL.md">Sync protocol (plain text)</a>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>What it does</h2>
+      <ul>
+        <li><b>Sync (opt-in, off by default).</b> While you are logged in, the plugin pushes a snapshot of your character to the server at most once every 2 seconds and polls every 5 seconds for the selection and setups the app wrote. Everything is keyed by an 8-character pairing code.</li>
+        <li><b>Bank highlights.</b> The app's picks are outlined green, the next-best alternatives yellow, the "what to bring" supplies cyan, in the bank, inventory and equipment tab. Each is a toggle.</li>
+        <li><b>Side panel.</b> Sync status, your current task, the app's selection (task, spot, style, setup) with one row per gear slot saying whether the item is worn, in your inventory, in the bank or missing, and your saved setups with an <b>Apply</b> button each.</li>
+        <li><b>Shortest Path.</b> "Walk there" sends the selection's spot to the <a href="https://github.com/Skretzo/shortest-path" rel="noopener">Shortest Path</a> plugin, which draws the route on the map. Nothing moves your character.</li>
+        <li><b>Info overlay.</b> A small on-screen box with the task, spot and setup name.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="install">
+      <h2>Install</h2>
+      <p>The plugin is not on the Plugin Hub yet, so for now it is built from source and sideloaded. The source is the <a href="https://github.com/Zlerp/wildy-slayer">Zlerp/wildy-slayer</a> repository (the plugin at the root, the web app under <code>web/</code>), a normal RuneLite Gradle project laid out like RuneLite's <a href="https://github.com/runelite/example-plugin" rel="noopener">example-plugin</a>. Java 11 or newer is needed to build it.</p>
+      <h3>A0. Download the prebuilt jar</h3>
+      <p><a class="btn primary" href="/plugin/wildy-slayer.jar" download>Download wildy-slayer.jar</a></p>
+      <p>Built from this repository's source against the RuneLite client API at commit <code>e98399f</code> (1.13.3), Java 11 bytecode. Then follow steps 1 to 3 below with this file instead of a build of your own.</p>
+      <h3>A. Build the jar and sideload it</h3>
+      <pre><code>./gradlew jar</code></pre>
+      <ol class="steps">
+        <li>Copy <code>build/libs/wildy-slayer.jar</code> to <code>~/.runelite/sideloaded-plugins/</code> (create the folder if it does not exist; on Windows it is <code>%USERPROFILE%\.runelite\sideloaded-plugins\</code>).</li>
+        <li>RuneLite only loads sideloaded jars in developer mode: in the RuneLite launcher's settings add <code>--developer-mode</code> to "Client arguments", then restart the client.</li>
+        <li>The plugin shows up in the plugin list as <b>Wildy Slayer</b>.</li>
+      </ol>
+      <h3>B. Run from source</h3>
+      <pre><code>./gradlew run</code></pre>
+      <p>Starts a development RuneLite client with the plugin already loaded. Log in with a Jagex account by following <a href="https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts" rel="noopener">Using Jagex Accounts</a>.</p>
+      <h3>C. Plugin Hub</h3>
+      <p>Once it has had real-world use, the plan is to submit it to the <a href="https://github.com/runelite/plugin-hub" rel="noopener">Plugin Hub</a> so it installs from the client's plugin list like any other.</p>
+    </section>
+
+    <section class="card" id="pairing">
+      <h2>Pairing</h2>
+      <ol class="steps">
+        <li>Open the <a href="/">web app</a> and read the pairing code it shows (<code>XXXX-XXXX</code>). The app generates one per browser and remembers it.</li>
+        <li>In RuneLite, open the Wildy Slayer plugin settings, paste the code into <b>Pairing code</b> (with or without the dash) and tick <b>Enable sync</b>. The client warns you that this sends data to a third-party server; accept it.</li>
+        <li>Log in. The panel's status line goes from "Syncing…" to "Synced Ns ago". The app now sees your levels, task and bank; open your bank once so the plugin can read it, pick a task in the app, and the plugin outlines the gear next time the bank is open.</li>
+      </ol>
+      <p>"Open app" in the panel opens the web app with your code in the URL. Anyone holding the code can read and write that pairing, so treat it like a password; the config field is marked secret and the panel never shows it. "New code" in the app starts a fresh row.</p>
+    </section>
+
+    <section class="card" id="privacy">
+      <h2>Privacy and rules</h2>
+      <ul>
+        <li>The plugin sends data about <b>your own account only</b>: display name, combat level, real skill levels, current Slayer task, and the ids and quantities of the items in your bank, inventory and equipment. Each of the three item lists can be turned off. Nothing about other players is read or sent.</li>
+        <li>Data goes only to the <b>Server URL</b> you configured, together with your pairing code, and only while <b>Enable sync</b> is on. Sync is <b>off by default</b>.</li>
+        <li>The server keeps one row per pairing code and prunes rows untouched for 120 days. The plugin writes nothing to disk; its only persisted state is RuneLite's own config for its settings.</li>
+        <li>It never clicks, types, walks or sends anything to the game server, adds no menu entries, changes no interface, and shows nothing about other players, prayers or boss mechanics. The README's "Rules" table maps each Plugin Hub rule to how the plugin complies.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="source">
+      <h2>Source layout</h2>
+      <table><tbody>
+        <tr><td>build.gradle, settings.gradle, gradlew, gradle/</td><td>Gradle wrapper build, Java 11</td></tr>
+        <tr><td>runelite-plugin.properties</td><td>Plugin Hub manifest</td></tr>
+        <tr><td>WildySlayerPlugin</td><td>events, debounced push, poll, Shortest Path messages</td></tr>
+        <tr><td>WildySlayerConfig</td><td>the settings (Sync, Highlights, Shortest Path, Display)</td></tr>
+        <tr><td>SyncClient, SyncModels</td><td>GET/POST to <code>/api/slayer/sync/</code> via OkHttp; Gson models matching the protocol</td></tr>
+        <tr><td>SnapshotBuilder, SlayerTaskReader</td><td>the player payload; the current task from the Slayer varps and DB tables</td></tr>
+        <tr><td>GearHighlightOverlay, WildySlayerInfoOverlay</td><td>outlines in bank / inventory / equipment; the on-screen summary</td></tr>
+        <tr><td>WildySlayerPanel</td><td>the sidebar panel</td></tr>
+      </tbody></table>
+      <p>All of it is under <code>src/main/java/com/zlerp/wildyslayer/</code>. The wire format the plugin and the app share is <a href="https://github.com/Zlerp/blob/main/PROTOCOL.md">PROTOCOL.md</a>; the full plugin notes are in the <a href="https://github.com/Zlerp/wildy-slayer#readme">README</a>. Both are served as plain text.</p>
+    </section>
+
+    <footer>
+      <p>Part of the <a href="/">Wildy Slayer</a> project. The plugin is an independent, open-source companion (BSD 2-Clause), not affiliated with Jagex or the RuneLite project.</p>
+    </footer>
+  </main>
+</body>
+</html>

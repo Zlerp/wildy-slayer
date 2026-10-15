@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "headers": [
+    { "source": "/icons/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] },
+    { "source": "/plugin/wildy-slayer.jar", "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }] }
+  ]
+}

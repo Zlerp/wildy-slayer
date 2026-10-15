@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Wildy Slayer</title>
+  <meta name="theme-color" content="#0c0a09" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Wildy Slayer" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <script src="/pwa.js" defer></script>
+  <meta name="description" content="Old School RuneScape Wilderness Slayer helper: look up your stats, pick a Krystilia task, get the spot, the gear, the supplies and the cost." />
+  <link rel="icon" href="/icons/icon-192.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <a class="home" href="https://playground-zlerps-projects.vercel.app/">← playground</a>
+  <main>
+    <header class="top">
+      <p class="eyebrow">Old School RuneScape · Krystilia</p>
+      <h1>Wildy <span>Slayer</span></h1>
+      <p class="lede">Pick the task, get the spot, the gear for your levels, what to bring, and what it all costs at today's prices.</p>
+    </header>
+
+    <section class="card" id="lookup">
+      <h2>1. Your character</h2>
+      <form id="rsn-form" class="row">
+        <input id="rsn" type="text" inputmode="text" autocomplete="off" autocapitalize="off" maxlength="12" placeholder="RuneScape name" aria-label="RuneScape name" />
+        <button class="btn primary" type="submit">Look up</button>
+      </form>
+      <p class="hint" id="lookup-msg">Pulls your levels from the official hiscores. Or set them by hand below.</p>
+      <div class="stats" id="stats"></div>
+      <details id="manual">
+        <summary>Edit levels by hand</summary>
+        <div class="grid-levels" id="levels"></div>
+      </details>
+    </section>
+
+    <section class="card" id="runelite">
+      <h2>RuneLite <span class="badge info">optional</span></h2>
+      <p class="hint" style="margin:0">Pair the Wildy Slayer plugin and this page uses your real levels, your bank and your current task; the plugin outlines the gear picked here in your bank and lists your saved setups.</p>
+      <div class="pair">
+        <div class="code" id="rl-code" aria-label="Pairing code">————</div>
+        <div class="row">
+          <button class="btn" type="button" id="rl-copy">Copy</button>
+          <button class="btn" type="button" id="rl-new">New code</button>
+        </div>
+      </div>
+      <p class="hint" id="rl-status">Waiting for the plugin…</p>
+      <p class="sr-only" id="rl-live" aria-live="polite"></p>
+      <div id="rl-player" class="hidden"></div>
+      <form id="rl-form" class="row" autocomplete="off">
+        <input id="rl-input" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="16" placeholder="Have a code? Enter it" aria-label="Pairing code to use" />
+        <button class="btn" type="submit">Use code</button>
+      </form>
+      <details id="rl-help">
+        <summary>How to install the plugin</summary>
+        <ol class="steps">
+          <li>Download <a href="/plugin/wildy-slayer.jar" download>wildy-slayer.jar</a> (or build it from the <a href="https://github.com/Zlerp/wildy-slayer">Zlerp/wildy-slayer</a> repository with <code>./gradlew jar</code>; <a href="/plugin/">the plugin page</a> has the details).</li>
+          <li>Copy the jar into <code>~/.runelite/sideloaded-plugins/</code> (Windows: <code>%USERPROFILE%\.runelite\sideloaded-plugins\</code>).</li>
+          <li>RuneLite only loads sideloaded jars in developer mode: in the launcher's settings add <code>--developer-mode</code> to "Client arguments", then restart. See the <a href="/plugin/#install">sideloading note on the plugin page</a>. (Or run <code>./gradlew run</code> for a development client with the plugin already loaded.)</li>
+          <li>Turn on <b>Wildy Slayer</b> in the plugin list, paste the code above into its settings and enable sync. Open your bank once so the plugin can read it.</li>
+        </ol>
+      </details>
+    </section>
+
+    <section class="card" id="tasks">
+      <h2>2. The task</h2>
+      <div class="banner hidden" id="rl-task"></div>
+      <input id="task-q" type="search" placeholder="Search tasks (dust devils, undead, cannon, cave…)" aria-label="Search tasks" />
+      <div class="filters" id="task-filters">
+        <button class="chip" data-f="all" aria-pressed="true">All</button>
+        <button class="chip" data-f="do">Worth doing</button>
+        <button class="chip" data-f="aoe">Burst / cannon</button>
+        <button class="chip" data-f="safe">Low wildy</button>
+        <button class="chip" data-f="block">Usually blocked</button>
+      </div>
+      <div class="task-grid" id="task-grid"></div>
+    </section>
+
+    <section class="card hidden" id="detail"></section>
+
+    <section class="card hidden" id="loadout">
+      <h2>4. Gear for your levels</h2>
+      <div class="controls" id="loadout-controls"></div>
+      <div class="equip-wrap">
+        <div class="equip" id="equip"></div>
+        <div class="totals" id="totals"></div>
+      </div>
+      <p class="hint hidden" id="equip-hint"></p>
+    </section>
+
+    <section class="card hidden" id="supplies">
+      <h2>5. What to bring</h2>
+      <div id="supplies-body"></div>
+    </section>
+
+    <section class="card" id="presets">
+      <h2>Saved setups</h2>
+      <p class="hint">Save the current task, spot, style, gear and supply choices. Stored in this browser and, when paired, on the sync server so the RuneLite plugin can list them and apply one in game.</p>
+      <form id="preset-form" class="row">
+        <input id="preset-name" type="text" maxlength="40" placeholder="Setup name (e.g. Dusties burst 3-item)" aria-label="Setup name" />
+        <button class="btn primary" type="submit">Save</button>
+      </form>
+      <ul class="preset-list" id="preset-list"></ul>
+      <div class="row wrap">
+        <button class="btn" id="preset-export" type="button">Export JSON</button>
+        <label class="btn file">Import JSON<input id="preset-import" type="file" accept="application/json" hidden /></label>
+      </div>
+    </section>
+
+    <div class="toast" id="rl-toast" role="status" aria-live="polite"></div>
+
+    <footer>
+      <p>Monster, location and item data from the <a href="https://oldschool.runescape.wiki/w/Krystilia" rel="noopener">OSRS Wiki</a> (CC BY-NC-SA 3.0). Prices from the wiki's real-time price API. Hiscores from Jagex. Supply counts are estimates from the standard combat formulas; the Wilderness has PKers in it, so bring more than the maths says.</p>
+    </footer>
+  </main>
+  <script src="/data.js"></script>
+  <script src="/items.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
