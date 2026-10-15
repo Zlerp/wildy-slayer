@@ -1,0 +1,73 @@
+# Builds the plugin the way the RuneLite Plugin Hub does, so a hub PR does not
+# fail on something we could have caught here:
+#   gradle-build : ./gradlew build against the latest RuneLite release
+#   hub-packager : the hub's own packager (runelite/plugin-hub-tooling bundle),
+#                  run on a local plugin-hub commit that adds plugins/wildy-slayer
+#                  pointing at this commit, exactly like a hub pull request.
+name: Plugin Hub check
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["web/**", "**/*.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gradle-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+      - name: gradle build
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon --console=plain build
+
+  hub-packager:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: runelite/plugin-hub
+          fetch-depth: 0
+          path: plugin-hub
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: adopt
+          java-version: 11
+      - name: add the descriptor as a hub PR would
+        working-directory: plugin-hub
+        run: |
+          set -eu
+          git config user.name "plugin-hub-check"
+          git config user.email "plugin-hub-check@users.noreply.github.com"
+          BASE=$(git rev-parse HEAD)
+          printf 'repository=https://github.com/%s.git\ncommit=%s\n' "$GITHUB_REPOSITORY" "$GITHUB_SHA" > plugins/wildy-slayer
+          cat plugins/wildy-slayer
+          git add plugins/wildy-slayer
+          git commit -q -m "add wildy-slayer"
+          echo "HUB_RANGE=$BASE...$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: fetch the hub packager
+        env:
+          PACKAGER_URL: "https://github.com/runelite/plugin-hub-tooling/releases/download/v5/bundle.tar.zst"
+        run: |
+          set -exu
+          curl --location --fail --retry 4 --max-time 60 --output bundle.tar.zst "$PACKAGER_URL"
+          sha256sum bundle.tar.zst
+          tar xf bundle.tar.zst
+      - name: prepare
+        run: ./prepare.sh
+      - name: package like the hub
+        env:
+          PACKAGE_COMMIT_RANGE: ${{ env.HUB_RANGE }}
+        run: exec java -XX:+UseParallelGC -cp package.jar net.runelite.pluginhub.packager.Packager
+      - name: list built jar
+        if: always()
+        run: ls -la /tmp/jars 2>/dev/null || true

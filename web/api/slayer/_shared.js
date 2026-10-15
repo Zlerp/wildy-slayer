@@ -2,7 +2,7 @@
 // These run on Vercel, where the OSRS hiscores, the OSRS Wiki and its price
 // API are reachable; the browser (and the Claude sandbox) cannot call those
 // hosts directly, so everything goes through here with CDN caching.
-const UA = "playground-wildy-slayer/1.0 (https://playground-zlerps-projects.vercel.app/wildy-slayer/; contact: z.h.perlman@gmail.com)";
+const UA = "wildy-slayer/1.0 (https://wildy-slayer.vercel.app/; contact: https://github.com/Zlerp/wildy-slayer/issues)";
 
 async function upstream(url, init = {}) {
   const res = await fetch(url, { ...init, headers: { "User-Agent": UA, ...(init.headers || {}) } });
