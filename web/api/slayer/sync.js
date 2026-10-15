@@ -1,5 +1,5 @@
 // Wildy Slayer <-> RuneLite sync. One row per pairing code; see
-// wildy-slayer/runelite/PROTOCOL.md for the shapes.
+// PROTOCOL.md at the repository root for the shapes.
 //   GET  /api/slayer/sync/?code=XXXXXXXX[&v=<version>]
 //   POST /api/slayer/sync/[?full=1]   { code, player?, selection?, setups? }
 const DB = require("./_db.js");

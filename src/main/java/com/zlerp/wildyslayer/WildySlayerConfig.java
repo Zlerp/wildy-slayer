@@ -85,7 +85,7 @@ public interface WildySlayerConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SYNC_ENABLED,
 		name = "Enable sync",
-		description = "Send your own levels, bank, inventory, equipment and Slayer task to the Wildy Slayer server, and fetch the gear it picks.",
+		description = "Send your RSN, levels, Slayer task, bank, inventory and equipment to the Wildy Slayer server, and fetch the gear it picks.",
 		warning = "This feature submits your IP address to a 3rd-party server not controlled or verified by RuneLite developers",
 		position = 0,
 		section = syncSection
@@ -149,7 +149,7 @@ public interface WildySlayerConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SHARE_INVENTORY,
 		name = "Share inventory",
-		description = "Include your inventory in the sync.",
+		description = "Include your inventory in the sync. In the Wilderness, PvP areas and PvP worlds it is not re-read; the last one seen outside is sent.",
 		position = 5,
 		section = syncSection
 	)
@@ -161,7 +161,7 @@ public interface WildySlayerConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SHARE_EQUIPMENT,
 		name = "Share equipment",
-		description = "Include your worn equipment in the sync.",
+		description = "Include your worn equipment in the sync. In the Wilderness, PvP areas and PvP worlds it is not re-read; the last one seen outside is sent.",
 		position = 6,
 		section = syncSection
 	)
@@ -273,13 +273,13 @@ public interface WildySlayerConfig extends Config
 	@ConfigItem(
 		keyName = "autoPath",
 		name = "Auto path on new selection",
-		description = "When a new selection with a location arrives from the app, ask the Shortest Path plugin to draw the route there. Only draws a path; never moves you.",
+		description = "When a new selection with a location arrives from the app, ask the Shortest Path plugin to draw the route there. Never in the Wilderness, a PvP area, on a PvP world or in an instance. Only draws a path; never moves you.",
 		position = 0,
 		section = pathSection
 	)
 	default boolean autoPath()
 	{
-		return true;
+		return false;
 	}
 
 	// ---- Display ----
@@ -287,7 +287,7 @@ public interface WildySlayerConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SHOW_INFO_OVERLAY,
 		name = "Show info overlay",
-		description = "Show a small overlay with the current task, location and setup name.",
+		description = "Show a small overlay with your current task and the task, spot and combat style picked in the app.",
 		position = 0,
 		section = displaySection
 	)

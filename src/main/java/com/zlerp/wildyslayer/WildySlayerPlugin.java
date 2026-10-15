@@ -31,8 +31,10 @@ import com.zlerp.wildyslayer.SyncModels.Selection;
 import com.zlerp.wildyslayer.SyncModels.Setup;
 import com.zlerp.wildyslayer.SyncModels.Supply;
 import com.zlerp.wildyslayer.SyncModels.SyncState;
-import com.zlerp.wildyslayer.SyncModels.Target;
+import com.zlerp.wildyslayer.SyncModels.Task;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -52,8 +54,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Skill;
+import net.runelite.api.WorldType;
+import net.runelite.api.WorldView;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
@@ -66,6 +71,8 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.PluginMessage;
+import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.ItemStats;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -76,7 +83,7 @@ import net.runelite.client.util.ImageUtil;
 @Slf4j
 @PluginDescriptor(
 	name = "Wildy Slayer",
-	description = "Syncs your own levels, bank and Slayer task to the Wildy Slayer web app, highlights the gear it picks in your bank, lists saved setups, and hands the chosen spot to Shortest Path",
+	description = "Syncs your levels, items and Slayer task with the Wildy Slayer web app, outlines its gear picks in your bank and routes to the spot via Shortest Path",
 	tags = {"slayer", "wilderness", "krystilia", "bank", "gear"}
 )
 public class WildySlayerPlugin extends Plugin
@@ -89,6 +96,22 @@ public class WildySlayerPlugin extends Plugin
 	private static final long POLL_INITIAL_DELAY_MS = 1000;
 	private static final int CODE_LENGTH = 8;
 	private static final int NAV_PRIORITY = 7;
+
+	/**
+	 * Game ticks to wait after LOGGED_IN (login, hop, reconnect) before reading the Wilderness and
+	 * PvP varbits: they arrive after that event, so until then the client is not settled and
+	 * nothing is pushed.
+	 */
+	private static final int SETTLE_TICKS = 2;
+
+	/** The app's gear slots (PROTOCOL.md); only these keys of a selection's gear and alts are read. */
+	static final List<String> GEAR_SLOTS = Collections.unmodifiableList(Arrays.asList(
+		"head", "cape", "neck", "ammo", "weapon", "body", "shield", "legs", "hands", "feet", "ring"));
+
+	// Bounds on what the server can make the plugin highlight (gear entries are bounded by GEAR_SLOTS)
+	private static final int MAX_ALT_ENTRIES = 22;
+	private static final int MAX_SUPPLY_ENTRIES = 40;
+	private static final int MAX_IDS_PER_ENTRY = 8;
 
 	// Shortest Path plugin message contract (see PROTOCOL.md)
 	private static final String SHORTEST_PATH_NAMESPACE = "shortestpath";
@@ -118,10 +141,16 @@ public class WildySlayerPlugin extends Plugin
 	private WildySlayerConfig config;
 
 	@Inject
+	private ItemManager itemManager;
+
+	@Inject
 	private SyncClient syncClient;
 
 	@Inject
 	private SnapshotBuilder snapshotBuilder;
+
+	@Inject
+	private SlayerTaskReader taskReader;
 
 	@Inject
 	private GearHighlightOverlay gearOverlay;
@@ -134,8 +163,35 @@ public class WildySlayerPlugin extends Plugin
 
 	private NavigationButton navButton;
 
+	/** Set first thing in startUp and cleared first thing in shutDown; late callbacks check it and do nothing. */
+	private volatile boolean running;
+
 	// client thread only
 	private final Map<Skill, Integer> realLevels = new EnumMap<>(Skill.class);
+
+	/**
+	 * Client thread only. False from logging in, hopping or a lost connection until
+	 * {@link #SETTLE_TICKS} ticks after LOGGED_IN, so the Wilderness and PvP varbits are current
+	 * before anything is pushed.
+	 */
+	private boolean settled;
+	private int settleTicksLeft = -1;
+
+	/**
+	 * The route this plugin last handed to Shortest Path. Cleared when this plugin clears it, and
+	 * when another plugin sets or clears a Shortest Path route ({@link #onPluginMessage}).
+	 */
+	@Nullable
+	private volatile WorldPoint postedPath;
+
+	/** The Shortest Path message this plugin is posting right now, so {@link #onPluginMessage} can skip it. */
+	@Nullable
+	private volatile PluginMessage ownMessage;
+
+	/** The game's current Slayer task, read on the client thread; shown with sync on or off. */
+	@Getter
+	@Nullable
+	private volatile Task currentTask;
 
 	// guarded by lock
 	private final Object lock = new Object();
@@ -173,6 +229,17 @@ public class WildySlayerPlugin extends Plugin
 	@Getter
 	private volatile Set<Integer> supplyIds = Collections.emptySet();
 
+	/** The selection's gear after the client-side checks, one row per slot, for the panel. */
+	@Getter
+	private volatile List<GearRow> gearRows = Collections.emptyList();
+
+	// which selection the highlights were last built for (guarded by this, like applyState)
+	private static final long NOT_BUILT = -1;
+	private long highlightsBuiltAt = NOT_BUILT;
+	private boolean highlightsBuiltPresent;
+	// bumped for every queued rebuild and by clearRemoteState; a rebuild publishes only if still current
+	private long highlightsGen;
+
 	@Getter
 	@Nullable
 	private volatile String syncError;
@@ -191,6 +258,10 @@ public class WildySlayerPlugin extends Plugin
 		@Override
 		public void onError(String message)
 		{
+			if (!running)
+			{
+				return;
+			}
 			log.debug("Sync error: {}", message);
 			syncError = message;
 			refreshPanel();
@@ -206,6 +277,7 @@ public class WildySlayerPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
+		running = true;
 		overlayManager.add(gearOverlay);
 		if (config.showInfoOverlay())
 		{
@@ -221,15 +293,23 @@ public class WildySlayerPlugin extends Plugin
 			.build();
 		clientToolbar.addNavigation(navButton);
 
-		// selections already on the server when we start are not auto-pathed; "Walk there" covers them
+		// selections already on the server when we start are not auto-pathed; "Show path" covers them
 		resetSelectionBaseline();
 		loggedIn = client.getGameState() == GameState.LOGGED_IN;
 
 		startPolling();
-		if (loggedIn)
+		clientThread.invoke(() ->
 		{
-			requestPush();
-		}
+			if (!running)
+			{
+				return;
+			}
+			// the first push goes out from onGameTick once settled
+			settled = false;
+			settleTicksLeft = client.getGameState() == GameState.LOGGED_IN ? SETTLE_TICKS : -1;
+			refreshTask();
+			refreshPanel();
+		});
 		refreshPanel();
 		log.info("Wildy Slayer started");
 	}
@@ -237,6 +317,7 @@ public class WildySlayerPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
+		running = false;
 		overlayManager.remove(gearOverlay);
 		overlayManager.remove(infoOverlay);
 		if (navButton != null)
@@ -248,12 +329,20 @@ public class WildySlayerPlugin extends Plugin
 		stopPolling();
 		cancelPush();
 
-		snapshotBuilder.clear();
-		realLevels.clear();
-		gearOverlay.reset();
+		clientThread.invoke(() ->
+		{
+			snapshotBuilder.clear();
+			realLevels.clear();
+			gearOverlay.reset();
+			settled = false;
+			settleTicksLeft = -1;
+			postedPath = null;
+			currentTask = null;
+		});
 		clearRemoteState();
 		resetSelectionBaseline();
 		lastSnapshot = null;
+		currentTask = null;
 		version = 0;
 		loggedIn = false;
 		refreshPanel();
@@ -269,22 +358,49 @@ public class WildySlayerPlugin extends Plugin
 		if (state == GameState.LOGGED_IN)
 		{
 			loggedIn = true;
-			requestPush();
+			if (settled)
+			{
+				// a region load: the varbits are current
+				requestPush();
+			}
+			else
+			{
+				// just logged in, hopped or reconnected: the varbits arrive after this event, so
+				// wait a couple of ticks before reading the area or pushing anything
+				settleTicksLeft = SETTLE_TICKS;
+			}
 		}
-		else if (state == GameState.LOGIN_SCREEN)
+		else if (state != GameState.LOADING)
 		{
-			// a different account may log in next: forget this one's bank and task
+			// logging in, hopping, reconnecting or logged out: nothing is pushed until settled again
 			loggedIn = false;
+			settled = false;
+			settleTicksLeft = -1;
 			realLevels.clear();
-			snapshotBuilder.clear();
-			lastSnapshot = null;
-		}
-		else if (state == GameState.HOPPING || state == GameState.CONNECTION_LOST)
-		{
-			loggedIn = false;
-			realLevels.clear();
+			if (state == GameState.LOGIN_SCREEN)
+			{
+				// a different account may log in next: forget this one's bank, items and task
+				snapshotBuilder.clear();
+				lastSnapshot = null;
+				currentTask = null;
+			}
 		}
 		refreshPanel();
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick tick)
+	{
+		if (settleTicksLeft > 0 && --settleTicksLeft == 0)
+		{
+			settleTicksLeft = -1;
+			settled = true;
+			refreshTask();
+			// item stats may have finished loading since the selection's highlights were built
+			rebuildHighlightsNow();
+			requestPush();
+			refreshPanel();
+		}
 	}
 
 	@Subscribe
@@ -301,14 +417,15 @@ public class WildySlayerPlugin extends Plugin
 		}
 		else if (id == InventoryID.INV)
 		{
-			if (config.shareInventory())
+			// frozen in the Wilderness and PvP areas: the payload keeps the snapshot taken outside
+			if (config.shareInventory() && !inPvpArea())
 			{
 				requestPush();
 			}
 		}
 		else if (id == InventoryID.WORN)
 		{
-			if (config.shareEquipment())
+			if (config.shareEquipment() && !inPvpArea())
 			{
 				requestPush();
 			}
@@ -331,12 +448,24 @@ public class WildySlayerPlugin extends Plugin
 	{
 		int varp = event.getVarpId();
 		int varbit = event.getVarbitId();
+		if (varbit == VarbitID.INSIDE_WILDERNESS || varbit == VarbitID.PVP_AREA_CLIENT)
+		{
+			// left the Wilderness or a PvP area: send a fresh inventory and equipment snapshot. Not
+			// while unsettled: a varcache reset during a hop or login is not leaving the area.
+			if (settled && client.getGameState() == GameState.LOGGED_IN && !inPvpArea())
+			{
+				requestPush();
+			}
+			return;
+		}
 		if (varp == VarPlayerID.SLAYER_COUNT || varp == VarPlayerID.SLAYER_TARGET || varp == VarPlayerID.SLAYER_AREA
 			|| varp == VarPlayerID.SLAYER_COUNT_ORIGINAL
 			|| varbit == VarbitID.SLAYER_MASTER || varbit == VarbitID.SLAYER_TARGET_BOSSID
 			|| varbit == VarbitID.SLAYER_MODIFIER_ID || varbit == VarbitID.SLAYER_MODIFIER_VALUE
 			|| varbit == VarbitID.SLAYER_MODIFIER_NEGATIVE)
 		{
+			refreshTask();
+			refreshPanel();
 			requestPush();
 		}
 	}
@@ -440,6 +569,34 @@ public class WildySlayerPlugin extends Plugin
 		return loggedIn;
 	}
 
+	/**
+	 * In the Wilderness, a PvP area or on a PvP world: inventory and equipment are not refreshed or
+	 * pushed there, and nothing is auto-pathed. Client thread only.
+	 */
+	private boolean inPvpArea()
+	{
+		return client.getVarbitValue(VarbitID.INSIDE_WILDERNESS) == 1
+			|| client.getVarbitValue(VarbitID.PVP_AREA_CLIENT) == 1
+			|| WorldType.isPvpWorld(client.getWorldType());
+	}
+
+	/** Client thread only. */
+	private boolean inInstance()
+	{
+		WorldView worldView = client.getTopLevelWorldView();
+		return worldView != null && worldView.isInstance();
+	}
+
+	/**
+	 * Re-read the game's current Slayer task for the panel and overlay. Needs no pairing. Client
+	 * thread only.
+	 */
+	private void refreshTask()
+	{
+		GameState state = client.getGameState();
+		currentTask = state == GameState.LOGGED_IN || state == GameState.LOADING ? taskReader.read() : null;
+	}
+
 	String appUrl()
 	{
 		String base = config.serverUrl().trim();
@@ -458,7 +615,7 @@ public class WildySlayerPlugin extends Plugin
 	 */
 	void requestPush()
 	{
-		if (!syncConfigured())
+		if (!running || !syncConfigured())
 		{
 			return;
 		}
@@ -487,6 +644,10 @@ public class WildySlayerPlugin extends Plugin
 
 	private void pushNow()
 	{
+		if (!running)
+		{
+			return;
+		}
 		synchronized (lock)
 		{
 			lastPushAt = System.currentTimeMillis();
@@ -495,8 +656,14 @@ public class WildySlayerPlugin extends Plugin
 		}
 		clientThread.invoke(() ->
 		{
-			if (client.getGameState() != GameState.LOGGED_IN || !syncConfigured())
+			if (!running || client.getGameState() != GameState.LOGGED_IN || !syncConfigured())
 			{
+				return true;
+			}
+			if (!settled)
+			{
+				// just logged in, hopped or reconnected: the Wilderness/PvP varbits may still read 0;
+				// onGameTick pushes once they are in
 				return true;
 			}
 			net.runelite.api.Player local = client.getLocalPlayer();
@@ -505,7 +672,7 @@ public class WildySlayerPlugin extends Plugin
 				// right after login the player is not populated yet; try again next tick
 				return false;
 			}
-			Player player = snapshotBuilder.build(config.shareBank(), config.shareInventory(), config.shareEquipment());
+			Player player = snapshotBuilder.build(config.shareBank(), config.shareInventory(), config.shareEquipment(), inPvpArea());
 			lastSnapshot = player;
 			log.debug("Pushing snapshot: {} bank, {} inventory, {} equipment, task {}",
 				player.bank.size(), player.inventory.size(), player.equipment.size(), player.task != null ? player.task.name : null);
@@ -549,7 +716,7 @@ public class WildySlayerPlugin extends Plugin
 
 	private void poll()
 	{
-		if (!loggedIn || !syncConfigured())
+		if (!running || !loggedIn || !syncConfigured())
 		{
 			return;
 		}
@@ -564,6 +731,10 @@ public class WildySlayerPlugin extends Plugin
 	 */
 	private synchronized void applyState(SyncState state)
 	{
+		if (!running)
+		{
+			return;
+		}
 		lastSyncAt = System.currentTimeMillis();
 		syncError = null;
 
@@ -577,9 +748,17 @@ public class WildySlayerPlugin extends Plugin
 		Selection newSelection = state.selection;
 		selection = newSelection;
 		remoteState = state;
-		rebuildHighlights(newSelection);
 
 		long selectionAt = selectionAt(state);
+		if (selectionAt != highlightsBuiltAt || (newSelection != null) != highlightsBuiltPresent)
+		{
+			// item stats and compositions are only safe on the client thread
+			highlightsBuiltAt = selectionAt;
+			highlightsBuiltPresent = newSelection != null;
+			long gen = ++highlightsGen;
+			clientThread.invoke(() -> rebuildHighlights(newSelection, gen));
+		}
+
 		if (!selectionBaselineSet)
 		{
 			// first full response since startUp or re-pairing: whatever is selected now predates us
@@ -589,10 +768,11 @@ public class WildySlayerPlugin extends Plugin
 		else if (newSelection != null && selectionAt > lastHandledSelectionAt)
 		{
 			lastHandledSelectionAt = selectionAt;
-			log.debug("New selection {} at {} ({})", newSelection.taskName, newSelection.locationName, newSelection.source);
-			if (config.autoPath() && newSelection.target != null && loggedIn)
+			log.debug("New selection {} #{} ({})", newSelection.task, newSelection.loc, newSelection.source);
+			WorldPoint target = targetOf(newSelection);
+			if (config.autoPath() && target != null && loggedIn)
 			{
-				postPath(newSelection.target);
+				postPath(target, true);
 			}
 		}
 
@@ -626,60 +806,206 @@ public class WildySlayerPlugin extends Plugin
 		lastHandledSelectionAt = 0;
 	}
 
-	private void rebuildHighlights(@Nullable Selection sel)
+	/**
+	 * The spot a selection names, from the bundled {@link Spots} table by task slug and location
+	 * index. When the selection also carries a {@code locationName} that differs from the table's
+	 * name at that index (the app's list changed since this build), the location is looked up by
+	 * that name within the same task instead, and there is no spot when none matches. The name is
+	 * only a lookup key and is never shown. Null when the task or location is unknown.
+	 */
+	@Nullable
+	static Spots.Spot spotOf(@Nullable Selection sel)
 	{
+		if (sel == null)
+		{
+			return null;
+		}
+		Spots.Spot byIndex = Spots.spot(sel.task, sel.loc);
+		if (sel.locationName == null || (byIndex != null && byIndex.name.equals(sel.locationName)))
+		{
+			return byIndex;
+		}
+		Spots.TaskSpots task = Spots.task(sel.task);
+		if (task != null)
+		{
+			for (Spots.Spot spot : task.spots)
+			{
+				if (spot.name.equals(sel.locationName))
+				{
+					return spot;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * The walk target for a selection: the {@link #spotOf} spot's target from the bundled table.
+	 * The server's own {@code target} is ignored. Null when there is no spot.
+	 */
+	@Nullable
+	static WorldPoint targetOf(@Nullable Selection sel)
+	{
+		Spots.Spot spot = spotOf(sel);
+		return spot != null ? spot.target : null;
+	}
+
+	/**
+	 * The display name of a selection's combat style, or null unless it is melee, ranged or magic.
+	 */
+	@Nullable
+	static String styleName(@Nullable String style)
+	{
+		if (style == null)
+		{
+			return null;
+		}
+		switch (style)
+		{
+			case "melee":
+				return "Melee";
+			case "ranged":
+				return "Ranged";
+			case "magic":
+				return "Magic";
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Rebuild the highlights for the current selection right away, if there is one. Client thread only.
+	 */
+	private void rebuildHighlightsNow()
+	{
+		Selection sel;
+		long gen;
+		synchronized (this)
+		{
+			if (remoteState == null)
+			{
+				return;
+			}
+			sel = remoteState.selection;
+			gen = ++highlightsGen;
+		}
+		rebuildHighlights(sel, gen);
+	}
+
+	/**
+	 * Turn the selection's id lists into highlight sets, keeping only what passes the client-side
+	 * checks: gear and alternative ids must be equipable items, and every list is capped. The sets
+	 * are built outside the lock and published only if {@code gen} is still current, so a rebuild
+	 * queued before sync was turned off, re-paired or superseded never puts old highlights back.
+	 * Client thread only.
+	 */
+	private void rebuildHighlights(@Nullable Selection sel, long gen)
+	{
+		if (!running)
+		{
+			return;
+		}
 		Set<Integer> gear = new HashSet<>();
 		Set<Integer> alts = new HashSet<>();
 		Set<Integer> supplies = new HashSet<>();
+		List<GearRow> rows = new ArrayList<>();
 		if (sel != null)
 		{
 			if (sel.gear != null)
 			{
-				for (GearPick pick : sel.gear.values())
+				for (String slot : GEAR_SLOTS)
 				{
-					addIds(gear, pick != null ? pick.ids : null);
+					GearPick pick = sel.gear.get(slot);
+					List<Integer> ids = itemIds(pick != null ? pick.ids : null, true);
+					if (ids.isEmpty())
+					{
+						continue;
+					}
+					gear.addAll(ids);
+					List<String> names = new ArrayList<>(ids.size());
+					for (int id : ids)
+					{
+						names.add(itemManager.getItemComposition(id).getName());
+					}
+					rows.add(new GearRow(slot, ids, names));
 				}
 			}
 			if (sel.alts != null)
 			{
-				for (List<GearPick> picks : sel.alts.values())
+				int entries = 0;
+				for (String slot : GEAR_SLOTS)
 				{
+					List<GearPick> picks = sel.alts.get(slot);
 					if (picks == null)
 					{
 						continue;
 					}
 					for (GearPick pick : picks)
 					{
-						addIds(alts, pick != null ? pick.ids : null);
+						if (entries++ >= MAX_ALT_ENTRIES)
+						{
+							break;
+						}
+						alts.addAll(itemIds(pick != null ? pick.ids : null, true));
 					}
 				}
 			}
 			if (sel.supplies != null)
 			{
-				for (Supply supply : sel.supplies)
+				int count = Math.min(sel.supplies.size(), MAX_SUPPLY_ENTRIES);
+				for (int i = 0; i < count; i++)
 				{
-					addIds(supplies, supply != null ? supply.ids : null);
+					Supply supply = sel.supplies.get(i);
+					supplies.addAll(itemIds(supply != null ? supply.ids : null, false));
 				}
 			}
 		}
-		gearIds = Collections.unmodifiableSet(gear);
-		altIds = Collections.unmodifiableSet(alts);
-		supplyIds = Collections.unmodifiableSet(supplies);
+		synchronized (this)
+		{
+			if (!running || gen != highlightsGen)
+			{
+				// shut down, remote state cleared, or a newer rebuild was queued after this one
+				return;
+			}
+			gearIds = Collections.unmodifiableSet(gear);
+			altIds = Collections.unmodifiableSet(alts);
+			supplyIds = Collections.unmodifiableSet(supplies);
+			gearRows = Collections.unmodifiableList(rows);
+		}
+		refreshPanel();
 	}
 
-	private static void addIds(Set<Integer> into, @Nullable List<Integer> ids)
+	/**
+	 * The first {@link #MAX_IDS_PER_ENTRY} ids of a list that are real item ids, and with
+	 * {@code equipable} only those whose item is equipable. Client thread only.
+	 */
+	private List<Integer> itemIds(@Nullable List<Integer> ids, boolean equipable)
 	{
+		List<Integer> out = new ArrayList<>();
 		if (ids == null)
 		{
-			return;
+			return out;
 		}
-		for (Integer id : ids)
+		int itemCount = client.getItemCount();
+		int count = Math.min(ids.size(), MAX_IDS_PER_ENTRY);
+		for (int i = 0; i < count; i++)
 		{
-			if (id != null)
+			Integer id = ids.get(i);
+			if (id == null || id <= 0 || id >= itemCount || out.contains(id))
 			{
-				into.add(id);
+				continue;
 			}
+			if (equipable)
+			{
+				ItemStats stats = itemManager.getItemStats(id);
+				if (stats == null || !stats.isEquipable())
+				{
+					continue;
+				}
+			}
+			out.add(id);
 		}
+		return out;
 	}
 
 	boolean hasHighlights()
@@ -687,13 +1013,17 @@ public class WildySlayerPlugin extends Plugin
 		return !gearIds.isEmpty() || !altIds.isEmpty() || !supplyIds.isEmpty();
 	}
 
-	private void clearRemoteState()
+	private synchronized void clearRemoteState()
 	{
 		selection = null;
 		remoteState = null;
+		highlightsBuiltAt = NOT_BUILT;
+		highlightsBuiltPresent = false;
+		highlightsGen++;
 		gearIds = Collections.emptySet();
 		altIds = Collections.emptySet();
 		supplyIds = Collections.emptySet();
+		gearRows = Collections.emptyList();
 		syncError = null;
 		lastSyncAt = 0;
 	}
@@ -739,40 +1069,106 @@ public class WildySlayerPlugin extends Plugin
 	}
 
 	/**
-	 * "Walk there": draw a Shortest Path route to the current selection's target.
+	 * "Show path": ask Shortest Path to draw a route to the current selection's spot. Works
+	 * anywhere, since the player asked for it.
 	 */
-	void walkToSelection()
+	void showPathToSelection()
 	{
-		Selection sel = selection;
-		if (sel != null && sel.target != null)
+		WorldPoint target = targetOf(selection);
+		if (target != null)
 		{
-			postPath(sel.target);
+			postPath(target, false);
 		}
 	}
 
+	/**
+	 * True after this plugin asked Shortest Path for a route, until this plugin clears it or another
+	 * plugin sets or clears a Shortest Path route. A destination the player sets on the world map
+	 * cannot be seen.
+	 */
+	boolean hasPostedPath()
+	{
+		return postedPath != null;
+	}
+
+	/**
+	 * "Clear path": asks Shortest Path to clear its route, only while {@link #hasPostedPath()};
+	 * otherwise does nothing.
+	 */
 	void clearPath()
 	{
-		clientThread.invokeLater(() -> eventBus.post(new PluginMessage(SHORTEST_PATH_NAMESPACE, SHORTEST_PATH_CLEAR)));
+		clientThread.invokeLater(() ->
+		{
+			if (!running || postedPath == null)
+			{
+				return;
+			}
+			postOwn(new PluginMessage(SHORTEST_PATH_NAMESPACE, SHORTEST_PATH_CLEAR));
+			postedPath = null;
+			refreshPanel();
+		});
+	}
+
+	/**
+	 * Another plugin (Quest Helper, for example) setting or clearing a Shortest Path route means the
+	 * route on screen is no longer ours, so "Clear path" must not clear it.
+	 */
+	@Subscribe
+	public void onPluginMessage(PluginMessage event)
+	{
+		if (event == ownMessage || !SHORTEST_PATH_NAMESPACE.equals(event.getNamespace()))
+		{
+			return;
+		}
+		String name = event.getName();
+		if ((SHORTEST_PATH_PATH.equals(name) || SHORTEST_PATH_CLEAR.equals(name)) && postedPath != null)
+		{
+			postedPath = null;
+			refreshPanel();
+		}
 	}
 
 	// ---- Shortest Path ----
 
 	/**
 	 * Hands a target to the Shortest Path plugin, which only draws a route on the map; this plugin
-	 * never moves the player.
+	 * never moves the player. Only the target is sent, never a config override. An automatic
+	 * request is dropped in the Wilderness, a PvP area, on a PvP world, or in an instance, and
+	 * right after a login, hop or reconnect, before those can be read.
 	 */
-	private void postPath(Target target)
+	private void postPath(WorldPoint target, boolean automatic)
 	{
-		WorldPoint point = new WorldPoint(target.x, target.y, target.plane);
 		Map<String, Object> data = new HashMap<>();
-		data.put(SHORTEST_PATH_TARGET, point);
+		data.put(SHORTEST_PATH_TARGET, target);
 		clientThread.invokeLater(() ->
 		{
-			if (client.getGameState() == GameState.LOGGED_IN)
+			if (!running || client.getGameState() != GameState.LOGGED_IN)
 			{
-				eventBus.post(new PluginMessage(SHORTEST_PATH_NAMESPACE, SHORTEST_PATH_PATH, data));
+				return;
 			}
+			if (automatic && (!settled || inPvpArea() || inInstance()))
+			{
+				log.debug("Not auto-pathing: unsettled, or in the Wilderness, a PvP area or an instance");
+				return;
+			}
+			postOwn(new PluginMessage(SHORTEST_PATH_NAMESPACE, SHORTEST_PATH_PATH, data));
+			postedPath = target;
+			refreshPanel();
 		});
+	}
+
+	/** Post a message on the event bus (synchronous), marked as ours for {@link #onPluginMessage}. Client thread only. */
+	private void postOwn(PluginMessage message)
+	{
+		ownMessage = message;
+		try
+		{
+			eventBus.post(message);
+		}
+		finally
+		{
+			ownMessage = null;
+		}
 	}
 
 	// ---- panel ----
@@ -780,5 +1176,20 @@ public class WildySlayerPlugin extends Plugin
 	private void refreshPanel()
 	{
 		SwingUtilities.invokeLater(panel::refresh);
+	}
+
+	/** One gear slot of the selection as the panel shows it: accepted ids and the game's name for each. */
+	static final class GearRow
+	{
+		final String slot;
+		final List<Integer> ids;
+		final List<String> names;
+
+		GearRow(String slot, List<Integer> ids, List<String> names)
+		{
+			this.slot = slot;
+			this.ids = Collections.unmodifiableList(ids);
+			this.names = Collections.unmodifiableList(names);
+		}
 	}
 }

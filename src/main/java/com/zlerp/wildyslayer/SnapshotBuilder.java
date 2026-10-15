@@ -56,6 +56,11 @@ class SnapshotBuilder
 	@Nullable
 	private Long bankAt;
 
+	// The last inventory and equipment taken outside the Wilderness and PvP areas; sent unchanged
+	// while inside them.
+	private List<int[]> lastInventory = Collections.emptyList();
+	private List<int[]> lastEquipment = Collections.emptyList();
+
 	@Inject
 	SnapshotBuilder(Client client, ItemManager itemManager, SlayerTaskReader taskReader)
 	{
@@ -77,9 +82,15 @@ class SnapshotBuilder
 	{
 		lastBank = Collections.emptyList();
 		bankAt = null;
+		lastInventory = Collections.emptyList();
+		lastEquipment = Collections.emptyList();
 	}
 
-	Player build(boolean shareBank, boolean shareInventory, boolean shareEquipment)
+	/**
+	 * @param freezeItems true in the Wilderness, a PvP area or on a PvP world: inventory and
+	 *                    equipment are not re-read, the last snapshot taken outside is sent instead
+	 */
+	Player build(boolean shareBank, boolean shareInventory, boolean shareEquipment, boolean freezeItems)
 	{
 		Player player = new Player();
 		player.pluginVersion = WildySlayerPlugin.PLUGIN_VERSION;
@@ -113,8 +124,13 @@ class SnapshotBuilder
 			player.bank = Collections.emptyList();
 			player.bankAt = null;
 		}
-		player.inventory = shareInventory ? pairs(client.getItemContainer(InventoryID.INV)) : Collections.emptyList();
-		player.equipment = shareEquipment ? pairs(client.getItemContainer(InventoryID.WORN)) : Collections.emptyList();
+		if (!freezeItems)
+		{
+			lastInventory = pairs(client.getItemContainer(InventoryID.INV));
+			lastEquipment = pairs(client.getItemContainer(InventoryID.WORN));
+		}
+		player.inventory = shareInventory ? lastInventory : Collections.emptyList();
+		player.equipment = shareEquipment ? lastEquipment : Collections.emptyList();
 
 		Map<String, String> names = new TreeMap<>();
 		addNames(names, player.bank);

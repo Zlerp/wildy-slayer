@@ -24,21 +24,18 @@
  */
 package com.zlerp.wildyslayer;
 
-import com.zlerp.wildyslayer.SyncModels.GearPick;
 import com.zlerp.wildyslayer.SyncModels.Player;
 import com.zlerp.wildyslayer.SyncModels.Selection;
 import com.zlerp.wildyslayer.SyncModels.Setup;
 import com.zlerp.wildyslayer.SyncModels.SyncState;
 import com.zlerp.wildyslayer.SyncModels.Task;
+import com.zlerp.wildyslayer.WildySlayerPlugin.GearRow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -60,13 +57,21 @@ import net.runelite.client.util.LinkBrowser;
 /**
  * The sidebar panel: sync status, the game's current task, the app's selection with one row per
  * gear slot (icon, name, where you have it), and the saved setups with an Apply button each.
+ * Task and location names come from the bundled {@link Spots} table and item names from the game;
+ * the only server text shown is setup names (at most {@link #MAX_SETUPS}, each trimmed to
+ * {@link #MAX_SETUP_NAME} characters) and a sync error message (trimmed to {@link #MAX_ERROR}).
  * Everything here runs on the Swing thread and never blocks.
  */
 @Singleton
 class WildySlayerPanel extends PluginPanel
 {
-	private static final List<String> SLOT_ORDER = Arrays.asList(
-		"head", "cape", "neck", "ammo", "weapon", "body", "shield", "legs", "hands", "feet", "ring");
+	private static final int MAX_SETUP_NAME = 40;
+	/** The server keeps at most 60 setups (PROTOCOL.md); the panel lists no more than that. */
+	static final int MAX_SETUPS = 60;
+	/** Sync error messages can carry server text, so they are cut to this many characters. */
+	static final int MAX_ERROR = 60;
+	private static final String CLEAR_PATH_TIP = "Asks Shortest Path to clear its route (enabled after Show path)";
+	private static final String CLEAR_PATH_DISABLED_TIP = "Enabled after Show path, until the route is cleared or another plugin sets one";
 
 	private static final Color WORN_COLOR = ColorScheme.PROGRESS_COMPLETE_COLOR;
 	private static final Color INVENTORY_COLOR = ColorScheme.GRAND_EXCHANGE_LIMIT;
@@ -88,7 +93,8 @@ class WildySlayerPanel extends PluginPanel
 	private final JLabel selectionSetupLabel = new JLabel();
 	private final JPanel gearRows = new JPanel(new GridLayout(0, 1, 0, 2));
 	private final JPanel setupRows = new JPanel(new GridLayout(0, 1, 0, 2));
-	private final JButton walkButton = new JButton("Walk there");
+	private final JButton showPathButton = new JButton("Show path");
+	private final JButton clearPathButton = new JButton("Clear path");
 
 	private final Timer statusTimer = new Timer(STATUS_TICK_MS, e -> updateStatus());
 
@@ -98,6 +104,8 @@ class WildySlayerPanel extends PluginPanel
 	private static final long NOT_BUILT = -1;
 	private long builtSelectionAt = NOT_BUILT;
 	private boolean builtSelectionPresent;
+	// the plugin builds a new list only when the selection changes, so identity is enough here
+	private List<GearRow> builtGearRows = Collections.emptyList();
 	private long builtSetupsAt = NOT_BUILT;
 	private int builtSetupCount;
 	private Set<Integer> builtWorn = Collections.emptySet();
@@ -127,10 +135,15 @@ class WildySlayerPanel extends PluginPanel
 		buttons.setBorder(new EmptyBorder(4, 0, 4, 0));
 		buttons.add(button("Open app", () -> LinkBrowser.browse(plugin.appUrl())));
 		buttons.add(button("Push now", plugin::requestPush));
-		styleButton(walkButton);
-		walkButton.addActionListener(e -> plugin.walkToSelection());
-		buttons.add(walkButton);
-		buttons.add(button("Clear path", plugin::clearPath));
+		styleButton(showPathButton);
+		showPathButton.setToolTipText("Draws a route to the selected spot in Shortest Path; never moves you");
+		showPathButton.addActionListener(e -> plugin.showPathToSelection());
+		buttons.add(showPathButton);
+		styleButton(clearPathButton);
+		clearPathButton.addActionListener(e -> plugin.clearPath());
+		clearPathButton.setEnabled(false);
+		clearPathButton.setToolTipText(CLEAR_PATH_DISABLED_TIP);
+		buttons.add(clearPathButton);
 		add(buttons);
 
 		add(header("Your task"));
@@ -154,7 +167,7 @@ class WildySlayerPanel extends PluginPanel
 
 		// the plugin fills this in from startUp(); its own fields may not be injected yet while we are being built
 		statusLabel.setText(wrap("Starting..."));
-		taskLabel.setText(describeTask(null));
+		taskLabel.setText(describeTask(null, false));
 		selectionTaskLabel.setText(wrap("Nothing selected in the app yet"));
 	}
 
@@ -186,23 +199,30 @@ class WildySlayerPanel extends PluginPanel
 		List<Setup> setups = remote != null && remote.setups != null ? remote.setups : Collections.emptyList();
 		long setupsAt = remote != null ? WildySlayerPlugin.setupsAt(remote) : 0;
 
-		taskLabel.setText(describeTask(snapshot));
-		walkButton.setEnabled(selection != null && selection.target != null);
+		// read by the plugin from the game itself, so it shows whether or not sync is on
+		taskLabel.setText(describeTask(plugin.getCurrentTask(), plugin.isLoggedIn()));
+		showPathButton.setEnabled(WildySlayerPlugin.targetOf(selection) != null);
+		boolean ownPath = plugin.hasPostedPath();
+		clearPathButton.setEnabled(ownPath);
+		clearPathButton.setToolTipText(ownPath ? CLEAR_PATH_TIP : CLEAR_PATH_DISABLED_TIP);
+		List<GearRow> gearRowList = plugin.getGearRows();
 
 		Set<Integer> worn = idsOf(snapshot != null ? snapshot.equipment : null);
 		Set<Integer> inventory = idsOf(snapshot != null ? snapshot.inventory : null);
 		Set<Integer> bank = idsOf(snapshot != null ? snapshot.bank : null);
 
-		boolean selectionChanged = selectionAt != builtSelectionAt || (selection != null) != builtSelectionPresent;
+		boolean selectionChanged = selectionAt != builtSelectionAt || (selection != null) != builtSelectionPresent
+			|| gearRowList != builtGearRows;
 		boolean ownedChanged = !worn.equals(builtWorn) || !inventory.equals(builtInventory) || !bank.equals(builtBank);
 		if (selectionChanged || ownedChanged)
 		{
 			builtSelectionAt = selectionAt;
 			builtSelectionPresent = selection != null;
+			builtGearRows = gearRowList;
 			builtWorn = worn;
 			builtInventory = inventory;
 			builtBank = bank;
-			rebuildSelection(selection, worn, inventory, bank);
+			rebuildSelection(selection, gearRowList, worn, inventory, bank);
 		}
 		if (setupsAt != builtSetupsAt || setups.size() != builtSetupCount)
 		{
@@ -224,7 +244,7 @@ class WildySlayerPanel extends PluginPanel
 		}
 		else if (plugin.getSyncError() != null)
 		{
-			text = "Error: " + plugin.getSyncError();
+			text = "Error: " + clip(plugin.getSyncError(), MAX_ERROR);
 			color = MISSING_COLOR;
 		}
 		else if (!plugin.isLoggedIn())
@@ -245,13 +265,12 @@ class WildySlayerPanel extends PluginPanel
 		statusLabel.setForeground(color);
 	}
 
-	private static String describeTask(@Nullable Player snapshot)
+	private static String describeTask(@Nullable Task task, boolean loggedIn)
 	{
-		if (snapshot == null)
+		if (!loggedIn)
 		{
 			return wrap("Log in to read your task");
 		}
-		Task task = snapshot.task;
 		if (task == null)
 		{
 			return wrap("No Slayer task");
@@ -268,7 +287,7 @@ class WildySlayerPanel extends PluginPanel
 		return wrap(sb.toString());
 	}
 
-	private void rebuildSelection(@Nullable Selection selection, Set<Integer> worn, Set<Integer> inventory, Set<Integer> bank)
+	private void rebuildSelection(@Nullable Selection selection, List<GearRow> rows, Set<Integer> worn, Set<Integer> inventory, Set<Integer> bank)
 	{
 		gearRows.removeAll();
 		if (selection == null)
@@ -280,40 +299,23 @@ class WildySlayerPanel extends PluginPanel
 			return;
 		}
 
-		selectionTaskLabel.setText(wrap("Task: " + orDash(selection.taskName)));
-		selectionLocationLabel.setText(wrap("Where: " + orDash(selection.locationName)));
-		selectionStyleLabel.setText(wrap("Style: " + orDash(selection.styleLabel != null ? selection.styleLabel : selection.style)));
-		selectionSetupLabel.setText(wrap("Setup: " + orDash(selection.setupName)));
+		Spots.TaskSpots task = Spots.task(selection.task);
+		Spots.Spot spot = WildySlayerPlugin.spotOf(selection);
+		selectionTaskLabel.setText(wrap("Task: " + (task != null ? task.name : "-")));
+		selectionLocationLabel.setText(wrap("Where: " + (spot != null ? spot.name : "-")));
+		selectionStyleLabel.setText(wrap("Style: " + orDash(WildySlayerPlugin.styleName(selection.style))));
+		selectionSetupLabel.setText(wrap("Setup: " + orDash(setupName(selection.setupName))));
 
-		if (selection.gear == null || selection.gear.isEmpty())
+		// already ordered by slot, checked and capped by the plugin
+		for (GearRow row : rows)
 		{
-			return;
-		}
-
-		Set<String> slots = new LinkedHashSet<>();
-		for (String slot : SLOT_ORDER)
-		{
-			if (selection.gear.containsKey(slot))
-			{
-				slots.add(slot);
-			}
-		}
-		slots.addAll(selection.gear.keySet());
-
-		for (String slot : slots)
-		{
-			GearPick pick = selection.gear.get(slot);
-			if (pick == null)
-			{
-				continue;
-			}
-			gearRows.add(gearRow(slot, pick, worn, inventory, bank));
+			gearRows.add(gearRow(row, worn, inventory, bank));
 		}
 	}
 
-	private JPanel gearRow(String slot, GearPick pick, Set<Integer> worn, Set<Integer> inventory, Set<Integer> bank)
+	private JPanel gearRow(GearRow gearRow, Set<Integer> worn, Set<Integer> inventory, Set<Integer> bank)
 	{
-		List<Integer> ids = pick.ids != null ? pick.ids : new ArrayList<>();
+		List<Integer> ids = gearRow.ids;
 
 		String status;
 		Color color;
@@ -357,10 +359,11 @@ class WildySlayerPanel extends PluginPanel
 		}
 		row.add(icon, BorderLayout.WEST);
 
-		JLabel name = new JLabel(wrap(orDash(pick.name)));
+		int nameIndex = iconId != null ? ids.indexOf(iconId) : -1;
+		JLabel name = new JLabel(wrap(orDash(nameIndex >= 0 ? gearRow.names.get(nameIndex) : null)));
 		name.setFont(FontManager.getRunescapeSmallFont());
 		name.setForeground(ColorScheme.TEXT_COLOR);
-		name.setToolTipText(slot);
+		name.setToolTipText(gearRow.slot);
 		row.add(name, BorderLayout.CENTER);
 
 		JLabel where = new JLabel(status);
@@ -381,20 +384,28 @@ class WildySlayerPanel extends PluginPanel
 			setupRows.add(none);
 			return;
 		}
+		int shown = 0;
 		for (Setup setup : setups)
 		{
 			if (setup == null)
 			{
 				continue;
 			}
+			if (shown++ >= MAX_SETUPS)
+			{
+				break;
+			}
 			JPanel row = new JPanel(new BorderLayout(4, 0));
 			row.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 			row.setBorder(new EmptyBorder(2, 4, 2, 4));
 
-			String detail = setup.selection != null
-				? orDash(setup.selection.taskName) + ", " + orDash(setup.selection.styleLabel != null ? setup.selection.styleLabel : setup.selection.style)
-				: "";
-			JLabel name = new JLabel("<html><body style='width:110px'><b>" + escape(orDash(setup.name)) + "</b><br>" + escape(detail) + "</body></html>");
+			String detail = "";
+			if (setup.selection != null)
+			{
+				Spots.TaskSpots task = Spots.task(setup.selection.task);
+				detail = (task != null ? task.name : "-") + ", " + orDash(WildySlayerPlugin.styleName(setup.selection.style));
+			}
+			JLabel name = new JLabel("<html><body style='width:110px'><b>" + escape(orDash(setupName(setup.name))) + "</b><br>" + escape(detail) + "</body></html>");
 			name.setFont(FontManager.getRunescapeSmallFont());
 			name.setForeground(ColorScheme.TEXT_COLOR);
 			row.add(name, BorderLayout.CENTER);
@@ -462,6 +473,33 @@ class WildySlayerPanel extends PluginPanel
 	private static String orDash(@Nullable String s)
 	{
 		return s == null || s.isEmpty() ? "-" : s;
+	}
+
+	/**
+	 * A setup name from the server as the panel shows it: trimmed, at most {@link #MAX_SETUP_NAME} characters.
+	 */
+	@Nullable
+	static String setupName(@Nullable String name)
+	{
+		return clip(name, MAX_SETUP_NAME);
+	}
+
+	/**
+	 * Server text as the panel shows it: trimmed and cut to at most {@code max} code points.
+	 */
+	@Nullable
+	static String clip(@Nullable String text, int max)
+	{
+		if (text == null)
+		{
+			return null;
+		}
+		String trimmed = text.trim();
+		if (trimmed.codePointCount(0, trimmed.length()) <= max)
+		{
+			return trimmed;
+		}
+		return trimmed.substring(0, trimmed.offsetByCodePoints(0, max));
 	}
 
 	/**

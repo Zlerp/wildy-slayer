@@ -63,7 +63,7 @@ final class SyncModels
 		String master;
 	}
 
-	/** A walk target for the Shortest Path plugin. */
+	/** The app's walk target. Only echoed back when applying a setup; the plugin takes targets from {@link Spots}. */
 	static final class Target
 	{
 		int x;

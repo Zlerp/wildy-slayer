@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Wildy Slayer plugin</title>
   <meta name="theme-color" content="#0c0a09" />
-  <meta name="description" content="The RuneLite companion plugin for Wildy Slayer: what it syncs, how to run it from source, how pairing works, and what it never does." />
+  <meta name="description" content="The RuneLite companion plugin for Wildy Slayer: what it syncs, how to install it from the Plugin Hub, how pairing works, what it sends and what it never does." />
   <link rel="icon" href="/icons/icon-192.png" />
   <link rel="stylesheet" href="/style.css" />
   <style>
@@ -22,6 +22,7 @@
     .doc table { margin-top: 8px; }
     .doc td { font-size: 13px; color: var(--muted); }
     .doc td:first-child { color: var(--fg); font-weight: 700; white-space: nowrap; }
+    .doc blockquote { margin: 8px 0; padding: 8px 12px; border-left: 3px solid var(--line); background: var(--bg2); border-radius: 6px; color: var(--fg); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -30,38 +31,33 @@
     <header class="top">
       <p class="eyebrow">Wildy Slayer · RuneLite companion</p>
       <h1>The <span>plugin</span></h1>
-      <p class="lede">Syncs your own levels, bank and current task to the <a href="/">Wildy Slayer</a> app, outlines the gear it picked in your bank, lists your saved setups and hands the spot to Shortest Path.</p>
+      <p class="lede">Syncs your levels, items and Slayer task with the <a href="/">Wildy Slayer</a> app, outlines its gear picks in your bank and routes to the spot via Shortest Path.</p>
       <div class="links">
         <a class="btn primary" href="/">Open the app</a>
         <a class="btn" href="https://github.com/Zlerp/wildy-slayer#readme">README (plain text)</a>
-        <a class="btn" href="https://github.com/Zlerp/blob/main/PROTOCOL.md">Sync protocol (plain text)</a>
+        <a class="btn" href="https://github.com/Zlerp/wildy-slayer/blob/main/PROTOCOL.md">Sync protocol (plain text)</a>
       </div>
     </header>
 
     <section class="card">
       <h2>What it does</h2>
       <ul>
-        <li><b>Sync (opt-in, off by default).</b> While you are logged in, the plugin pushes a snapshot of your character to the server at most once every 2 seconds and polls every 5 seconds for the selection and setups the app wrote. Everything is keyed by an 8-character pairing code.</li>
-        <li><b>Bank highlights.</b> The app's picks are outlined green, the next-best alternatives yellow, the "what to bring" supplies cyan, in the bank, inventory and equipment tab. Each is a toggle.</li>
-        <li><b>Side panel.</b> Sync status, your current task, the app's selection (task, spot, style, setup) with one row per gear slot saying whether the item is worn, in your inventory, in the bank or missing, and your saved setups with an <b>Apply</b> button each.</li>
-        <li><b>Shortest Path.</b> "Walk there" sends the selection's spot to the <a href="https://github.com/Skretzo/shortest-path" rel="noopener">Shortest Path</a> plugin, which draws the route on the map. Nothing moves your character.</li>
-        <li><b>Info overlay.</b> A small on-screen box with the task, spot and setup name.</li>
+        <li><b>Sync (opt-in, off by default).</b> While you are logged in, the plugin pushes a snapshot of your own character to the server at most once every 2 seconds after something in it changes, and polls every 5 seconds (configurable) for the selection and setups the app wrote. Everything is keyed by an 8-character pairing code. In the Wilderness, in a PvP area and on a PvP world your inventory and equipment are <b>not</b> refreshed or sent: pushes keep the last ones taken outside those areas (empty lists if none has been taken since you logged in or the plugin started), and a fresh snapshot goes out when you leave.</li>
+        <li><b>Bank highlights.</b> The app's picks are outlined green, the next-best alternatives yellow, the "what to bring" supplies cyan, in the bank, inventory and equipment tab. Alternatives and supplies can each be turned off, as can outlining in each of the three places. Only items you have are outlined, and gear picks count only for equipable items.</li>
+        <li><b>Side panel.</b> Sync status, your current task (read from the game, so it shows without pairing too), the app's selection (task, spot, style, setup) with one row per gear slot saying whether the item is worn, in your inventory, in the bank or missing, and your saved setups (at most 60) with an <b>Apply</b> button each.</li>
+        <li><b>Shortest Path.</b> <b>Show path</b> asks the <a href="https://github.com/Skretzo/shortest-path" rel="noopener">Shortest Path</a> plugin to draw the route to the selected spot on the map. The spot's coordinates come from a table built into the plugin, not from the server. <b>Clear path</b> is enabled only after this plugin has drawn a route and has not cleared it since, and only until another plugin sets or clears a Shortest Path route; it asks Shortest Path to clear its current route (a destination you set yourself on the world map cannot be detected, so it would clear that too). <i>Auto path on new selection</i> is <b>off by default</b>, and even when on it never fires in the Wilderness, a PvP area, on a PvP world or in an instance. Nothing moves your character.</li>
+        <li><b>Info overlay.</b> A small on-screen box with your current task (no pairing needed) and the selected task, spot and style.</li>
       </ul>
     </section>
 
     <section class="card" id="install">
       <h2>Install</h2>
-      <p>The plugin is not on the Plugin Hub yet. Current RuneLite only turns on developer mode, which sideloading needs, when the client was <b>not</b> started by the RuneLite launcher and Java assertions are on (<code>RuneLite.java</code>: <code>options.has("developer-mode") &amp;&amp; RuneLiteProperties.getLauncherVersion() == null</code>, then an <code>-ea</code> check). So a jar dropped into <code>~/.runelite/sideloaded-plugins/</code> is never loaded by the RuneLite you install from runelite.net or start from the Jagex Launcher, whatever its settings. Until the plugin is on the Plugin Hub, you run it in a development client built from this source.</p>
-      <h3>Run it from source (macOS, Linux, Windows)</h3>
+      <h3>From the Plugin Hub</h3>
       <ol class="steps">
-        <li><b>Java 17.</b> macOS with Homebrew: <code>brew install --cask temurin@17</code>. Otherwise install Temurin 17 from <a href="https://adoptium.net/temurin/releases/?version=17" rel="noopener">adoptium.net</a>. Check with <code>java -version</code>; if several are installed, on macOS run <code>export JAVA_HOME=$(/usr/libexec/java_home -v 17)</code> first.</li>
-        <li><b>The source.</b> <code>git clone https://github.com/Zlerp/wildy-slayer</code>, or on the repository page use Code, Download ZIP and unzip it.</li>
-        <li><b>Run it.</b> In that folder: <code>chmod +x gradlew</code> once, then <code>./gradlew run</code> (Windows: <code>gradlew.bat run</code>). The first run downloads Gradle and the RuneLite client, a few minutes. A RuneLite window opens with <b>Wildy Slayer</b> already in the plugin list.</li>
-        <li><b>Log in.</b> An old-style username and password account logs in as usual. A <b>Jagex account</b> cannot log in to a development client directly: once, start your normal RuneLite from the Jagex Launcher with the client argument <code>--insecure-write-credentials</code> (set it in the launcher's configuration window, <code>/Applications/RuneLite.app/Contents/MacOS/RuneLite --configure</code> on macOS, launcher 2.6.3 or newer), log in, and it writes <code>~/.runelite/credentials.properties</code>. The development client then logs in with that file. It is a login token: keep it private, and delete it and remove the argument when you are done. Details: <a href="https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts" rel="noopener">Using Jagex Accounts</a>.</li>
-        <li>Install <b>Shortest Path</b> from the Plugin Hub inside that client for "Walk there".</li>
+        <li>In RuneLite, open the configuration panel (wrench icon), click <b>Plugin Hub</b>, search for <b>Wildy Slayer</b> and install it.</li>
+        <li>Also install <b>Shortest Path</b> from the Plugin Hub; <b>Show path</b> needs it.</li>
       </ol>
-      <h3>Plugin Hub</h3>
-      <p>Once it has had real-world use, the plan is to submit it to the <a href="https://github.com/runelite/plugin-hub" rel="noopener">Plugin Hub</a>, after which it installs from the normal client's plugin list like any other and none of the above is needed.</p>
+      <p>The plugin has been submitted to the <a href="https://github.com/runelite/plugin-hub" rel="noopener">Plugin Hub</a> and is <b>pending review</b>; until it is accepted it does not show up in the search. The normal RuneLite does not load sideloaded jars, so until then the only way to run it is a development client built from the source (<a href="#development">Development</a> below).</p>
     </section>
 
     <section class="card" id="pairing">
@@ -71,32 +67,48 @@
         <li>In RuneLite, open the Wildy Slayer plugin settings, paste the code into <b>Pairing code</b> (with or without the dash) and tick <b>Enable sync</b>. The client warns you that this sends data to a third-party server; accept it.</li>
         <li>Log in. The panel's status line goes from "Syncing…" to "Synced Ns ago". The app now sees your levels, task and bank; open your bank once so the plugin can read it, pick a task in the app, and the plugin outlines the gear next time the bank is open.</li>
       </ol>
-      <p>"Open app" in the panel opens the web app with your code in the URL. Anyone holding the code can read and write that pairing, so treat it like a password; the config field is marked secret and the panel never shows it. "New code" in the app starts a fresh row.</p>
+      <p>"Open app" in the panel opens the web app with your code in the URL. The pairing code is a bearer token: anyone holding it can read and write that pairing's synced data, like the app key of other sync plugins such as Mystix. Treat it like a password; the config field is marked secret and the panel never shows it. "New code" in the app starts a fresh row.</p>
     </section>
 
     <section class="card" id="privacy">
       <h2>Privacy and rules</h2>
+      <p>The Plugin Hub listing carries this warning:</p>
+      <blockquote>This plugin submits your IP address, RSN, skill levels, Slayer task, and bank, inventory and equipment contents to a 3rd-party server not controlled or verified by RuneLite developers.</blockquote>
       <ul>
-        <li>The plugin sends data about <b>your own account only</b>: display name, combat level, real skill levels, current Slayer task, and the ids and quantities of the items in your bank, inventory and equipment. Each of the three item lists can be turned off. Nothing about other players is read or sent.</li>
-        <li>Data goes only to the <b>Server URL</b> you configured, together with your pairing code, and only while <b>Enable sync</b> is on. Sync is <b>off by default</b>.</li>
-        <li>The server keeps one row per pairing code and prunes rows untouched for 120 days. The plugin writes nothing to disk; its only persisted state is RuneLite's own config for its settings.</li>
+        <li><b>What is sent.</b> Data about <b>your own account only</b>: your RSN (display name), combat level, real skill levels, current Slayer task, and the ids, quantities and names of the items in your bank (as last seen), inventory and equipment, plus the plugin version and a timestamp. The server sees your IP address with every request. Each of the three item lists can be turned off; the next push then sends an empty list. Nothing about other players is read or sent.</li>
+        <li><b>When.</b> Only while <b>Enable sync</b> is on (<b>off by default</b>) and you are logged in: a push at most once every 2 seconds after your levels, task, bank, inventory or equipment change, and a poll every 5 seconds (configurable) that sends only the pairing code.</li>
+        <li><b>Wilderness and PvP.</b> In the Wilderness, a PvP area or on a PvP world the plugin does not refresh or send your inventory and equipment; pushes keep the last ones taken outside those areas (empty lists if none has been taken since you logged in or the plugin started), and a fresh snapshot is sent when you leave. After a login, hop or reconnect nothing is pushed until the plugin has read whether you are in such an area. Your RSN, levels, task and bank are sent there as everywhere else.</li>
+        <li><b>Where.</b> Only to the <b>Server URL</b> you configured (default this site, a Vercel function storing one row per pairing code in a Supabase table), together with your pairing code. The function does not store your IP address.</li>
+        <li><b>Retention.</b> Rows untouched for 120 days become eligible for deletion and are removed by a best-effort periodic prune. Turning sync off does not delete the row; "New code" in the app starts a fresh one. The plugin writes nothing to disk; its only persisted state is RuneLite's own config for its settings.</li>
+        <li><b>What the server can make it do.</b> Only choose which of your own items get outlined (equipable items for gear picks, capped lists), and a task and spot from the table built into the plugin. Text from the server appears only in the side panel: at most 60 setup names, each trimmed to 40 characters, and sync error messages trimmed to 60.</li>
         <li>It never clicks, types, walks or sends anything to the game server, adds no menu entries, changes no interface, and shows nothing about other players, prayers or boss mechanics. The README's "Rules" table maps each Plugin Hub rule to how the plugin complies.</li>
       </ul>
     </section>
 
-    <section class="card" id="source">
-      <h2>Source layout</h2>
+    <section class="card" id="development">
+      <h2>Development</h2>
+      <p>For contributors, or to run unreleased changes. Current RuneLite only turns on developer mode, which sideloading needs, when the client was <b>not</b> started by the RuneLite launcher and Java assertions are on, so a jar dropped into <code>~/.runelite/sideloaded-plugins/</code> is never loaded by the normal client. Build a development client from the source instead.</p>
+      <h3>Run it from source (macOS, Linux, Windows)</h3>
+      <ol class="steps">
+        <li><b>Java 17</b> (the plugin itself targets Java 11). macOS with Homebrew: <code>brew install --cask temurin@17</code>. Otherwise install Temurin 17 from <a href="https://adoptium.net/temurin/releases/?version=17" rel="noopener">adoptium.net</a>. Check with <code>java -version</code>; if several are installed, on macOS run <code>export JAVA_HOME=$(/usr/libexec/java_home -v 17)</code> first.</li>
+        <li><b>The source.</b> <code>git clone https://github.com/Zlerp/wildy-slayer</code>, or on the repository page use Code, Download ZIP and unzip it.</li>
+        <li><b>Run it.</b> In that folder: <code>chmod +x gradlew</code> once, then <code>./gradlew run</code> (Windows: <code>gradlew.bat run</code>). The first run downloads Gradle and the RuneLite client, a few minutes. A RuneLite window opens with <b>Wildy Slayer</b> already in the plugin list.</li>
+        <li><b>Log in.</b> An old-style username and password account logs in as usual. A <b>Jagex account</b> cannot log in to a development client directly: once, start your normal RuneLite from the Jagex Launcher with the client argument <code>--insecure-write-credentials</code> (set it in the launcher's configuration window, <code>/Applications/RuneLite.app/Contents/MacOS/RuneLite --configure</code> on macOS, launcher 2.6.3 or newer), log in, and it writes <code>~/.runelite/credentials.properties</code>. The development client then logs in with that file. It is a login token: keep it private, and delete it and remove the argument when you are done. Details: <a href="https://github.com/runelite/runelite/wiki/Using-Jagex-Accounts" rel="noopener">Using Jagex Accounts</a>.</li>
+        <li>Install <b>Shortest Path</b> from the Plugin Hub inside that client for <b>Show path</b>.</li>
+      </ol>
+      <h3>Source layout</h3>
       <table><tbody>
         <tr><td>build.gradle, settings.gradle, gradlew, gradle/</td><td>Gradle wrapper build, Java 11</td></tr>
         <tr><td>runelite-plugin.properties</td><td>Plugin Hub manifest</td></tr>
         <tr><td>WildySlayerPlugin</td><td>events, debounced push, poll, Shortest Path messages</td></tr>
         <tr><td>WildySlayerConfig</td><td>the settings (Sync, Highlights, Shortest Path, Display)</td></tr>
+        <tr><td>Spots</td><td>the built-in spot table (tasks, locations, walk targets), generated from the app's <code>data.js</code></td></tr>
         <tr><td>SyncClient, SyncModels</td><td>GET/POST to <code>/api/slayer/sync/</code> via OkHttp; Gson models matching the protocol</td></tr>
         <tr><td>SnapshotBuilder, SlayerTaskReader</td><td>the player payload; the current task from the Slayer varps and DB tables</td></tr>
         <tr><td>GearHighlightOverlay, WildySlayerInfoOverlay</td><td>outlines in bank / inventory / equipment; the on-screen summary</td></tr>
         <tr><td>WildySlayerPanel</td><td>the sidebar panel</td></tr>
       </tbody></table>
-      <p>All of it is under <code>src/main/java/com/zlerp/wildyslayer/</code>. The wire format the plugin and the app share is <a href="https://github.com/Zlerp/blob/main/PROTOCOL.md">PROTOCOL.md</a>; the full plugin notes are in the <a href="https://github.com/Zlerp/wildy-slayer#readme">README</a>. Both are served as plain text.</p>
+      <p>All of it is under <code>src/main/java/com/zlerp/wildyslayer/</code>. The wire format the plugin and the app share is <a href="https://github.com/Zlerp/wildy-slayer/blob/main/PROTOCOL.md">PROTOCOL.md</a>; the full plugin notes are in the <a href="https://github.com/Zlerp/wildy-slayer#readme">README</a>. Both are served as plain text.</p>
     </section>
 
     <footer>

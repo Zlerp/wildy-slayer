@@ -24,7 +24,6 @@
  */
 package com.zlerp.wildyslayer;
 
-import com.zlerp.wildyslayer.SyncModels.Player;
 import com.zlerp.wildyslayer.SyncModels.Selection;
 import com.zlerp.wildyslayer.SyncModels.Task;
 import java.awt.Color;
@@ -40,8 +39,8 @@ import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
 /**
- * A small on-screen summary: the game's current task, and the spot and setup the app chose.
- * Gear, location and setup names only.
+ * A small on-screen summary: the game's current task, and the task, spot and combat style the app
+ * chose. Task and spot names come from the bundled {@link Spots} table, never from the server.
  */
 @Singleton
 class WildySlayerInfoOverlay extends OverlayPanel
@@ -68,8 +67,8 @@ class WildySlayerInfoOverlay extends OverlayPanel
 			return null;
 		}
 
-		Player snapshot = plugin.getLastSnapshot();
-		Task task = snapshot != null ? snapshot.task : null;
+		// read from the game by the plugin, so it shows whether or not sync is on
+		Task task = plugin.getCurrentTask();
 		Selection selection = plugin.getSelection();
 		if (task == null && selection == null)
 		{
@@ -91,19 +90,28 @@ class WildySlayerInfoOverlay extends OverlayPanel
 
 		if (selection != null)
 		{
-			if (selection.locationName != null)
+			Spots.TaskSpots picked = Spots.task(selection.task);
+			if (picked != null)
+			{
+				panelComponent.getChildren().add(LineComponent.builder()
+					.left("Picked")
+					.right(picked.name)
+					.build());
+			}
+			Spots.Spot spot = WildySlayerPlugin.spotOf(selection);
+			if (spot != null)
 			{
 				panelComponent.getChildren().add(LineComponent.builder()
 					.left("Spot")
-					.right(selection.locationName)
+					.right(spot.name)
 					.build());
 			}
-			String setup = selection.setupName != null ? selection.setupName : selection.styleLabel;
-			if (setup != null)
+			String style = WildySlayerPlugin.styleName(selection.style);
+			if (style != null)
 			{
 				panelComponent.getChildren().add(LineComponent.builder()
-					.left("Setup")
-					.right(setup)
+					.left("Style")
+					.right(style)
 					.build());
 			}
 		}

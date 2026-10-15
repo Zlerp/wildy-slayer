@@ -15,7 +15,7 @@ Eight characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (no 0/O/1/I), shown as
 `XXXX-XXXX`. The web app generates one and keeps it in `localStorage`
 (`wildy:code`); the player types it into the plugin's config (or opens the app
 from the plugin, which passes `?code=` in the URL). The code is the only
-credential: anyone holding it can read and write that row. The server
+credential, a bearer token: anyone holding it can read and write that row. The server
 normalises codes with `toUpperCase().replace(/[^A-Z0-9]/g, "")` and requires
 `^[A-Z0-9]{8}$`.
 
@@ -51,11 +51,12 @@ plugin writing `player` never clobbers the app writing `selection`). Response
 `{ "ok": true, "version", "now" }`, or the full GET body with `?full=1` (the
 plugin uses this to push and pull in one round trip). Size limits: `player`
 300 KB, `selection` 40 KB, `setups` 400 KB and at most 60 entries; over the
-limit is a 413. Rows untouched for 120 days are pruned.
+limit is a 413. Rows untouched for 120 days become eligible for deletion and
+are removed by a best-effort prune that runs on about 1% of writes.
 
-Both clients poll GET every 5 s while active (the plugin only while logged in;
-the app only while the tab is visible and a code is set), and write with a
-2 s debounce.
+Both clients poll GET every 5 s by default (plugin: configurable, 3-60 s)
+while active (the plugin only while logged in; the app only while the tab is
+visible and a code is set), and write with a 2 s debounce.
 
 ## `player` (written by the plugin only)
 
@@ -86,6 +87,16 @@ Own-account data only; nothing about other players.
   `DBTableID.SlayerTask` / `SlayerArea`); `master` is `"Krystilia"` when
   `VarbitID.SLAYER_MASTER == 7`, else the number as a string, or null.
 * `levels` are real (unboosted) levels.
+* Wilderness and PvP freeze: while `VarbitID.INSIDE_WILDERNESS` or
+  `VarbitID.PVP_AREA_CLIENT` is 1, or `WorldType.isPvpWorld(client.getWorldType())`,
+  the plugin does not refresh `inventory` or `equipment`: pushes keep the
+  last lists taken outside those areas (and `names` keeps covering them), or
+  send `[]` when none has been taken since login or plugin start (logging out
+  and restarting the plugin forget them; a world hop does not). On leaving,
+  it takes a fresh snapshot and pushes. After a login, hop or reconnect it
+  pushes nothing until 2 game ticks after `LOGGED_IN`, since those varbits
+  arrive after that event. `rsn`, `levels`, `task` and `bank` are otherwise
+  unaffected.
 
 ## `selection` (written by the app; by the plugin when it applies a saved setup)
 
@@ -109,12 +120,45 @@ Own-account data only; nothing about other players.
   matches the item, plus the item's base id from `items.js`), so the plugin
   only ever compares ids: it highlights a bank, inventory or equipment item when
   `canonicalize(id)` is in a `gear` id list (green), an `alts` list (yellow) or
-  a `supplies` list (blue). `alts` are the next-best scored candidates per
+  a `supplies` list (cyan). `alts` are the next-best scored candidates per
   slot (up to 2), `supplies` the "what to bring" rows with ids.
-* `target` is the walk target for the Shortest Path plugin: the plugin posts
+* Bounds the plugin enforces (anything beyond them is ignored): `gear` at most
+  11 slots of 8 ids each, `alts` at most 22 entries in total of 8 ids each,
+  `supplies` at most 40 entries of 8 ids each. A `gear` or `alts` id counts
+  only when its canonical item is equipable per `ItemManager.getItemStats`
+  (checked on the client thread); supply ids are not filtered that way, since
+  potions, food and runes are not equipable. The side panel lists at most 60
+  `setups` and cuts a sync error message (which may carry the server's
+  `error` text) to 60 characters. So the server can only choose which of the
+  player's own items get outlined.
+* The plugin ignores `target`. It resolves the walk target from its bundled
+  spot table (`Spots.java`, generated from `web/data.js`): `task` is looked up
+  by slug, `loc` is an index into that task's `locations`, and the location's
+  `wp: [x, y, plane]` becomes the `WorldPoint`. When `locationName` is set and
+  differs from the table's name at `loc` (the app's list changed after that
+  plugin build), the location is looked up by that name within the task
+  instead; `locationName` is only a lookup key and is never shown. An unknown
+  slug, an out-of-range index or an unmatched name means no target. Because
+  released plugin builds keep their own table, a task's `locations` in
+  `web/data.js` are append-only and slugs never change. The app keeps sending
+  `target` (the same `wp`) for its own use.
+* Names shown by the plugin: the task and location names come from the same
+  table, never from `taskName` / `locationName`. The game-view overlay shows
+  `style` only when it is `melee`, `ranged` or `magic`. Setup names are shown
+  only in the side panel, trimmed to 40 characters.
+* Shortest Path messages: **Show path** posts
   `PluginMessage("shortestpath", "path", {"target": new WorldPoint(x, y, plane)})`
-  when a new selection with a target arrives and auto-path is on, or when the
-  player clicks "Walk there". `PluginMessage("shortestpath", "clear")` clears.
+  with the table's target. With *Auto path on new selection* on (**off by
+  default**) the plugin also posts it when a selection newer than its first
+  sync arrives, except while the player is in the Wilderness, a PvP area, on a
+  PvP world or in an instance (`client.getTopLevelWorldView().isInstance()`).
+  **Clear path** posts `PluginMessage("shortestpath", "clear")` and is enabled
+  only after the plugin posted a route and has not cleared it since, and only
+  until another plugin posts a `"shortestpath"` `"path"` or `"clear"` message;
+  otherwise the button is disabled. A destination the player sets on the
+  world map cannot be detected, so it would be cleared too. The plugin never
+  sends Shortest Path a config override. Shortest Path only draws the route;
+  nothing moves the player.
 
 ## `setups` (written by the app only)
 
@@ -126,7 +170,8 @@ Own-account data only; nothing about other players.
     "selection": { ...a selection object as above, "source": "app" } } ]
 ```
 
-Newest first, at most 60. The plugin lists them in its side panel; "Apply"
+Newest first, at most 60. The plugin lists at most 60 of them in its side
+panel (names trimmed to 40 characters); "Apply"
 posts `setup.selection` back as the current `selection` with
 `source: "plugin"`, `setupId`, `setupName` and a fresh `at`. The app, seeing a
 plugin-sourced selection newer than what it last applied, loads that setup's

@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # wildy-slayer
 
 Zach's Wilderness Slayer helper: a static web app (`web/`) and a RuneLite
@@ -19,7 +21,26 @@ ask whether to deploy.
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep
   it Plugin Hub compliant: Java 11, no reflection, no input injection, no
   menu entries, nothing about other players, sync opt-in with the mandated
-  warning string. Rules are listed in README.md.
+  warning string. Rules are listed in README.md; `AGENTS.md` (imported above)
+  is RuneLite's own rule list, copied unchanged from the example-plugin.
+- Plugin invariants (keep code, README "Rules" and PROTOCOL.md in step):
+  inventory/equipment frozen in the Wilderness, PvP areas and PvP worlds,
+  and nothing pushed until 2 ticks after a login/hop/reconnect; walk targets
+  and shown task/location names only from `Spots.java` (generated from
+  `web/data.js`; `selection.target` is ignored); auto path off by default and
+  never in Wilderness/PvP/instances; "Show path", and "Clear path" enabled
+  only after we drew a route and until we or another plugin cleared or
+  replaced it; server-driven highlights capped, gear/alt ids must be
+  equipable; server text in the panel bounded (60 setups, names 40 chars,
+  errors 60 chars).
+- `Spots.java`: regenerate with `node scripts/gen_spots.mjs` whenever a task
+  or location in `web/data.js` changes (`--check` exits 1 when stale). Per-task
+  `locations` in `data.js` are append-only (add at the end; never remove or
+  reorder) and task slugs never change: released plugin builds resolve
+  `selection.loc` against their own copy of the table.
+- Version: on each Plugin Hub update bump `version` in
+  `runelite-plugin.properties` and `PLUGIN_VERSION` in `WildySlayerPlugin`
+  together (`PluginVersionTest` checks they match).
 - `PROTOCOL.md`: the sync wire format. Change it on both sides or not at all.
 
 ## Services
@@ -53,7 +74,7 @@ ask whether to deploy.
   Zero errors in plugin files is the bar; jar only `com/zlerp/wildyslayer/**`
   plus resources into a scratch jar to check packaging (do not publish it: current
   RuneLite never loads sideloaded jars when started by its launcher, see README
-  Install). If the environment
+  Development). If the environment
   allows repo.runelite.net, `./gradlew jar` is the real build.
 - Nothing in-game can be verified from the sandbox and automating the game is
   forbidden; tell the user what to test in RuneLite.
