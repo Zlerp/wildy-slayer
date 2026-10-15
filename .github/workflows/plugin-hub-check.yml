@@ -66,6 +66,7 @@ jobs:
         run: ./prepare.sh
       - name: package like the hub
         env:
+          PACKAGE_IS_PR: "true"
           PACKAGE_COMMIT_RANGE: ${{ env.HUB_RANGE }}
         run: exec java -XX:+UseParallelGC -cp package.jar net.runelite.pluginhub.packager.Packager
       - name: list built jar
