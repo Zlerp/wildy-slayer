@@ -1,0 +1,2350 @@
+[
+ {
+  "slug": "catablepon",
+  "name": "Catablepon",
+  "image": "Catablepon.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Mazchna only. Stronghold of Security, third level (Pit of Pestilence).",
+  "targets": [
+   {
+    "page": "Catablepon",
+    "ver": "Level 64",
+    "name": "Catablepon (lvl 49-68)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Stronghold of Security, level 3",
+    "region": "Barbarian Village",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Barbarian Village hole, take the ladders down twice, or the Pit of Pestilence portal if you have been before.",
+    "notes": "Rooms of 2-5 catablepon. Ranged/magic safespots behind the tendrils in the north-west room. Level 64s give the most Slayer XP (70)."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Their Weaken glare drains Strength every few casts, so melee gets worse as the task goes; range or mage from a safespot and the drain never matters.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "drain",
+    "text": "Casts Weaken: drains your Strength until 8% + 3 levels are gone. Protect from Magic blocks the spell, not the melee."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Super restore(4)",
+    "why": "Restores the drained Strength if you insist on meleeing"
+   }
+  ],
+  "mechanics": "Attack from a safespot or with Protect from Magic on. The drain stops on its own once about 8% of your Strength is gone, so it is a nuisance rather than a danger.",
+  "tips": [
+   "Top of sceptre drop here, bottom from the flesh crawlers one floor up: a skull sceptre teleports to the Stronghold.",
+   "Short task (20-30): a quick bit of points on a Mazchna rotation."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Short, safe and close to a bank; only Mazchna assigns them.",
+  "aoe": false
+ },
+ {
+  "slug": "cockatrice",
+  "name": "Cockatrice",
+  "image": "Cockatrice.png",
+  "attr": [],
+  "superior": "Cockathrice",
+  "unlock": "20 Defence to wear the mirror shield.",
+  "targets": [
+   {
+    "page": "Cockatrice",
+    "ver": null,
+    "name": "Cockatrice (lvl 37)",
+    "loc": "Fremennik Slayer Dungeon"
+   },
+   {
+    "page": "Moonlight Cockatrice",
+    "ver": null,
+    "name": "Moonlight cockatrice (lvl 49)",
+    "loc": "Neypotzli"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Slayer ring to the dungeon, or fairy ring AJR and walk east.",
+    "notes": "First room past the cave crawlers. No cannon anywhere in this dungeon. Light drops: mystic boots (light), cockatrice head."
+   },
+   {
+    "name": "Neypotzli (Moonlight cockatrice)",
+    "region": "Varlamore",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Perilous Moons started: fairy ring AKR or the Cam Torum minecart, then into Neypotzli.",
+    "notes": "Level 49 moonlight cockatrice count. Multi and cannonable, the only cannon option for this task. Still need the mirror shield."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "37 HP, no defence to speak of. Any melee weapon with the mirror shield in the off-hand; two-handed weapons mean no shield, so do not.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "drain",
+    "text": "Gaze hits 11 and shreds every combat stat when you fight them without a mirror shield or V's shield. Range 5 tiles; they also pre-emptively gaze anyone within 10 tiles who targets them."
+   },
+   {
+    "kind": "special",
+    "text": "Superior Cockathrice uses the same gaze, harder."
+   }
+  ],
+  "need": [
+   {
+    "item": "Mirror shield",
+    "why": "Reflects the gaze; V's shield (Fremennik Exiles) also works. The Slayer helmet does NOT cover this.",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Equip the mirror shield before you click one. Then it is a weak melee monster. Without the shield only a safespot around the big rock to the north saves you, and that is for pures only.",
+  "tips": [
+   "Mazchna and Vannaka only; a tiny, fast task.",
+   "Cockatrice head goes on the wall of your POH; the light mystic boots are the one valuable drop."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast, low-level task once the shield is in hand.",
+  "aoe": false
+ },
+ {
+  "slug": "crabs",
+  "name": "Crabs",
+  "image": "Sand Crab.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Sand Crab",
+    "ver": "Active",
+    "name": "Sand crab (lvl 15)",
+    "loc": "Hosidius"
+   },
+   {
+    "page": "Rock Crab",
+    "ver": "Active",
+    "name": "Rock crab (lvl 13)",
+    "loc": "Rellekka"
+   },
+   {
+    "page": "Ammonite Crab",
+    "ver": null,
+    "name": "Ammonite crab (lvl 25)",
+    "loc": "Fossil Island"
+   },
+   {
+    "page": "Swamp Crab",
+    "ver": null,
+    "name": "Swamp crab (lvl 55)",
+    "loc": "Haunted Woods"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Hosidius shore (sand crabs)",
+    "region": "Kourend",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Xeric's talisman to Xeric's Glade, or Kourend teleport, walk south to the beach; Crabclaw Isle is 10k to enter and quieter.",
+    "notes": "60 HP, hit 1. The classic AFK spot: they go tolerant after 10 minutes, so step away and back. No cannon."
+   },
+   {
+    "name": "Rellekka shore (rock crabs)",
+    "region": "Fremennik",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fremennik boots / Rellekka teleport (enchanted lyre), walk north-west to the beach.",
+    "notes": "50 HP. Cannonable, which is the only reason to pick them over sand crabs."
+   },
+   {
+    "name": "Fossil Island (ammonite crabs)",
+    "region": "Fossil Island",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Digsite pendant to the Mushroom Forest, or the Fossil Island boat; Bone Voyage needed.",
+    "notes": "100 HP each, so fewer kills per task count but more XP per kill. Not cannonable."
+   },
+   {
+    "name": "Haunted Woods (swamp crabs)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring ALQ, walk east; or Slepe.",
+    "notes": "75 HP, hit 1. Quiet alternative near the Slepe teleport."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "They hit 1 and have almost no defence. Whatever trains the stat you want; the task is really a training session.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Stand next to the rocks so they emerge and attack you. After 10 minutes they stop being aggressive: walk out of sight (across the beach or a short teleport) and come back to reset.",
+  "tips": [
+   "Mazchna, Vannaka and Chaeldar only, and a weight-8 task: people block it on Chaeldar because 70-130 of them is slow.",
+   "Gemstone crabs and hermit crabs do not count.",
+   "Wear crush defence (chainbody over platebody) if you take any damage at all."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Zero danger but slow for Slayer XP; worth doing only if you want combat XP anyway.",
+  "aoe": false
+ },
+ {
+  "slug": "flesh-crawlers",
+  "name": "Flesh Crawlers",
+  "image": "Flesh Crawler.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Mazchna only. Stronghold of Security, second level (Catacomb of Famine).",
+  "targets": [
+   {
+    "page": "Flesh Crawler",
+    "ver": "Level 35",
+    "name": "Flesh Crawler (lvl 28-41)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Stronghold of Security, level 2",
+    "region": "Barbarian Village",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Barbarian Village hole, ladder down once, or the Catacomb of Famine portal.",
+    "notes": "Rooms full of crawlers, aggressive to everyone. Hit 1 every 3 ticks. Safespots in the south-west corner of the south-east room."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "25-30 HP and max hit 1: anything works. Their 3-tick attacks are only annoying for the HP bar.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Several crawlers attack at once at any combat level; damage is 1 per hit but constant."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Regen bracelet",
+    "why": "Out-heals their 1s so you never eat"
+   }
+  ],
+  "mechanics": "Stand still with auto-retaliate on and let them come. When they stop being aggressive after 10 minutes, change room and come back.",
+  "tips": [
+   "Bottom of sceptre drop here; grimy ranarr is the drop people farm.",
+   "15-25 assigned: finished in minutes."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Quick, safe, and the herb drops pay for your food.",
+  "aoe": false
+ },
+ {
+  "slug": "ghouls",
+  "name": "Ghouls",
+  "image": "Ghoul.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Priest in Peril.",
+  "targets": [
+   {
+    "page": "Ghoul",
+    "ver": null,
+    "name": "Ghoul (lvl 42)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "West of Canifis (ghoul graveyard)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Kharyrll teleport or Canifis fairy ring CKS, walk west along the river; fairy ring ALQ is also close.",
+    "notes": "Eight-ish ghouls among gravestones. Safespot between the two gravestones and the cross on the east side. Cannon can be set up."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "They run away at low HP and another ghoul takes over, which wastes melee kills. Range or mage from the gravestone safespot and finish the runner before it heals.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Not undead: salve amulet and Crumble Undead do nothing. Ghouls flee when hurt and a fresh one may attack you mid-kill, stealing the Slayer XP if you are under 85 combat."
+   }
+  ],
+  "need": [],
+  "bring": [],
+  "mechanics": "Poison or ranged attacks finish fleeing ghouls. Wait 10 minutes in the area for tolerance so other ghouls stop interrupting, or trap one in the south-west corner against the plant.",
+  "tips": [
+   "Mazchna and Vannaka only, 10-40 assigned.",
+   "Ghoul bone for Rag and Bone Man II; otherwise the drops are nothing."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Short task next to the Canifis bank once you handle the fleeing.",
+  "aoe": false
+ },
+ {
+  "slug": "hill-giants",
+  "name": "Hill Giants",
+  "image": "Hill Giant.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Hill Giant",
+    "ver": "1",
+    "name": "Hill Giant (lvl 28)",
+    "loc": null
+   },
+   {
+    "page": "Cyclops",
+    "ver": "Level 56",
+    "name": "Cyclops (lvl 56-106, Warriors' Guild / Catacombs)",
+    "loc": "Catacombs"
+   },
+   {
+    "page": "Obor",
+    "ver": null,
+    "name": "Obor (lvl 106, boss)",
+    "loc": "Obor"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Edgeville Dungeon",
+    "region": "Edgeville",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Glory to Edgeville, trapdoor by the yew trees, brass key door.",
+    "notes": "The classic spot, 10+ giants, safespot by the fire remains. Cannon allowed. Giant key drop opens Obor's lair next door."
+   },
+   {
+    "name": "Giants' Plateau",
+    "region": "Al Kharid",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Walk north-east from Al Kharid, or ring of dueling to the Duel Arena area and go east/north.",
+    "notes": "Open-air plateau of hill giants with slightly different drops, usually empty."
+   },
+   {
+    "name": "Catacombs of Kourend (dark giants)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Xeric's talisman to Xeric's Heart, or Kourend teleport and the statue.",
+    "notes": "Dark hill giants and cyclopes count; multi, no cannon; dark totem pieces and ancient shards as a bonus."
+   },
+   {
+    "name": "Obor's lair (Edgeville Dungeon)",
+    "region": "Edgeville",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Giant key from a hill giant; the door is in the Edgeville Dungeon giant room.",
+    "notes": "The hill giant boss counts. Hits 20+ through melee prayer with a ranged attack; Protect from Missiles."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "35 HP and no defence; crush is slightly weak (Earth weakness 25% for mages). Anything, with a cannon if you want it over fast.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill giants. If you get a giant key, use the task on Obor: he hits up to 22 with ranged and melee, so pray Protect from Missiles at range or melee him with Protect from Melee and food.",
+  "tips": [
+   "Mazchna and Vannaka (and Krystilia in the Wilderness).",
+   "Big bones, limpwurt roots and a 1/128 giant key on task; Obor's drops include the hill giant club."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast low-level task with an optional boss.",
+  "aoe": false
+ },
+ {
+  "slug": "hobgoblins",
+  "name": "Hobgoblins",
+  "image": "Hobgoblin.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Hobgoblin",
+    "ver": "Hobgoblin",
+    "name": "Hobgoblin (lvl 28)",
+    "loc": null
+   },
+   {
+    "page": "Hobgoblin",
+    "ver": "Hobgoblin (armed)",
+    "name": "Hobgoblin (lvl 42, armed)",
+    "loc": "Edgeville Dungeon"
+   },
+   {
+    "page": "Hobgoblin",
+    "ver": "Hobgoblin (GWD)",
+    "name": "Hobgoblin (lvl 47, GWD)",
+    "loc": "God Wars"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Peninsula west of the Crafting Guild",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Skills necklace to the Crafting Guild, walk west onto the peninsula; or Falador south gate.",
+    "notes": "About 10 hobgoblins by the cow field; safespot from inside the guild's cow pen. Cannon works."
+   },
+   {
+    "name": "Peninsula north-east of the Hosidius vinery",
+    "region": "Kourend",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Kourend teleport or Xeric's Glade, walk east to the coast past the vinery.",
+    "notes": "22 spawns, the most anywhere; limpwurt roots everywhere."
+   },
+   {
+    "name": "Edgeville Dungeon",
+    "region": "Edgeville",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Glory to Edgeville, trapdoor.",
+    "notes": "Five armed level 42 hobgoblins; safespot between the rockslide and the fire remains."
+   },
+   {
+    "name": "Asgarnian Ice Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Port Sarim, the ladder south of the town; or fairy ring AIQ.",
+    "notes": "A handful of hobgoblins in the first rooms, mixed with ice warriors."
+   },
+   {
+    "name": "God Wars Dungeon",
+    "region": "Troll Country",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Trollheim teleport, down the rope.",
+    "notes": "Level 47s in the Bandos area; everything else there attacks you too unless you wear god items."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Under 50 HP and no defence. Melee; a cannon on the Crafting Guild peninsula clears a 90 task in minutes.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill them wherever is closest to your bank. Limpwurt roots are the only drop worth picking up.",
+  "tips": [
+   "Mazchna and Vannaka only.",
+   "Bring a cannon for the peninsula spots if you want it done fast."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Trivial and quick.",
+  "aoe": false
+ },
+ {
+  "slug": "ice-warriors",
+  "name": "Ice warriors",
+  "image": "Ice warrior.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Ice warrior",
+    "ver": "Normal",
+    "name": "Ice warrior (lvl 57)",
+    "loc": null
+   },
+   {
+    "page": "Icelord",
+    "ver": "Melee, 1",
+    "name": "Icelord (lvl 51, Cold War)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Asgarnian Ice Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Port Sarim ladder south of town, or fairy ring AIQ then west.",
+    "notes": "A dozen ice warriors with ice giants in the big room; safespot by the plus-shaped rocks in the north-west."
+   },
+   {
+    "name": "White Wolf Mountain (ground level)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Camelot or Catherby, up the mountain path; the ice warriors are at the dungeon markers north of the tunnel entrance.",
+    "notes": "Aggressive wolves nearby unless your combat level is double theirs. Safespot south of the middle marker."
+   },
+   {
+    "name": "Ruins of Tapoyauik",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Varlamore: fairy ring or Civitas teleport, into the Tapoyauik ruins' middle and lower levels.",
+    "notes": "Newer spawns alongside frost crabs and chilled jellies; cold ruins, no cannon."
+   },
+   {
+    "name": "Ice Queen's Lair (White Wolf Mountain)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Mine the boulder west of the ice warriors (50 Mining), take the southernmost ladder and the south-west path.",
+    "notes": "More warriors around the Ice Queen; mostly out of the way."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "100% weak to Fire: Fire Bolt with chaos gauntlets hits 30 and finishes them in two casts, far faster than melee against their rune-tier armour. Melee works with crush.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Accurate melee from a long aggro range; they cut through d'hide and robes, so keep food or Protect from Melee if you are under 60 Defence."
+   }
+  ],
+  "need": [],
+  "bring": [],
+  "mechanics": "Fire spells. Stand at the Asgarnian safespot and bolt them; nothing else to it.",
+  "tips": [
+   "Mazchna, Vannaka and Krystilia; Icelords in the Ice Troll caves count for Vannaka.",
+   "No drops beyond runes and nats: a points task.",
+   "Krystilia's version is deep Wilderness and usually blocked; this one is harmless."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fire spells make it a five-minute task outside the Wilderness.",
+  "aoe": false
+ },
+ {
+  "slug": "killerwatts",
+  "name": "Killerwatts",
+  "image": "Killerwatt (Passive).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Ernest the Chicken (portal at the top of Draynor Manor). Mazchna only.",
+  "targets": [
+   {
+    "page": "Killerwatt",
+    "ver": "Attacking",
+    "name": "Killerwatt (lvl 55)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Killerwatt plane (Draynor Manor)",
+    "region": "Draynor",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Draynor Manor (Glory to Draynor, walk north), climb to the top floor and step through the portal.",
+    "notes": "Floating orbs that become hostile the moment you click one. No cannon. Hide behind clouds or holes to block their melee; their ranged attack reaches 13 tiles."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Two-tick melee and ranged attacks; the safe play is a cloud safespot with Protect from Missiles and d'hide. Air spells get +60% from their weakness if you mage.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Without insulated boots their ranged and melee hit 15 every 2 ticks; with boots 8 and 6, still fast and accurate."
+   },
+   {
+    "kind": "special",
+    "text": "Once clicked, a killerwatt chases you until it or you die, even if you cancel the attack."
+   }
+  ],
+  "need": [
+   {
+    "item": "Insulated boots",
+    "why": "Halves their max hit (15 to 8). Buy from a Slayer master.",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles for the whole task"
+   }
+  ],
+  "mechanics": "Equip insulated boots. Click one, step behind a cloud so it cannot reach you, and shoot it while praying Missiles; or click with a melee weapon and walk away so it comes to you and you take only melee hits.",
+  "tips": [
+   "Mazchna only; a common skip because the drops are poor apart from the air diamond.",
+   "Do not bring a two-handed bow unless you have the safespot: 2-tick melee hurts."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "High damage for mediocre drops; skip unless you want the diary or air diamond.",
+  "aoe": false
+ },
+ {
+  "slug": "mogres",
+  "name": "Mogres",
+  "image": "Mogre.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Skippy and the Mogres miniquest for the Mudskipper Point ones.",
+  "targets": [
+   {
+    "page": "Mogre",
+    "ver": null,
+    "name": "Mogre (lvl 60)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mudskipper Point",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring AIQ lands on top of them; or Port Sarim and walk south-west.",
+    "notes": "Lure each one by using a fishing explosive on an ominous fishing spot while standing a few tiles back. Safespot by the fairy ring or the STASH unit. Rimmington altar to the north."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "48 HP, melee only, no defence bonuses. Anything kills them; the task is really about luring them.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [
+   {
+    "item": "Fishing explosive",
+    "why": "One per mogre: use it on an ominous fishing spot to make one appear. Buy them from a Slayer master.",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Use a fishing explosive on an ominous fishing spot, step back, kill the mogre that climbs out, repeat. The Lure and Bait options on the spot do nothing.",
+  "tips": [
+   "Mazchna and Vannaka only.",
+   "Flippers and the mudskipper hat are the only drops of note; a mogre kill is a Falador medium diary task.",
+   "Bring a tinderbox and logs: they drop raw fish you can cook on the spot."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Slow per kill but short tasks and zero danger.",
+  "aoe": false
+ },
+ {
+  "slug": "pyrefiends",
+  "name": "Pyrefiends",
+  "image": "Pyrefiend.png",
+  "attr": [
+   "demon",
+   "fiery"
+  ],
+  "superior": "Flaming pyrelord",
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Pyrefiend",
+    "ver": "Level 43",
+    "name": "Pyrefiend (lvl 43-48)",
+    "loc": null
+   },
+   {
+    "page": "Pyrelord",
+    "ver": null,
+    "name": "Pyrelord (lvl 60)",
+    "loc": "Isle of Souls"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Slayer ring to the dungeon, or fairy ring AJR.",
+    "notes": "Second room on the left past the cave crawlers. No cannon in this dungeon."
+   },
+   {
+    "name": "Isle of Souls Dungeon",
+    "region": "Isle of Souls",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Soul Wars portal from Edgeville/Ferox, then the dungeon entrance on the island; or the Isle of Souls teleport scroll.",
+    "notes": "Pyrefiends and stronger pyrelords in a multi, cannonable cave."
+   },
+   {
+    "name": "Smoke Dungeon",
+    "region": "Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Camulet or Nardah carpet, into the Smoke Dungeon west of Pollnivneach.",
+    "notes": "Pyrefiends dotted through the dungeon; facemask needed for the smoke."
+   },
+   {
+    "name": "God Wars Dungeon",
+    "region": "Troll Country",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Trollheim teleport, down the rope.",
+    "notes": "Zamorak followers; wear a Zamorak item so they ignore you."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "45 HP demons: Arclight or any decent melee. Water spells have +100% here if you want to mage; Fire does nothing special.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Their attack is magical melee: Protect from Melee blocks it, but it rolls against your magic defence, so robes or d'hide take less than plate."
+   }
+  ],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill them. Fire-type monsters, so Water spells (not Fire) get the 100% weakness bonus.",
+  "tips": [
+   "Mazchna, Vannaka and Mortimer; Mortimer's modifier tasks make these worth points.",
+   "Mystic gloves (light) and gold bars are the drops.",
+   "Wear d'hide or a slayer helm with robes: their attack checks magic defence."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Quick and safe.",
+  "aoe": false
+ },
+ {
+  "slug": "rockslugs",
+  "name": "Rockslugs",
+  "image": "Rockslug.png",
+  "attr": [],
+  "superior": "Giant rockslug",
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Rockslug",
+    "ver": "Adult",
+    "name": "Rockslug (lvl 29)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Slayer ring to the dungeon, or fairy ring AJR.",
+    "notes": "The cave past the cockatrice. No cannon."
+   },
+   {
+    "name": "Lumbridge Swamp Caves",
+    "region": "Lumbridge",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Lumbridge, into the swamp cave with a rope and a light source (bullseye or sapphire lantern: open flames ignite swamp gas).",
+    "notes": "Rockslugs near the wall beasts; light source required."
+   },
+   {
+    "name": "Dorgesh-Kaan South Dungeon",
+    "region": "Dorgesh-Kaan",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring AJQ (Death to the Dorgeshuun).",
+    "notes": "Quiet spot with cave bugs and molanisks alongside."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "27 HP, hit 4. Any melee; the only mechanic is finishing them off.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [
+   {
+    "item": "Bag of salt",
+    "why": "Finish a rockslug under 5 HP by using a bag of salt on it, one per slug. Brine sabre kills them outright instead. The Slug salter unlock (10 points) salts automatically while you carry salt.",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Hit a rockslug to 4 HP or less, then use a bag of salt on it. Below 5 HP it stops fighting back and wanders off if you do not salt it. Buy Slug salter once and it is a normal kill.",
+  "tips": [
+   "Mazchna and Mortimer only, 30-50 each.",
+   "Mystic gloves (light) is the rare drop; otherwise ores and seeds."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast once you own Slug salter; tedious without it.",
+  "aoe": false
+ },
+ {
+  "slug": "shades",
+  "name": "Shades",
+  "image": "Loar Shade.png",
+  "attr": [
+   "shade",
+   "undead",
+   "spectral"
+  ],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Loar Shade",
+    "ver": "Shade",
+    "name": "Loar Shade (lvl 40)",
+    "loc": "Mort'ton"
+   },
+   {
+    "page": "Shade",
+    "ver": "Catacombs of Kourend",
+    "name": "Shade (lvl 140, Catacombs)",
+    "loc": "Catacombs"
+   },
+   {
+    "page": "Fiyr Shade",
+    "ver": "Shade",
+    "name": "Fiyr Shade (lvl 120)",
+    "loc": "Shade Catacombs"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mort'ton (Loar shadows)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Mort'ton teleport (Shades of Mort'ton started) or fairy ring BKR / Barrows teleport and walk west.",
+    "notes": "Loar shadows wander the village; they die in two hits. By far the fastest way to finish."
+   },
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Xeric's talisman or Kourend statue.",
+    "notes": "Level 140 shades, safespottable, decent Slayer XP (115) and the catacombs tertiary drops."
+   },
+   {
+    "name": "Shade Catacombs (Mort'ton)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Mort'ton, the catacombs under the temple; bronze+ shade keys open deeper doors.",
+    "notes": "Phrin to Urium shades: slower but their remains sell. Riyl safespot in the first steel chest room."
+   },
+   {
+    "name": "Stronghold of Security, level 3",
+    "region": "Barbarian Village",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Stronghold ladders, third level.",
+    "notes": "Level 159 shades giving 5 Slayer XP: avoid."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Undead and spectral: salve amulet and Crumble Undead apply, but their 40% Air weakness means Wind Bolt out-damages Crumble for the same chaos rune. Loar shades die to anything.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Shades drain nothing, but the Stronghold version gives 1 combat XP per 10 damage and 5 Slayer XP per kill: a trap."
+   }
+  ],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill the Loar shadows in Mort'ton. Shade remains can be cremated on the funeral pyres for Firemaking/Prayer XP and shade keys.",
+  "tips": [
+   "Mazchna and Vannaka only.",
+   "Do not do the task in the Stronghold of Security."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Loar shadows make it a two-minute task.",
+  "aoe": false
+ },
+ {
+  "slug": "vampyres",
+  "name": "Vampyres",
+  "image": "Vyrewatch Sentinel (1).png",
+  "attr": [
+   "vampyre"
+  ],
+  "superior": null,
+  "unlock": "Priest in Peril. Chaeldar and above only after 'Actual Vampyre Slayer' (80 points). Tier 2 vyres need silver weapons, tier 3 the Ivandis flail, blisterwood or hallowed/sunspear weapons.",
+  "targets": [
+   {
+    "page": "Vyrewatch Sentinel",
+    "ver": "1",
+    "name": "Vyrewatch Sentinel (lvl 151)",
+    "loc": "Darkmeyer"
+   },
+   {
+    "page": "Vyrewatch",
+    "ver": "Level 87",
+    "name": "Vyrewatch (lvl 87-125)",
+    "loc": "Meiyerditch"
+   },
+   {
+    "page": "Feral Vampyre",
+    "ver": "Level 61",
+    "name": "Feral Vampyre (lvl 61-77)",
+    "loc": "Haunted Woods"
+   },
+   {
+    "page": "Vampyre Juvinate",
+    "ver": "Level 54 (Meiyerditch)",
+    "name": "Vampyre Juvinate (lvl 54, Meiyerditch)",
+    "loc": "Burgh"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Darkmeyer (Vyrewatch Sentinels)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Drakan's medallion to Darkmeyer (Sins of the Father).",
+    "notes": "Sentinels are aggressive unless you wear full vyre noble clothing, hit 17 with melee only, and drop blood shards (1/1500). The task to actually do. Cannonable in places."
+   },
+   {
+    "name": "Meiyerditch (Vyrewatch)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Drakan's medallion to Ver Sinhaza, through the laboratories; or the Meiyerditch mines route.",
+    "notes": "Ordinary vyrewatch, 75 HP; they fly off occasionally. Need the Ivandis flail or better."
+   },
+   {
+    "name": "Slepe (juveniles, vyrewatch)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Drakan's medallion to Slepe.",
+    "notes": "Vampyre juveniles and vyrewatch around the town; Konar can send you here."
+   },
+   {
+    "name": "Vampyrium (Venators)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Reached after the Blood Moon Rises; Drakan's medallion.",
+    "notes": "Venators: tier-3 vyres from The Blood Moon Rises; Mortimer has a separate Venators task."
+   },
+   {
+    "name": "Haunted Woods / Burgh de Rott (feral vampyres)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring ALQ or Burgh de Rott; or the God Wars Dungeon Zamorak side.",
+    "notes": "Tier 1: any weapon hurts them. The option when you have no silver weapon; 40 HP each."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Blisterwood flail or Ivandis flail on crush are the only things that damage vyrewatch and sentinels; sentinels have no defence to speak of and melee only, so Protect from Melee makes Darkmeyer AFK.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Tier 2 vyres (juvinates) need a silver weapon; tier 3 (vyrewatch, sentinels, venators) need the Ivandis flail or better. Normal weapons do nothing, even with Efaritay's aid on tier 3."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Sentinels are permanently aggressive unless you wear full vyre noble outfit; hits of 17."
+   }
+  ],
+  "need": [
+   {
+    "item": "Ivandis flail",
+    "why": "Minimum weapon for vyrewatch and sentinels; Blisterwood flail/sickle, hallowed flail or sunspear are better. Rod of ivandis or any silver weapon is enough for juvinates.",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee at the sentinels"
+   }
+  ],
+  "mechanics": "With Sins of the Father done: Darkmeyer, vyre noble clothing in the bank, blisterwood flail, Protect from Melee, kill sentinels for blood shards. Without it: silver/Ivandis weapon on vyrewatch, or ferals with anything.",
+  "tips": [
+   "Do not toggle 'Actual Vampyre Slayer' until Sins of the Father is done: sentinels are the whole point.",
+   "Blood shards (amulet of blood fury) on task are the money; wear the vyre noble top/legs/shoes to stop aggression when banking.",
+   "Mazchna/Vannaka assign only 10-20 ferals or juvinates: trivial."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Sentinels are an AFK melee task with a 1/1500 blood shard; everything else about vampyres is a chore.",
+  "aoe": false
+ },
+ {
+  "slug": "wall-beasts",
+  "name": "Wall beasts",
+  "image": "Wall beast.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "5 Defence for the spiny helmet. Mazchna only.",
+  "targets": [
+   {
+    "page": "Wall beast",
+    "ver": "Beast",
+    "name": "Wall beast (lvl 49)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Lumbridge Swamp Caves",
+    "region": "Lumbridge",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Lumbridge Swamp, the hole east of the Zanaris shed; rope the first time, light source always (bullseye or sapphire lantern, not an open flame).",
+    "notes": "Wall beasts sit in holes in the cave walls; two spawns close together in the south-west corner, one by the entrance."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "105 HP, hit 4 once the grab is repelled. Melee with the spiny helmet (or slayer helm) on; after the first grab you can swap to a black mask.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Without a spiny helmet or Slayer helmet the beast grabs your head for 18 and you cannot fight back."
+   },
+   {
+    "kind": "special",
+    "text": "Open light sources can ignite swamp gas for heavy damage and leave you in the dark."
+   }
+  ],
+  "need": [
+   {
+    "item": "Spiny helmet",
+    "why": "Blocks the opening grab",
+    "helm": true
+   },
+   {
+    "item": "Light source",
+    "why": "The caves are dark; a bullseye or sapphire lantern is safe from swamp gas",
+    "helm": false
+   },
+   {
+    "item": "Rope",
+    "why": "First visit only, to get down the hole",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Walk onto the tile in front of a hole with the helmet on, repel the grab, then kill it. Run between the two south-west spawns; killing one respawns the others.",
+  "tips": [
+   "Mazchna only, 10-20 per task.",
+   "Mystic hat (light) is the one good drop; guam leaves otherwise."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Short and safe with the helmet on.",
+  "aoe": false
+ },
+ {
+  "slug": "ankou",
+  "name": "Ankou",
+  "image": "Ankou.png",
+  "attr": [
+   "undead",
+   "spectral"
+  ],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Ankou",
+    "ver": "Level 86",
+    "name": "Ankou (lvl 75-98)",
+    "loc": null
+   },
+   {
+    "page": "Ankou",
+    "ver": "Level 95",
+    "name": "Ankou (lvl 95, Catacombs/Stronghold Slayer Cave)",
+    "loc": "Catacombs"
+   },
+   {
+    "page": "Ankou",
+    "ver": "Level 75",
+    "name": "Ankou (lvl 75, Stronghold of Security)",
+    "loc": "Stronghold of Security"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman (Xeric's Heart) or the Kourend statue; ankou are in the north-east.",
+    "notes": "Multi and 1x1: bursts, barrages or a venator bow stack them. No cannon. Catacomb totem pieces and shards."
+   },
+   {
+    "name": "Stronghold Slayer Cave",
+    "region": "Gnome Stronghold",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Spirit tree or Gnome glider to the Stronghold, cave entrance by Nieve.",
+    "notes": "Single-way, cannonable, right next to Nieve; the usual spot for a Nieve/Duradel task."
+   },
+   {
+    "name": "Stronghold of Security, level 4",
+    "region": "Barbarian Village",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Barbarian Village hole, down to the Sepulchre of Death (ladders or the portal).",
+    "notes": "Level 75 ankou, cannonable, safespots everywhere."
+   },
+   {
+    "name": "Deepfin Mine",
+    "region": "Sailing",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Reached by boat (Sailing).",
+    "notes": "Newer spawns of level 98 ankou near the mine."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Zero defence bonuses and a weak, inaccurate melee attack. Melee with a salve (ei) is fastest in singles; in the Catacombs they are a 1x1 multi burst target.",
+  "pray": "Protect from Melee",
+  "hazards": [],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Only if you keep Protect from Melee up; most players just tank their 8s"
+   }
+  ],
+  "mechanics": "Kill them. Salve amulet beats a slayer helm on them (undead) and does not stack with it. Death runes, blood runes and the Catacombs tertiaries are the drops.",
+  "tips": [
+   "Vannaka, Konar, Nieve, Duradel (and Krystilia). 'Ankou very much' (100 points) extends them to 91-150, which is only worth it as a burst task in the Catacombs.",
+   "Good Larran's/brimstone-key fodder: fast kills, decent runes."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Quick, safe, nothing to think about.",
+  "aoe": true
+ },
+ {
+  "slug": "basilisks",
+  "name": "Basilisks",
+  "image": "Basilisk.png",
+  "attr": [],
+  "superior": "Monstrous basilisk",
+  "unlock": "20 Defence for the mirror shield. Nieve/Duradel/Konar only after 'Basilocked' (80 points). Basilisk Knights need The Fremennik Exiles.",
+  "targets": [
+   {
+    "page": "Basilisk",
+    "ver": null,
+    "name": "Basilisk (lvl 61)",
+    "loc": "Fremennik Slayer Dungeon"
+   },
+   {
+    "page": "Basilisk Knight",
+    "ver": null,
+    "name": "Basilisk Knight (lvl 204)",
+    "loc": "Jormungand"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Jormungand's Prison (Basilisk Knights)",
+    "region": "Fremennik",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fremennik Exiles done: slayer ring or AJR to the Fremennik Slayer Dungeon and the entrance to the prison inside, or the Rellekka boat.",
+    "notes": "300 HP knights, melee and magic up to 20, match your attack speed. Mirror shield mandatory. Basilisk jaw 1/1000 on task (1/5000 off)."
+   },
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring or fairy ring AJR.",
+    "notes": "Ordinary basilisks, 75 HP, melee hits of 5 that rarely land. No cannon in this dungeon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Knights have 300 HP and middling defence; melee on stab or slash with a one-handed weapon so the mirror shield stays on. Ordinary basilisks die to anything with a shield.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "drain",
+    "text": "Gaze without a mirror shield or V's shield hits hard and drains every combat stat."
+   },
+   {
+    "kind": "magic",
+    "text": "Knights cast magic for up to 20 when you are out of melee range; switch to Protect from Magic when they stand off."
+   }
+  ],
+  "need": [
+   {
+    "item": "Mirror shield",
+    "why": "Required for every basilisk; V's shield (Fremennik Exiles) is the upgrade. The Slayer helmet does NOT cover it.",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Knights hit 20 through either style; pray the one they are using"
+   }
+  ],
+  "mechanics": "Shield on first. At the knights: melee with Protect from Melee, swap to Protect from Magic when one attacks from range, and the jaw plus Neitiznot helm makes the faceguard.",
+  "tips": [
+   "Skip the ordinary basilisks: thin drops. Do the task once you can fight knights.",
+   "Knights are 1/1000 for the jaw on task and drop good alchables; a weight-5-7 task worth keeping once Exiles is done."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Basilisk Knights on task are the way to a Neitiznot faceguard; plain basilisks are a skip.",
+  "aoe": false
+ },
+ {
+  "slug": "brine-rats",
+  "name": "Brine rats",
+  "image": "Brine rat.png",
+  "attr": [
+   "rat"
+  ],
+  "superior": null,
+  "unlock": "Olaf's Quest. Bring a spade to dig into the cavern.",
+  "targets": [
+   {
+    "page": "Brine rat",
+    "ver": null,
+    "name": "Brine rat (lvl 70)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Brine Rat Cavern",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring DKS to Snowy Hunter area, dig with a spade at the mound south-west of the Hunter area (Olaf's Quest).",
+    "notes": "One cave of brine rats. Cannonable. Safespots behind the black bones in the south-east and the north-west corner."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "50 HP and low defence but 9 max hits with good accuracy: melee in decent armour, or range from the bone safespots.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Hit 9 fairly often; bring food or defence under 70."
+   }
+  ],
+  "need": [
+   {
+    "item": "Spade",
+    "why": "To dig into the cavern",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "If you pray melee"
+   }
+  ],
+  "mechanics": "Dig in, cannon or safespot them, bank the brine sabre if it drops. Rat bone weapons get +10 max hit here.",
+  "tips": [
+   "Vannaka, Chaeldar, Konar and Nieve.",
+   "Brine sabre drop; raw fish and bones drops can be cooked on Olaf's fire outside.",
+   "Bones to Peaches tablets turn the bone drops into food."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Single cave, cannonable, close to a fairy ring.",
+  "aoe": false
+ },
+ {
+  "slug": "crocodiles",
+  "name": "Crocodiles",
+  "image": "Crocodile.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Vannaka only.",
+  "targets": [
+   {
+    "page": "Crocodile",
+    "ver": "Land",
+    "name": "Crocodile (lvl 63)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "River Elid south of Pollnivneach",
+    "region": "Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Magic carpet to Pollnivneach, walk south to the river; or Nardah and walk west.",
+    "notes": "Stand directly south of the small island so crocodiles come to you from the water. Cactus safespot west of the Nardah carpet."
+   },
+   {
+    "name": "Ruins of Unkah",
+    "region": "Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring DLQ then south, or the Shantay Pass and walk south along the coast.",
+    "notes": "Safespot on the wall east of the ruins; no bank nearby, bring waterskins."
+   },
+   {
+    "name": "North of Sophanem (river)",
+    "region": "Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Pharaoh's sceptre to Jaldraocht, or the Sophanem teleport (Contact!).",
+    "notes": "Altar inside the city gate for prayer and a sink for waterskins."
+   },
+   {
+    "name": "South of the Ruins of Ullek",
+    "region": "Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring AKQ or the Ullek area via Sophanem.",
+    "notes": "12 spawns in a grassy riverbank where you do not lose water."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "62 HP, slash attack, low defence. Melee with Protect from Melee or food; safespot with range if you prefer.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Desert heat: carry waterskins or stay on the grass near the water."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Aggressive from several tiles, which is useful: they walk out of the river to you."
+   }
+  ],
+  "need": [
+   {
+    "item": "Waterskin(4)",
+    "why": "Desert heat damage unless you stay on the Ullek grass",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Stand where they path to you, kill them, drop bones. Nothing drops but bones and the rare herb.",
+  "tips": [
+   "Vannaka only, weight 6, 40-90. One of the few truly pointless tasks: skip when you have the points.",
+   "Kebabs from Ali the Kebab Seller for 3 coins are the desert's cheap food."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Slow for no loot; most players skip it on Vannaka.",
+  "aoe": false
+ },
+ {
+  "slug": "harpie-bug-swarms",
+  "name": "Harpie Bug Swarms",
+  "image": "Harpie Bug Swarm.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "33 Firemaking to light the bug lantern. Vannaka only.",
+  "targets": [
+   {
+    "page": "Harpie Bug Swarm",
+    "ver": null,
+    "name": "Harpie Bug Swarm (lvl 46)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Karamja, south of Brimhaven (east of the Nature Altar area)",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Brimhaven teleport (house or Ardougne boat), walk south past the dungeon entrance; or fairy ring CKR and walk north.",
+    "notes": "A swarm of swarms along the path; aggressive until you are combat 93. Cannon can be set up."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "25 HP each but accurate 6s: melee with Protect from Melee, or just food. A cannon finishes a 90 task very fast.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Very accurate melee, up to 6, from several at once if you are under 93 combat."
+   }
+  ],
+  "need": [
+   {
+    "item": "Bug lantern",
+    "why": "Must be lit (33 Firemaking) AND equipped in the shield slot or you cannot damage them. Buy from a Slayer master.",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Nature rune",
+    "why": "Many alchable drops; alch to save inventory"
+   }
+  ],
+  "mechanics": "Light the bug lantern with a tinderbox, equip it (shield slot, so one-handed weapon), kill swarms. If it goes out, relight it.",
+  "tips": [
+   "Vannaka only.",
+   "Fire runes drop constantly; alch the rest of the loot and keep the fire runes."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy mid-level task once the lantern is lit.",
+  "aoe": false
+ },
+ {
+  "slug": "infernal-mages",
+  "name": "Infernal Mages",
+  "image": "Infernal Mage.png",
+  "attr": [],
+  "superior": "Malevolent Mage",
+  "unlock": "Priest in Peril (Slayer Tower).",
+  "targets": [
+   {
+    "page": "Infernal Mage",
+    "ver": null,
+    "name": "Infernal Mage (lvl 66)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Slayer Tower, first floor",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Slayer ring to the tower; up the south-east stairs (past the banshees, earmuffs on) or the 18 Agility window shortcut.",
+    "notes": "About ten mages in the east rooms. Protect from Magic negates them entirely. No cannon in the tower."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "60 HP, no melee defence, and their only attack is magic: melee them with Protect from Magic on and nothing touches you.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Accurate Fire Bolt-style attacks up to 8; Protect from Magic removes all of it."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic for the task"
+   },
+   {
+    "item": "Earmuffs",
+    "why": "The banshees on the way up scream if you have no slayer helm"
+   }
+  ],
+  "mechanics": "Pray magic, melee them. Fire ruby, dark mystic hat and boots are the drops to hope for.",
+  "tips": [
+   "Vannaka and Mortimer only.",
+   "Wear the slayer helm: it covers the banshees you run past."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Harmless with Protect from Magic and right by the tower entrance.",
+  "aoe": false
+ },
+ {
+  "slug": "molanisks",
+  "name": "Molanisks",
+  "image": "Molanisk.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Death to the Dorgeshuun. Vannaka only.",
+  "targets": [
+   {
+    "page": "Molanisk",
+    "ver": null,
+    "name": "Molanisk (lvl 51)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Dorgesh-Kaan South Dungeon",
+    "region": "Dorgesh-Kaan",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring AJQ lands in the dungeon.",
+    "notes": "Ten molanisks stuck to the cave walls. Ring the Slayer bell next to one to make it drop off; a light source is needed. Safespot on the big rock south of the fairy ring."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "52 HP, hit 5, little defence. Anything; the bell is the only mechanic.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [
+   {
+    "item": "Slayer bell",
+    "why": "Ring it beside a molanisk on the wall to make it attackable; from a Slayer master",
+    "helm": false
+   },
+   {
+    "item": "Light source",
+    "why": "The dungeon is dark",
+    "helm": false
+   }
+  ],
+  "bring": [],
+  "mechanics": "Walk to a molanisk on the wall, ring the bell, kill it, move to the next. Mystic hat (dark) is the rare drop.",
+  "tips": [
+   "Vannaka only, 40-50 assigned: ten spawns, so it takes a few rounds.",
+   "Cave bugs and rockslugs share the dungeon if Spria or Mazchna want those."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Short and safe, if a little slow for ten spawns.",
+  "aoe": false
+ },
+ {
+  "slug": "moss-giants",
+  "name": "Moss giants",
+  "image": "Moss giant.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Moss giant",
+    "ver": "Level 42",
+    "name": "Moss giant (lvl 42)",
+    "loc": null
+   },
+   {
+    "page": "Bryophyta",
+    "ver": null,
+    "name": "Bryophyta (lvl 128, boss)",
+    "loc": "Bryophyta"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Varrock Sewers",
+    "region": "Varrock",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Varrock teleport, the manhole east of the palace, east end of the sewers.",
+    "notes": "Several giants, cannonable, safespots; Bryophyta's lair door is here (mossy key the first time)."
+   },
+   {
+    "name": "Brimhaven Dungeon",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Brimhaven teleport or Karamja glider; 875 coins to Saniboch; the giants are near the entrance.",
+    "notes": "Quick and cannonable, next to the red dragons and fire giants."
+   },
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Xeric's talisman or the Kourend statue; moss giants in the north-west.",
+    "notes": "Multi, no cannon, totem pieces and shards."
+   },
+   {
+    "name": "Moss Giant Island (west of Brimhaven)",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Brimhaven, swing across on the ropes (10 Agility).",
+    "notes": "Four giants, usually empty."
+   },
+   {
+    "name": "Bryophyta's lair (Varrock Sewers)",
+    "region": "Varrock",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Varrock Sewers east end; a mossy key opens the door the first time.",
+    "notes": "The moss giant boss counts: mossy keys are 1/8 from her on task. Summons Growthlings you must chop with an axe."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "60 HP and zero defence in every style; melee is simplest, Fire spells get +50%. Cannon if you want it over.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill giants; keep the mossy keys (1/75 on task) and use the task on Bryophyta for her 1/8 key rate and the Bryophyta's essence.",
+  "tips": [
+   "Vannaka (and Krystilia). 100-150 only from Krystilia; Vannaka gives 40-90.",
+   "Bring an axe for Bryophyta's growthlings."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy, cannonable, with a cheap boss attached.",
+  "aoe": false
+ },
+ {
+  "slug": "ogres",
+  "name": "Ogres",
+  "image": "Ogre.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Vannaka only.",
+  "targets": [
+   {
+    "page": "Ogre",
+    "ver": "Level 53",
+    "name": "Ogre (lvl 53-63)",
+    "loc": null
+   },
+   {
+    "page": "Ogress Warrior",
+    "ver": "1",
+    "name": "Ogress Warrior (lvl 82)",
+    "loc": "Corsair"
+   },
+   {
+    "page": "Zogre",
+    "ver": null,
+    "name": "Zogre (lvl 44)",
+    "loc": "Jiggig"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Combat Training Camp (north of Ardougne)",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Ardougne teleport, walk north; Biohazard needed for the gate.",
+    "notes": "Caged ogres: range or mage them through the fence with no risk at all."
+   },
+   {
+    "name": "West of Yanille / Gu'Tanoth",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Watchtower teleport or Yanille house; the ogres wander west of town and in Gu'Tanoth.",
+    "notes": "Open-air ogres, cannonable; the wiki's pick for melee."
+   },
+   {
+    "name": "Corsair Cove Dungeon (ogress warriors and shamans)",
+    "region": "Feldip",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Corsair Cove (Dragon Slayer I ship or fairy ring AIR), the dungeon under the cove; Corsair Curse started or 10 Agility.",
+    "notes": "Multi, cannonable, 82 HP ogresses that drop rune items and the shaman's magic drops. The task to actually do."
+   },
+   {
+    "name": "Jiggig (zogres and skogres)",
+    "region": "Feldip",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring BKP or Feldip teleport; Zogre Flesh Eaters started.",
+    "notes": "Zogres count but inflict disease: bring a relicym's balm. Only for the ogre coffin keys."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Ogres are crush-weak but hit 7-8 and are 2x2; range them from the training camp cage or cannon the ogress cave. Melee is fine at the warriors with Protect from Melee.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "disease",
+    "text": "Zogres and skogres at Jiggig can give you disease (stat drain over time); Relicym's balm cures it."
+   },
+   {
+    "kind": "magic",
+    "text": "Ogress shamans in Corsair Cove cast magic for 8s."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "If you melee the ogress warriors"
+   }
+  ],
+  "mechanics": "Cannon the Corsair Cove dungeon for drops, or range the caged ogres at the training camp for zero-risk kills. Jogres do not count.",
+  "tips": [
+   "Vannaka only, 40-90.",
+   "Ensouled ogre heads with Adept Reanimation (41 Magic) count too.",
+   "Ogress warriors drop rune armour pieces and the shamans drop mystic; bring nature runes."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Zero-risk at the cage or profitable in Corsair Cove.",
+  "aoe": false
+ },
+ {
+  "slug": "otherworldly-beings",
+  "name": "Otherworldly beings",
+  "image": "Otherworldly being.png",
+  "attr": [
+   "spectral"
+  ],
+  "superior": null,
+  "unlock": "Lost City. Vannaka only.",
+  "targets": [
+   {
+    "page": "Otherworldly being",
+    "ver": null,
+    "name": "Otherworldly being (lvl 64)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Zanaris, south of the bank",
+    "region": "Zanaris",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring to Zanaris (any ring, or the Lumbridge swamp shed with a dramen staff); they are by the flower pond south of the bank.",
+    "notes": "Six beings around the pond. Safespot across the pond: stand right beside it on the north or south side and corner-trap them."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "66 HP, melee only, no defence bonuses. Range or mage across the pond and they never reach you; melee works too with a bit of food.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Stand next to the pond and attack the ones on the other side; three of them never retreat if you stay on the edge. Bank is 20 tiles away.",
+  "tips": [
+   "Vannaka only, 40-90.",
+   "Herbs, runes and the ring of forging materials; the Ectoplasmator gives prayer XP (spectral)."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Safespot next to a bank: a relaxing task.",
+  "aoe": false
+ },
+ {
+  "slug": "sea-snakes",
+  "name": "Sea snakes",
+  "image": "Sea Snake Young.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Royal Trouble (started). Vannaka only.",
+  "targets": [
+   {
+    "page": "Sea Snake Young",
+    "ver": null,
+    "name": "Sea snake young (lvl 90)",
+    "loc": null
+   },
+   {
+    "page": "Sea Snake Hatchling",
+    "ver": null,
+    "name": "Sea snake hatchling (lvl 62)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Miscellania and Etceteria Dungeon",
+    "region": "Fremennik Isles",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring CIP to Miscellania, into the dungeon below the castle; or the Fremennik Isles boat.",
+    "notes": "Hatchlings (1x1, poison 5) and young (2x2, poison 7) through the cave. Single-way, cannon allowed. Big bones from the young."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "85 HP, no defence bonuses, crush attack. Melee with Protect from Melee, or a cannon to speed it up.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "poison",
+    "text": "Both variants poison, hatchlings starting at 5, young at 7."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Antidote++(4)",
+    "why": "Poison from every bite; any antipoison works"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee if you want"
+   }
+  ],
+  "mechanics": "Antipoison up, melee or cannon through the dungeon. Drops are bones and nothing else.",
+  "tips": [
+   "Vannaka only, weight 6, 40-90.",
+   "A common skip: slow, poison, no loot."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Poison and no drops; skip once you have points to spare.",
+  "aoe": false
+ },
+ {
+  "slug": "terror-dogs",
+  "name": "Terror dogs",
+  "image": "Terror dog (level 100).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Lair of Tarn Razorlor miniquest (Haunted Mine). Vannaka only.",
+  "targets": [
+   {
+    "page": "Terror dog",
+    "ver": "Level 100",
+    "name": "Terror dog (lvl 100-110)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Tarn's Lair (below the Haunted Mine)",
+    "region": "Morytania",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Haunted Mine entrance (Mort'ton or fairy ring BKR, then north-west), through the lair to Tarn's room; the dogs are in the room south of it.",
+    "notes": "Multi: several accurate dogs at once, and the room drains prayer 1 point per 2 ticks. Hide in Tarn's room north until they go tolerant; safespot through the doorway with range."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Accurate melee hits of 11 from several at once in multi, but low defence: range or mage from Tarn's room doorway so only one can reach you.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Multi-combat: three or four dogs attack at once, each hitting 11 accurately."
+   },
+   {
+    "kind": "prayer",
+    "text": "The dogs' room drains prayer constantly, so protection prayers do not last."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Shark",
+    "why": "You will be tanking; bring real food"
+   }
+  ],
+  "mechanics": "Walk into Tarn's room, wait for the dogs to lose aggression (log out and in to check), then fight them one at a time or safespot through the doorway with the dog on the tile in front of it.",
+  "tips": [
+   "Vannaka only, 20-45 assigned. Granite helmet is the unique drop.",
+   "Not the same task as Dogs."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Dangerous for mid-levels and the drops are poor; skip unless you want the granite helm.",
+  "aoe": false
+ },
+ {
+  "slug": "werewolves",
+  "name": "Werewolves",
+  "image": "Werewolf (Boris).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Priest in Peril. Vannaka only.",
+  "targets": [
+   {
+    "page": "Werewolf",
+    "ver": "Boris",
+    "name": "Werewolf (lvl 88, Canifis)",
+    "loc": "Canifis"
+   },
+   {
+    "page": "Werewolf",
+    "ver": "God Wars Dungeon (1)",
+    "name": "Werewolf (lvl 93, God Wars Dungeon)",
+    "loc": "God Wars"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Canifis",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Kharyrll teleport or fairy ring CKS; the villagers are the werewolves.",
+    "notes": "Attack a villager and it transforms into a level 88 werewolf; it must be killed transformed to count. Cannon in the middle of town while you do the rooftop course is the classic trick."
+   },
+   {
+    "name": "God Wars Dungeon",
+    "region": "Troll Country",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Trollheim teleport, down the rope; the Zamorak area.",
+    "notes": "Level 93 werewolves, aggressive unless you wear a Zamorak item. Only if you are there anyway."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "100 HP, slash attack, little defence. Melee them transformed with Protect from Melee, or cannon the town.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Killing one in human form (Wolfbane equipped) does NOT count for the task; let them transform."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee; or just food"
+   }
+  ],
+  "mechanics": "Do not wield Wolfbane. Attack a villager, kill the werewolf it becomes. Set a cannon by the bank and run the Canifis rooftop course to turn the town into a multi area for the cannon.",
+  "tips": [
+   "Vannaka only, 30-60.",
+   "Wolf bones every kill; the werewolf drop table has nothing else of note."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast with a cannon in town and a bank next door.",
+  "aoe": false
+ },
+ {
+  "slug": "ice-giants",
+  "name": "Ice giants",
+  "image": "Ice giant.png",
+  "attr": [],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Ice giant",
+    "ver": "1",
+    "name": "Ice giant (lvl 53)",
+    "loc": null
+   },
+   {
+    "page": "Eldric the Ice King",
+    "ver": null,
+    "name": "Eldric the Ice King (Royal Titans boss)",
+    "loc": "Royal Titans"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Asgarnian Ice Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Port Sarim ladder or fairy ring AIQ, past the hobgoblins and ice warriors.",
+    "notes": "A dozen giants in the big room with the ice warriors. Cannonable, several safespots."
+   },
+   {
+    "name": "White Wolf Mountain (ground level)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "From the ice warriors, mine the boulder (50 Mining), down the southern ladder, south-west path, up again.",
+    "notes": "A few giants reachable only through the mine; the first two can be safespotted at the trees."
+   },
+   {
+    "name": "Royal Titans (Eldric the Ice King)",
+    "region": "Ice Mountain",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "The Royal Titans lair at the Ice Mountain / Dwarven area entrance; a duo boss.",
+    "notes": "Eldric counts for a Vannaka ice giant task; Branda does not. Boss-level danger."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "70 HP, slash attack, no defence bonuses. Melee; Fire spells have +100% if you mage. Cannon in the Asgarnian dungeon.",
+  "pray": "Protect from Melee",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Kill giants in the Asgarnian Ice Dungeon; big bones are the drop. Or take the task to the Royal Titans for Eldric's loot.",
+  "tips": [
+   "Vannaka (and Krystilia). Vannaka's 30-80 is quick in the Asgarnian dungeon.",
+   "Nothing drops but big bones: a points task."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy and cannonable; the Wilderness version is the one people block.",
+  "aoe": false
+ },
+ {
+  "slug": "lesser-demons",
+  "name": "Lesser demons",
+  "image": "Lesser demon.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": null,
+  "unlock": null,
+  "targets": [
+   {
+    "page": "Lesser demon",
+    "ver": "Level 82",
+    "name": "Lesser demon (lvl 82)",
+    "loc": null
+   },
+   {
+    "page": "Lesser demon",
+    "ver": "Level 87",
+    "name": "Lesser demon (lvl 87, Catacombs)",
+    "loc": "Catacombs"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Chasm of Fire, top floor",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring DJR, walk south-east; or Kourend teleport. Shayzien favour requirement was removed.",
+    "notes": "Multi, cannonable, a fairy ring outside; the wiki's pick. Safespots along the walls."
+   },
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Xeric's talisman or the Kourend statue; demons in the south-east.",
+    "notes": "Level 87s in multi, no cannon; totem pieces and shards."
+   },
+   {
+    "name": "Taverley Dungeon (west of the black demons)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Falador teleport and walk north, or the 70 Agility pipe; the demons are past the blue dragons.",
+    "notes": "A few lesser demons near the blue dragon room."
+   },
+   {
+    "name": "Karamja Volcano",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Karamja glider or Brimhaven, down the volcano into the Crandor side.",
+    "notes": "The F2P spot; a few demons and nothing else."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "79 HP, slash attack, zero defence bonuses: Arclight/Emberlight melee, or a cannon at the Chasm of Fire. Water spells get +40%.",
+  "pray": "Protect from Melee",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Cannon or melee at the Chasm of Fire. Rune med helm and a few alchables.",
+  "tips": [
+   "Vannaka and Chaeldar (and Krystilia). Below-average drops; fine XP.",
+   "Zakl'n Gritch in the God Wars Dungeon counts if you are there."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast and cannonable; just not profitable.",
+  "aoe": false
+ }
+]

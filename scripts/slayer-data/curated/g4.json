@@ -1,0 +1,2418 @@
+[
+ {
+  "slug": "abyssal-demons",
+  "name": "Abyssal demons",
+  "image": "Abyssal demon.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": "Greater abyssal demon",
+  "unlock": "Priest in Peril (or Fairytale II for Abyss access). Extend with 'Augment my abbies' (100 points).",
+  "targets": [
+   {
+    "page": "Abyssal demon",
+    "ver": "Catacombs of Kourend",
+    "name": "Abyssal demon (Catacombs)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Abyssal demon",
+    "ver": "Standard",
+    "name": "Abyssal demon (lvl 124)",
+    "loc": null
+   },
+   {
+    "page": "Greater abyssal demon",
+    "ver": null,
+    "name": "Greater abyssal demon (superior)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman to Xeric's Heart, or Kourend Castle teleport then the statue.",
+    "notes": "The burst/barrage spot: 1x1 demons in multi, no cannon. Back into a corner so they cannot teleport behind you; goading potion or Dinh's bulwark to make them aggressive. Catacombs drop table (dark totem pieces)."
+   },
+   {
+    "name": "Slayer Tower (third floor and task-only basement)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring to the tower, or Kharyrll / Salve Graveyard teleport and walk.",
+    "notes": "Single-way, so one at a time with melee and an expeditious bracelet. Morytania Hard diary gives the basement a 10% chance of a second roll. Cannon allowed."
+   },
+   {
+    "name": "Abyssal Area (Abyss)",
+    "region": "Abyss",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring ALR, or the Abyssal Sire area via the Mage of Zamorak's rift.",
+    "notes": "Few spawns, single-way. Only worth it as the way to the Abyssal Sire, who counts for the task."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "1x1 and 0 magic defence: Smoke Barrage or Burst stacks them in the Catacombs (Smoke over Ice: frozen demons that teleport away will not walk back). Arclight or Emberlight melee in single-way spots.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "teleport",
+    "text": "They teleport around and can teleport you up to 20 tiles away; a Teleport anchoring scroll stops it, or keep Auto Retaliate on."
+   },
+   {
+    "kind": "special",
+    "text": "The superior Greater abyssal demon teleports behind you and hits up to 27 unprotected; pray melee."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Teleport anchoring scroll",
+    "why": "Read once; you are never teleported by abyssal demons again"
+   },
+   {
+    "item": "Divine super combat potion(4)",
+    "why": "If meleeing single-way"
+   }
+  ],
+  "mechanics": "Pray melee the whole time. In the Catacombs, stand in a corner so only two tiles can reach you, make them aggressive and barrage the pile; in the Slayer Tower kill them one by one with a demonbane weapon. Anchoring scroll first if you have never read one.",
+  "tips": [
+   "Extend them early: one of the best XP tasks in the game.",
+   "Whip 1/512, abyssal dagger very rare; soul bearer for the ensouled heads, herb sack for the herbs.",
+   "Konar at the Slayer Tower or Abyss is slow: melee with an expeditious bracelet.",
+   "Abyssal Sire counts if you want profit over XP."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast, extendable, and the demons drop the whip.",
+  "aoe": true
+ },
+ {
+  "slug": "fossil-island-wyverns",
+  "name": "Fossil Island Wyverns",
+  "image": "Spitting Wyvern.png",
+  "attr": [
+   "dragon"
+  ],
+  "superior": null,
+  "unlock": "Bone Voyage and Elemental Workshop I. 'Stop the Wyvern' (500 points) blocks them without a block slot; 'Wyver-nother two' (100) extends to 55-75.",
+  "targets": [
+   {
+    "page": "Spitting Wyvern",
+    "ver": null,
+    "name": "Spitting Wyvern (lvl 139)",
+    "loc": null
+   },
+   {
+    "page": "Long-tailed Wyvern",
+    "ver": null,
+    "name": "Long-tailed Wyvern (lvl 152)",
+    "loc": null
+   },
+   {
+    "page": "Ancient Wyvern",
+    "ver": null,
+    "name": "Ancient Wyvern (lvl 210, 82 Slayer)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Wyvern Cave (task-only cave)",
+    "region": "Fossil Island",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Digsite pendant to the House on the Hill, then the Mushroom Forest cave entrance; or the magic mushtree.",
+    "notes": "Smaller task-only area with the three 66-Slayer wyverns. Fossil storage box at the entrance. Cannon allowed."
+   },
+   {
+    "name": "Wyvern Cave (main cave, Ancient Wyverns)",
+    "region": "Fossil Island",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Same entrance, follow the cave down.",
+    "notes": "All four types incl. Ancient Wyverns (82 Slayer). Taloned and Ancient use typeless ranged from any distance: avoid them."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Spitting Wyverns are the pick: melee them at melee distance so they do not spit, Protect from Missiles for the weak ranged hit. 50 stab defence is their weakest melee side; a Dragon hunter lance is ideal.",
+  "pray": "Protect from Missiles (Protect from Melee for Long-tailed)",
+  "hazards": [
+   {
+    "kind": "icebreath",
+    "text": "Icy breath hits 50+ and freezes you unless you carry an Elemental or Mind shield, Dragonfire shield, Dragonfire ward or Ancient wyvern shield. Antifire potions and the Anti-dragon shield do NOT work. Protect from Magic only halves it."
+   },
+   {
+    "kind": "ranged",
+    "text": "Taloned and Ancient Wyverns use a typeless ranged attack from any distance; Long-tailed only when you are out of melee range."
+   }
+  ],
+  "need": [
+   {
+    "item": "Elemental shield",
+    "why": "Or Mind shield, Dragonfire shield, Dragonfire ward or Ancient wyvern shield: the only things that reduce the icy breath",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer the whole task"
+   },
+   {
+    "item": "Dragon hunter lance",
+    "why": "Dragonbane bonus on every wyvern if you own one"
+   }
+  ],
+  "mechanics": "Wyvern shield in the shield slot, Protect from Missiles, stand in melee range of Spitting Wyverns and kill them one at a time. Never fight Taloned or Ancient ones for a normal task. Bank fossils at the storage box by the entrance.",
+  "tips": [
+   "Tiny task (5-50) for mediocre XP and loot: many buy 'Stop the Wyvern' or block it.",
+   "The shield slot is taken, so no defender: a two-hander is not an option either.",
+   "Spitting Wyverns only; Long-tailed are fine if you stay in melee range with Protect from Melee."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Slow, no good drops and a mandatory shield; skip or buy 'Stop the Wyvern'.",
+  "aoe": false
+ },
+ {
+  "slug": "lesser-nagua",
+  "name": "Lesser Nagua",
+  "image": "Sulphur Nagua.png",
+  "attr": [
+   "spectral"
+  ],
+  "superior": null,
+  "unlock": "Perilous Moons (Neypotzli); The Heart of Darkness for the Ruins of Tapoyauik; The Final Dawn for the Crypt of Tonali. Only Chaeldar and Konar assign them.",
+  "targets": [
+   {
+    "page": "Sulphur Nagua",
+    "ver": null,
+    "name": "Sulphur Nagua (lvl 98)",
+    "loc": "Neypotzli"
+   },
+   {
+    "page": "Frost Nagua",
+    "ver": null,
+    "name": "Frost Nagua (lvl 104)",
+    "loc": "Ruins of Tapoyauik"
+   },
+   {
+    "page": "Earthen Nagua",
+    "ver": "Normal",
+    "name": "Earthen Nagua (lvl 128)",
+    "loc": "Crypt of Tonali"
+   },
+   {
+    "page": "Amoxliatl",
+    "ver": "Post-quest",
+    "name": "Amoxliatl (boss, lvl 263)",
+    "loc": "Ruins of Tapoyauik"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Neypotzli (Sulphur Nagua)",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Moons of Peril teleport (Civitas illa Fortis) and run to the prison, or the Cam Torum lift.",
+    "notes": "14 spawns, cannonable with a safespot by the cooking stove skeleton. Supplies are free inside: cook fish, make moonlight potions (super combat + prayer). The AFK choice."
+   },
+   {
+    "name": "Ruins of Tapoyauik (Frost Nagua and Amoxliatl)",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring or the Tapoyauik teleport after The Heart of Darkness.",
+    "notes": "11 Frost Nagua plus the boss Amoxliatl, who also counts and drops better. No cannon. Moonlight moths in the corners restore prayer (75 Hunter, butterfly net)."
+   },
+   {
+    "name": "Crypt of Tonali (Earthen Nagua)",
+    "region": "Varlamore",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Teleport unlocked by The Final Dawn.",
+    "notes": "Sun Chambers are multi, the outside ones single-way. No cannon. Moonlight moths for prayer."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Negative flat armour (-4) means every hitsplat does extra damage, so multi-hit weapons like the Dual macuahuitl shine. Crush is the weak side (10) on sulphur and frost; earthen flip to crush-weak once below 60%.",
+  "pray": "Protect from Melee (Protect from Magic for Frost Nagua)",
+  "hazards": [
+   {
+    "kind": "prayer",
+    "text": "Sulphur Nagua: every 5th attack drains 5 prayer unless you step out of melee range. Frost Nagua mark your tile; move off it or lose prayer."
+   },
+   {
+    "kind": "special",
+    "text": "Earthen Nagua armour up at 60% HP: stab and slash get worse, crush gets much better."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Only at Tapoyauik and Tonali; Neypotzli makes its own moonlight potions"
+   }
+  ],
+  "mechanics": "At Neypotzli bring almost nothing: cook the fish, brew moonlight potions and cannon from the safespot. Step away on the fifth attack to dodge the prayer drain. Elsewhere switch to crush when the Earthen ones armour up, and pray magic against Frost Nagua.",
+  "tips": [
+   "Neypotzli is the free-supply AFK spot; Amoxliatl is the profit option.",
+   "Weight 2-4 and a short task: do it for points.",
+   "Dual macuahuitl or any multi-hit weapon abuses the negative armour."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Short, cheap and relaxed at Neypotzli.",
+  "aoe": false
+ },
+ {
+  "slug": "lizardmen",
+  "name": "Lizardmen",
+  "image": "Lizardman shaman (1).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "'Reptile got ripped' (75 points). Shamans need tier 5 Shayzien armour (or the Slayer helm toggle from Captain Cleive after the Hard Kourend diary) to block the acid spit.",
+  "targets": [
+   {
+    "page": "Lizardman",
+    "ver": "Level 62",
+    "name": "Lizardman (lvl 53-62)",
+    "loc": null
+   },
+   {
+    "page": "Lizardman brute",
+    "ver": "Standard",
+    "name": "Lizardman brute (lvl 75)",
+    "loc": "Battlefront"
+   },
+   {
+    "page": "Lizardman shaman",
+    "ver": "Lizardman Temple",
+    "name": "Lizardman shaman (lvl 150)",
+    "loc": "Molch"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Lizardman Canyon",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman to Xeric's Lookout, run north; or fairy ring and walk.",
+    "notes": "Multi and cannonable: the fast task spot for plain lizardmen (east side has ~25). Shamans on the west side."
+   },
+   {
+    "name": "Lizardman Settlement (and Lizardman Caves beneath)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman to Xeric's Glade, walk north-west.",
+    "notes": "Plain lizardmen and brutes above; the caves underneath hold task-only shamans."
+   },
+   {
+    "name": "Molch (Lizardman Temple beneath)",
+    "region": "Kourend",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring DJR, run east; or Xeric's talisman to the Lookout.",
+    "notes": "The shaman spot: small chambers shrink the spawn explosion from 5x5 to 3x3. Single-way, no cannon. Dragon warhammer 1/5000."
+   },
+   {
+    "name": "Battlefront",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Battlefront teleport (Arceuus) lands on top of them.",
+    "notes": "Brutes and plain lizardmen by the Shayzien soldiers; nothing dangerous."
+   },
+   {
+    "name": "Kebos Swamp (around Xeric's Shrine)",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring DJR, walk west.",
+    "notes": "Spread-out brutes in the swamp; only when Konar sends you here."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Shamans: ranged (-20 stab / 0 ranged defence) from range with Protect from Missiles. Plain lizardmen die to anything; a cannon in the Canyon ends the task.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "poison",
+    "text": "All lizardmen poison (3 for plain ones, 10 from shamans)."
+   },
+   {
+    "kind": "special",
+    "text": "Shaman acid spit hits up to 30 unless you wear full tier 5 Shayzien (or the Slayer helm toggle); their spawns explode for up to 10 after a few seconds: step away."
+   },
+   {
+    "kind": "ranged",
+    "text": "Shamans jump onto you for a big crush hit; keep moving and keep Protect from Missiles up for the ranged spit."
+   }
+  ],
+  "need": [
+   {
+    "item": "Shayzien helm (5)",
+    "why": "Full tier 5 Shayzien armour blocks the shamans' acid completely (Hard Kourend diary lets the Slayer helm count)",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Antidote++(4)",
+    "why": "Every variant poisons"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles the whole shaman fight"
+   }
+  ],
+  "mechanics": "For points: cannon plain lizardmen in the Canyon in Shayzien or anything. For the warhammer: Lizardman Temple, Protect from Missiles, ranged from distance, walk away from the green spawns before they explode and out of the jumping shaman's landing spot.",
+  "tips": [
+   "The Temple under Molch is the shaman spot: smaller rooms mean smaller spawn explosions.",
+   "Plain lizardmen in the Canyon with a cannon finish 130 kills in minutes.",
+   "Killing lizardmen does not count for a Lizards task, and vice versa."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast with a cannon, and the shamans drop the dragon warhammer.",
+  "aoe": true
+ },
+ {
+  "slug": "mutated-zygomites",
+  "name": "Mutated Zygomites",
+  "image": "Zygomite (level 74).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Lost City. Ancient Zygomites also need Bone Voyage (Fossil Island).",
+  "targets": [
+   {
+    "page": "Zygomite",
+    "ver": null,
+    "name": "Mutated Zygomite (lvl 74-86)",
+    "loc": "Zanaris"
+   },
+   {
+    "page": "Ancient Zygomite",
+    "ver": null,
+    "name": "Ancient Zygomite (lvl 109)",
+    "loc": "Fossil Island"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Zanaris (Cosmic Altar and east of the furnace)",
+    "region": "Zanaris",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring, or the Lumbridge Swamp shed with a dramen staff.",
+    "notes": "'Pick' the fungi to wake them. Safespot: trap one behind a pillar near the Cosmic Altar and stand back by the ruins. Zanaris bank is close."
+   },
+   {
+    "name": "Fossil Island Mushroom Forest (Ancient Zygomites)",
+    "region": "Fossil Island",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Digsite pendant to the House on the Hill, mushtree to the Mushroom Meadow.",
+    "notes": "Tankier 150 HP ancient version; guaranteed mort myre fungus (reagent pouch). Stalker Den in Custodia Pass has them too."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Low defence, but you must land the final blow with a Fungicide spray, so the style barely matters. Dragonhide helps against their magic-based hits.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Immortal until you finish them with a Fungicide spray at low HP (or buy 'Shroom sprayer' so it happens automatically)."
+   },
+   {
+    "kind": "magic",
+    "text": "Magic-based headbutt and a stronger spore attack from range; dragonhide reduces both."
+   }
+  ],
+  "need": [
+   {
+    "item": "Fungicide spray",
+    "why": "The only way to kill them; 10 charges each, refill at the Slayer Master. Or the 'Shroom sprayer' unlock (400 points)",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee"
+   }
+  ],
+  "mechanics": "Pick the fungus, fight it to 7 HP or less, then use the Fungicide spray on it. With 'Shroom sprayer' unlocked you simply kill them. Bring two sprays: one charge per kill, 10 charges a spray.",
+  "tips": [
+   "8-30 assigned, weight 2: a quick points task.",
+   "Zanaris spot is next to a bank; safespot behind the pillar if you prefer.",
+   "Ancient Zygomites only if you want the mort myre fungus."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Tiny task, near a bank, low effort.",
+  "aoe": false
+ },
+ {
+  "slug": "skeletal-wyverns",
+  "name": "Skeletal Wyverns",
+  "image": "Skeletal Wyvern.png",
+  "attr": [
+   "dragon"
+  ],
+  "superior": null,
+  "unlock": "Elemental Workshop I. 'Stop the Wyvern' (500 points) blocks them for free; 'Wyver-nother one' extends to 50-70.",
+  "targets": [
+   {
+    "page": "Skeletal Wyvern",
+    "ver": "1",
+    "name": "Skeletal Wyvern (lvl 140)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Asgarnian Ice Dungeon (far end)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Port Sarim lodestone area: Draynor or Falador teleport then run south-east; 82 Agility shortcut at the ladder (77 with a summer pie). Mudskipper Point fairy ring AIQ.",
+    "notes": "Single-way, cannon allowed, a task-only side room. Safespots behind the rocks let ranged and magic avoid melee and breath entirely. Granite legs and the wyvern visage drop here."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "140 stab and 90 slash/crush defence makes melee slow; magic defence is only 80 and they are weak to Fire (+25%), so Fire spells or ranged from a safespot. Dragon hunter crossbow or lance if you own one.",
+  "pray": "Protect from Missiles (Protect from Melee if meleeing)",
+  "hazards": [
+   {
+    "kind": "icebreath",
+    "text": "Icy breath hits 50+ without an Elemental, Mind, Dragonfire shield, Dragonfire ward or Ancient wyvern shield; antifire and the anti-dragon shield do nothing."
+   },
+   {
+    "kind": "ranged",
+    "text": "Ranged attack up to 13; melee up to 13."
+   }
+  ],
+  "need": [
+   {
+    "item": "Elemental shield",
+    "why": "Or Mind shield, Dragonfire shield, Dragonfire ward or Ancient wyvern shield against the icy breath",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   },
+   {
+    "item": "Dragon hunter crossbow",
+    "why": "Dragonbane bonus; they count as dragons"
+   }
+  ],
+  "mechanics": "Wear the shield, pray missiles and attack from a safespot so only the breath can reach you. Not undead: a Salve amulet does nothing. Kill in the task-only room if the main area is busy.",
+  "tips": [
+   "5-40 assigned: short but slow kills.",
+   "Dragon bones and plenty of alchables; a herb sack and gem bag help.",
+   "Many block it or buy 'Stop the Wyvern'."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Tanky, slow and shield-locked; skip unless you want the visage.",
+  "aoe": false
+ },
+ {
+  "slug": "tzhaar",
+  "name": "TzHaar",
+  "image": "TzHaar-Ket (level 149).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "'Hot stuff' (100 points). Jad or Zuk can be taken instead when the task is offered (Zuk needs one prior Zuk kill).",
+  "targets": [
+   {
+    "page": "TzHaar-Ket",
+    "ver": "Level 149",
+    "name": "TzHaar-Ket (lvl 149)",
+    "loc": null
+   },
+   {
+    "page": "TzHaar-Ket",
+    "ver": "Level 221",
+    "name": "TzHaar-Ket (lvl 221, inner city)",
+    "loc": "Mor Ul Rek (inner"
+   },
+   {
+    "page": "TzHaar-Xil",
+    "ver": "Sword",
+    "name": "TzHaar-Xil (lvl 133, melee)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mor Ul Rek (outer city)",
+    "region": "Karamja",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Fairy ring BLP, or TzHaar teleport / Karamja gloves 4 to the Fight Cave area.",
+    "notes": "Ket and melee Xil safespotted over the lava vents. Attacking a Hur or Mej aggroes everything near it. No cannon."
+   },
+   {
+    "name": "Mor Ul Rek (inner city, lvl 221 Ket)",
+    "region": "Karamja",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Show a fire cape to the gate guards once, then fairy ring BLP.",
+    "notes": "Stronger Ket that drop obsidian armour; low magic level and 0 magic defence, so burst them by the Ket-Rak challenges or south of the fairy ring with Protect from Melee."
+   },
+   {
+    "name": "Fight Caves (TzTok-Jad)",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same as above.",
+    "notes": "One Jad kill completes the task: ~37,000 Slayer XP, slayer helm bonus for the whole cave, 50% better pet odds. Leaving cancels the task without a cost."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "TzHaar-Ket have 1 Magic level and 0 magic defence and are 1x1 in multi: Ice Burst or Barrage stacks of 4-5 with Protect from Melee. Melee the Ket one at a time otherwise; they are weak to Water (+40%).",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Attack a TzHaar-Hur and every Mej, Xil and Ket nearby attacks you; attack a Mej and the Xil and Ket do."
+   },
+   {
+    "kind": "magic",
+    "text": "TzHaar-Mej cast magic (up to 25 on low magic defence); ring-wielding Xil also throw."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee while bursting Ket"
+   },
+   {
+    "item": "Ring of wealth",
+    "why": "More gem and onyx bolt tip drops"
+   }
+  ],
+  "mechanics": "Stick to Ket (and melee Xil). Tag 4-5 Ket with a fast ranged weapon, pile them with Protect from Melee on and barrage; or flinch them over a vent with melee. Jad instead if you want the XP and have a cape to earn.",
+  "tips": [
+   "Jad on task is the best XP per kill in Slayer; Zuk even more if you can.",
+   "Never hit Hur or Mej in a crowd.",
+   "Weight 8-10 once unlocked: block it if you only wanted Jad tasks occasionally."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Great XP with bursts or a Jad kill; skip the Hur/Mej.",
+  "aoe": true
+ },
+ {
+  "slug": "warped-creatures",
+  "name": "Warped creatures",
+  "image": "Warped Terrorbird (lv 96).png",
+  "attr": [],
+  "superior": "Mutated Terrorbird / Mutated Tortoise",
+  "unlock": "The Path of Glouphrie and 'Warped Reality' (60 points); Mortimer assigns them without the unlock.",
+  "targets": [
+   {
+    "page": "Warped Terrorbird",
+    "ver": "Level 96",
+    "name": "Warped Terrorbird (lvl 96)",
+    "loc": null
+   },
+   {
+    "page": "Warped Tortoise",
+    "ver": null,
+    "name": "Warped Tortoise (lvl 121)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Poison Waste Dungeon",
+    "region": "Tirannwn",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Spirit tree to the Poison Waste, climb down.",
+    "notes": "Only location. Tortoises right at the entrance for short trips (spirit tree bank runs). Best cannon spot: the second large chamber, cannon on the north-western tortoise spawn, Protect from Missiles. Telekinetic Grab for drops across the pit."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Both have 0 crush defence and 20-78 Defence: a crush weapon (Inquisitor's mace, Sarachnis cudgel, Zombie axe) plus a cannon. Tortoises are weak to Earth (+20%).",
+  "pray": "Protect from Missiles (Protect from Melee for tortoises)",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Invulnerable unless you carry the Crystal chime in your inventory."
+   },
+   {
+    "kind": "ranged",
+    "text": "Terrorbirds use melee and ranged and switch to whatever you are not praying against; earmuffs or a slayer helm halve their max hit."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Terrorbirds are always aggressive and never lose aggression; corners with one or two reachable tiles keep the rest stuck."
+   }
+  ],
+  "need": [
+   {
+    "item": "Crystal chime",
+    "why": "Must be in your inventory or they cannot be damaged (from The Path of Glouphrie)",
+    "helm": false
+   },
+   {
+    "item": "Earmuffs",
+    "why": "Halves the terrorbirds' max hit",
+    "helm": true
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer all task"
+   }
+  ],
+  "mechanics": "Chime in the inventory, slayer helm on. Tortoises: pray melee, crush them, pillars for safespots deeper in. Terrorbirds: stand in a corner so one can reach you, flash Protect from Missiles to make them all switch to melee and get stuck, then crush them with the cannon running.",
+  "tips": [
+   "Two drop tables: tortoises for tortoise shells, terrorbirds for the rest; the second chamber has both for a cannon.",
+   "Short bank trips via the spirit tree at the entrance.",
+   "Weight 4-8 and good XP with a cannon: worth doing."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast cannon task once you own the chime.",
+  "aoe": false
+ },
+ {
+  "slug": "wyrms",
+  "name": "Wyrms",
+  "image": "Wyrm.png",
+  "attr": [
+   "dragon"
+  ],
+  "superior": "Shadow Wyrm / Magma strykewyrm",
+  "unlock": "None for Karuulm (boots of stone unless Elite Kourend diary). Wyrmscraig needs 62 Sailing and Fallen From Grace; Charred Dungeon 60 Sailing; Neypotzli Perilous Moons.",
+  "targets": [
+   {
+    "page": "Wyrm",
+    "ver": "Attacking",
+    "name": "Wyrm (lvl 97)",
+    "loc": "Karuulm"
+   },
+   {
+    "page": "Wyrmling",
+    "ver": "Idle (Wyrmscraig)",
+    "name": "Wyrmling (lvl 55)",
+    "loc": "Wyrmscraig (wyrmling"
+   },
+   {
+    "page": "Lava Strykewyrm",
+    "ver": null,
+    "name": "Lava Strykewyrm (lvl 116)",
+    "loc": "Charred Dungeon"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Karuulm Slayer Dungeon (wyrms, task-only area)",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Rada's blessing 3/4 to Mount Karuulm, or fairy ring CIR and climb.",
+    "notes": "Boots of stone required unless Elite Kourend diary. Single-way, no cannon; safespot behind the rocks so they only cast. Task-only room to the south has the same wyrms."
+   },
+   {
+    "name": "Wyrmscraig (wyrmling nest on the surface)",
+    "region": "Wyrmscraig",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Slayer ring or necklace of passage after Fallen From Grace; 62 Sailing to land.",
+    "notes": "The fast task: 65 HP melee-only wyrmlings in multi, cannonable, bank and teleport nearby. Reachable before the quest, but the cavern below is not."
+   },
+   {
+    "name": "Wyrmscraig Cavern (wyrms and Lava Strykewyrms)",
+    "region": "Wyrmscraig",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring teleport straight in (Fallen From Grace).",
+    "notes": "Single-way but a cannon can pull wyrms to you. Adult wyrms (dragon sword/knives/thrownaxes) and strykewyrms (dragon metal sheets, better on task) in one cave."
+   },
+   {
+    "name": "Neypotzli Earthbound Cavern (wyrmlings)",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Moons of Peril teleport, into the prison.",
+    "notes": "Melee-only wyrmlings; free food and moonlight potions inside."
+   },
+   {
+    "name": "Charred Dungeon (Lava Strykewyrms)",
+    "region": "Sailing",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Sail there (60 Sailing).",
+    "notes": "Aggressive strykewyrms using melee and ranged; red and black dragons share the dungeon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Adult wyrms: 10 stab defence and 1 flat armour, so a Dragon hunter lance on stab is ideal; otherwise any strong stab weapon. Wyrmlings die to anything, cannon them.",
+  "pray": "Protect from Magic (Protect from Melee for wyrmlings)",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Karuulm floor burns you every tick without Boots of stone, Boots of brimstone or Granite boots (Elite Kourend diary removes the need)."
+   },
+   {
+    "kind": "magic",
+    "text": "Adult wyrms cast magic up to 13 when you are not in melee range; melee up to 10 otherwise."
+   },
+   {
+    "kind": "special",
+    "text": "Magma strykewyrm (superior) burrows to your tile: move 2 tiles away or take 20+."
+   }
+  ],
+  "need": [
+   {
+    "item": "Boots of stone",
+    "why": "At Karuulm only, unless Elite Kourend & Kebos diary",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   },
+   {
+    "item": "Dragon hunter lance",
+    "why": "Dragonbane: +20% accuracy and damage"
+   }
+  ],
+  "mechanics": "Fast task: cannon the wyrmling nest on Wyrmscraig. XP and drops: Karuulm or the Wyrmscraig Cavern, stand in melee range so they melee (or safespot so they only cast) and pray accordingly. Strykewyrms are the choice for dragon metal sheets.",
+  "tips": [
+   "Wyrmlings on Wyrmscraig are the quickest version of the task by far.",
+   "Dragon sword, harpoon, knives and thrownaxes come from adult wyrms only.",
+   "Weight 6-10: a common task, happily done."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy with good drops; wyrmlings make it quick.",
+  "aoe": false
+ },
+ {
+  "slug": "black-dragons",
+  "name": "Black dragons",
+  "image": "Black dragon.png",
+  "attr": [
+   "dragon",
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "Dragon Slayer I started (anti-dragon shield). Brutal black dragons need 77 Slayer. Extend with 'Fire & Darkness' (50 points).",
+  "targets": [
+   {
+    "page": "Baby black dragon",
+    "ver": "Normal",
+    "name": "Baby black dragon (lvl 83)",
+    "loc": "Taverley"
+   },
+   {
+    "page": "Black dragon",
+    "ver": "Level 227",
+    "name": "Black dragon (lvl 227)",
+    "loc": null
+   },
+   {
+    "page": "Brutal black dragon",
+    "ver": null,
+    "name": "Brutal black dragon (lvl 318)",
+    "loc": "Catacombs"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Taverley Dungeon (task-only baby black dragons and adults)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Falador teleport and run, or Taverley house portal; 70 Agility pipe shortcut.",
+    "notes": "Five task-only baby black dragons in groups of two and three: AFK the task in minutes. Adults further in near the blue dragons."
+   },
+   {
+    "name": "Catacombs of Kourend (brutal black dragons)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's Heart, then north-west.",
+    "notes": "The profit option: brutal blacks with long-range dragonfire and magic. Pray magic, stand out of melee range north of the Lovakengj vine, crossbow or lance."
+   },
+   {
+    "name": "Myths' Guild Dungeon (Corsair Cove)",
+    "region": "Feldip",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Mythical cape teleport straight to the guild; bank upstairs.",
+    "notes": "Adults and babies right under a bank. Needs Dragon Slayer II."
+   },
+   {
+    "name": "Evil Chicken's Lair",
+    "region": "Zanaris",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Zanaris, sacrifice a raw chicken at the Chicken Shrine (Recipe for Disaster: Sir Amik started).",
+    "notes": "Several adults close to the Zanaris bank."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "0 stab defence on every variant: a Dragon hunter lance or Zamorakian hasta on stab. Babies die to anything. Brutals: Protect from Magic and a crossbow from range, or lance with flinching.",
+  "pray": "Protect from Melee (Protect from Magic for brutals)",
+  "hazards": [
+   {
+    "kind": "dragonfire",
+    "text": "Adults breathe for up to 50 without protection. Anti-dragon shield plus antifire (or a super antifire alone) blocks it; Protect from Magic also covers normal dragonfire."
+   },
+   {
+    "kind": "magic",
+    "text": "Brutal black dragons add long-range dragonfire and a hard magic attack (29): pray magic and keep your distance."
+   }
+  ],
+  "need": [
+   {
+    "item": "Anti-dragon shield",
+    "why": "Or Dragonfire shield; with an antifire potion that is full protection against adults",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Extended antifire(4)",
+    "why": "Not needed for babies"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   }
+  ],
+  "mechanics": "Points: AFK the five task-only babies in Taverley. Loot: brutal blacks in the Catacombs with Protect from Magic, antifire, standing out of melee range with a crossbow (dragon hunter best). Adults: shield plus antifire plus Protect from Melee.",
+  "tips": [
+   "10-20 assigned: either five minutes of babies or a lucrative brutal task.",
+   "Brutal blacks drop the visage and lots of alchables; bring a herb sack.",
+   "KBD counts too, but it is deep Wilderness."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Tiny task; trivial on babies, profitable on brutals.",
+  "aoe": false
+ },
+ {
+  "slug": "bosses",
+  "name": "Bosses",
+  "image": "Vorkath.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "'Like a boss' (200 points). The master picks a boss you have access to; 3-35 kills. Wilderness bosses are covered under Krystilia.",
+  "targets": [
+   {
+    "page": "Vorkath",
+    "ver": "Post-quest",
+    "name": "Vorkath",
+    "loc": "Ungael"
+   },
+   {
+    "page": "Zulrah",
+    "ver": "Serpentine",
+    "name": "Zulrah",
+    "loc": "Zul-Andra"
+   },
+   {
+    "page": "Kraken",
+    "ver": "Kraken",
+    "name": "Kraken (87 Slayer)",
+    "loc": "Kraken Cove"
+   },
+   {
+    "page": "Cerberus",
+    "ver": null,
+    "name": "Cerberus (91 Slayer)",
+    "loc": "Taverley"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Ungael (Vorkath)",
+    "region": "Fremennik",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Rellekka teleport or fremennik boots, boat from Torfinn; or Vorkath's head in the POH.",
+    "notes": "Dragon Slayer II. Venom, 80+ dragonfire specials, the acid walk and the spawn; super antifire, anti-venom and a dragon hunter crossbow or lance. Very profitable."
+   },
+   {
+    "name": "Zul-Andra (Zulrah)",
+    "region": "Tirannwn",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Zul-andra teleport scroll, or fairy ring BJS (76 Agility).",
+    "notes": "Venom clouds and snakelings; rotation-based prayer and gear switching. Anti-venom+ or a serpentine helm."
+   },
+   {
+    "name": "Kraken Cove (Kraken)",
+    "region": "Piscatoris",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": true,
+    "masters": [],
+    "tele": "Fairy ring AKQ then east, or Piscatoris teleport.",
+    "notes": "Needs 87 Slayer and magic (trident). The lowest-effort boss task: kill the tentacles, pray magic, instance for 25k."
+   },
+   {
+    "name": "Taverley Dungeon (Cerberus)",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [],
+    "tele": "Key master teleport, or Taverley Dungeon and the 91 Slayer gate.",
+    "notes": "91 Slayer. Ghosts (pray the matching style), lava pools, summoned souls; Arclight or Emberlight melee. Primordial, pegasian and eternal crystals."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "Boss-specific: ranged for Vorkath and Zulrah, magic for Kraken, melee with a demonbane weapon for Cerberus. This helper's maths is rough for bosses; follow a dedicated guide.",
+  "pray": "Boss-specific",
+  "hazards": [
+   {
+    "kind": "venom",
+    "text": "Vorkath and Zulrah venom; bring anti-venom or venom immunity."
+   },
+   {
+    "kind": "dragonfire",
+    "text": "Vorkath's dragonfire bomb and specials hit 80-121: super antifire and movement."
+   },
+   {
+    "kind": "special",
+    "text": "Each boss has its own mechanics; read its strategy page before the first kill."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Anti-venom+(4)",
+    "why": "Vorkath, Zulrah"
+   },
+   {
+    "item": "Extended super antifire(4)",
+    "why": "Vorkath"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Every boss"
+   }
+  ],
+  "mechanics": "The master assigns one boss you can access; kill the stated number. Kraken is the laziest completion, Vorkath and Zulrah the richest. Use the Wilderness entries for Callisto, Vet'ion, Venenatis, Scorpia and friends.",
+  "tips": [
+   "Only unlock it if you boss anyway; weight 8-12 means it comes up often.",
+   "The slayer helm works on the boss for the whole task.",
+   "Skip costs points like any task; blocking it costs the slot."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Profitable for bossers, otherwise do not unlock it.",
+  "aoe": false
+ },
+ {
+  "slug": "dark-beasts",
+  "name": "Dark beasts",
+  "image": "Dark beast.png",
+  "attr": [],
+  "superior": "Night beast",
+  "unlock": "Mourning's End Part II started (just the dialogue after MEP I). 'Need more darkness' (100 points) extends 10-20 to 110-135.",
+  "targets": [
+   {
+    "page": "Dark beast",
+    "ver": null,
+    "name": "Dark beast (lvl 182)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mourner Tunnels (slayer ring teleport)",
+    "region": "Tirannwn",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring 'Dark beasts' lands right there (Mourning's End Part II completed).",
+    "notes": "A dozen beasts in the Temple of Light area; single-way, always aggressive, cannon allowed but not needed."
+   },
+   {
+    "name": "Iorwerth Dungeon",
+    "region": "Prifddinas",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Prifddinas teleport (Song of the Elves), the dungeon in the Iorwerth district.",
+    "notes": "Close to a bank; several spawns near the entrance. Nechryaels and kurask share the dungeon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Melee is the most effective (30 stab / 40 slash defence, 100 crush); they only cast magic if you hit first or they cannot reach you, so stand in melee range and pray melee. Weak to Earth (+60%) if you mage.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Permanently aggressive, never become tolerant."
+   },
+   {
+    "kind": "magic",
+    "text": "Magic attack up to 8 as an opener or when they cannot reach you; melee up to 17 otherwise."
+   },
+   {
+    "kind": "special",
+    "text": "The Night beast superior is not aggressive and always opens with magic."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee all task; proselyte or other prayer armour stretches it"
+   }
+  ],
+  "mechanics": "Slayer ring to the beasts, Protect from Melee on, let them come to you and melee them down; they hit back only with melee while you are adjacent. A Saradomin godsword special keeps prayer topped up. Loot herbs, gems and the dark bow.",
+  "tips": [
+   "Small task (10-20) with big HP: good points per hour, mediocre XP.",
+   "Dark bow and death talisman drops; herb sack and gem bag.",
+   "Extend only if you want the XP; most leave it short."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Quick points, AFK melee with prayer.",
+  "aoe": false
+ },
+ {
+  "slug": "drakes",
+  "name": "Drakes",
+  "image": "Drake.png",
+  "attr": [
+   "dragon"
+  ],
+  "superior": "Guardian Drake",
+  "unlock": "Access to Mount Karuulm; boots of stone unless Elite Kourend & Kebos diary.",
+  "targets": [
+   {
+    "page": "Drake",
+    "ver": null,
+    "name": "Drake (lvl 192)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Karuulm Slayer Dungeon (task-only drake room)",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Rada's blessing 3/4 to Mount Karuulm, or fairy ring CIR and up the volcano; Battlefront teleport then north-west.",
+    "notes": "Smaller room, so a cannon covers more of it. Boots of stone unless Elite Kourend diary. 2 flat armour and 225 HP."
+   },
+   {
+    "name": "Karuulm Slayer Dungeon (main drake room)",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Same.",
+    "notes": "Larger room with more spawns; same drakes."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "5 stab defence: a Dragon hunter lance on stab is the clear best, with melee armour against their ranged and ranged-melee hits. Weak to Water (+50%) if you mage; 100 standard ranged defence makes normal ranged poor.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Karuulm floor burns you every tick without Boots of stone, Boots of brimstone or Granite boots (Elite Kourend diary removes the need)."
+   },
+   {
+    "kind": "dragonfire",
+    "text": "After seven attacks a fireball lands on your tile for 4 x 6-8; step one tile away, or dragonfire protection reduces it (super antifire, or shield plus antifire, blocks it)."
+   },
+   {
+    "kind": "ranged",
+    "text": "Ranged and ranged-melee up to 15, blocked by Protect from Missiles."
+   },
+   {
+    "kind": "stun",
+    "text": "Guardian Drake (superior) stuns and hits hard if you stay in melee range of its special; step out."
+   }
+  ],
+  "need": [
+   {
+    "item": "Boots of stone",
+    "why": "Karuulm floor, unless Elite Kourend & Kebos diary",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles"
+   },
+   {
+    "item": "Dragon hunter lance",
+    "why": "Dragonbane on stab"
+   },
+   {
+    "item": "Extended super antifire(4)",
+    "why": "Optional: lets you ignore the fireball and use a defender"
+   }
+  ],
+  "mechanics": "Boots of stone on, Protect from Missiles, lance on stab. Count attacks: on the seventh a fireball flies, so sidestep one tile (or just drink super antifire and stand still). Cannon in the task-only room to speed it up.",
+  "tips": [
+   "High weight, 2 flat armour, lackluster drops: the most-blocked Konar task.",
+   "Drake's claw and tooth upgrade boots of stone and holy sandals; five times more common on task.",
+   "If you do it, cannon the task-only room."
+  ],
+  "verdict": "block",
+  "verdictWhy": "Heavy weight, tanky, poor drops.",
+  "aoe": false
+ },
+ {
+  "slug": "hydras",
+  "name": "Hydras",
+  "image": "Hydra.png",
+  "attr": [
+   "dragon"
+  ],
+  "superior": "Colossal Hydra",
+  "unlock": "Konar or Mortimer only (Mortimer needs Fallen From Grace started). Boots of stone unless Elite Kourend & Kebos diary.",
+  "targets": [
+   {
+    "page": "Hydra",
+    "ver": null,
+    "name": "Hydra (lvl 194)",
+    "loc": "Karuulm Slayer Dungeon (hydra"
+   },
+   {
+    "page": "Alchemical Hydra",
+    "ver": "Serpentine",
+    "name": "Alchemical Hydra (boss, lvl 426)",
+    "loc": "Alchemical"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Karuulm Slayer Dungeon (hydra area)",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Rada's blessing 3/4 to Mount Karuulm, or fairy ring CIR; the lowest level of the dungeon, 95 Slayer to pass the gate.",
+    "notes": "Plenty of hydras in single-way; cannon allowed. Boots of stone unless Elite Kourend diary. Colossal Hydra superior has the best imbued heart rate (1/160)."
+   },
+   {
+    "name": "Alchemical Hydra lair",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Same, then the boss door at the end of the hydra area.",
+    "notes": "Boss counts for the task: huge HP (XP per kill), very good commons, hydra claw and leather. Four phases, swap prayers on three-attack cycles, stand on the vents at the right time."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "160 melee and magic defence but 0 ranged defence: ranged is far more accurate, and a Dragon hunter crossbow (they are dragons) or any strong crossbow. Melee needs a lance and patience. Weak to Earth (+40%) for mages.",
+  "pray": "Protect from Magic or Missiles (switch every 3 attacks to match)",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Karuulm floor burns you every tick without Boots of stone, Boots of brimstone or Granite boots (Elite Kourend diary removes the need)."
+   },
+   {
+    "kind": "poison",
+    "text": "After about 12 attacks they spit poison on three tiles (one under you): 4 poison damage every 2 ticks while you stand in it; 1-2 with poison immunity. Step off the pool."
+   },
+   {
+    "kind": "magic",
+    "text": "Alternates magic and ranged (max 22), switching after three attacks of one style once the fight settles: swap protection prayers to match."
+   }
+  ],
+  "need": [
+   {
+    "item": "Boots of stone",
+    "why": "Karuulm floor, unless Elite Kourend & Kebos diary",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Prayer swaps all fight"
+   },
+   {
+    "item": "Anti-venom+(4)",
+    "why": "Poison immunity turns the pools into 1-2 damage"
+   },
+   {
+    "item": "Dragon hunter crossbow",
+    "why": "Dragonbane on a 0 ranged defence target"
+   }
+  ],
+  "mechanics": "Boots of stone, Protect from the style your armour is weak to, then follow the three-attack pattern and swap. Move off the poison pools when they land. Cannon in the area for speed; kill the Alchemical Hydra instead when you want the money and the XP.",
+  "tips": [
+   "Mortimer is the reliable source of hydra tasks; from Konar block metal dragons, drakes and wyrms to see them more.",
+   "Normal hydras for a fast task and imbued heart chances; the boss for profit.",
+   "Ring of suffering or a Dragon hunter crossbow make the task comfortable."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Great XP and the boss is one of the best money makers.",
+  "aoe": false
+ },
+ {
+  "slug": "metal-dragons",
+  "name": "Metal dragons",
+  "image": "Iron dragon.png",
+  "attr": [
+   "dragon",
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "Dragon Slayer I started. Mithril dragons need the Ancient Cavern (barbarian pyre ships), adamant and rune need Dragon Slayer II. 'Pedal to the Metals' (200 points) extends to 150-200.",
+  "targets": [
+   {
+    "page": "Bronze dragon",
+    "ver": "Standard",
+    "name": "Bronze dragon (lvl 131)",
+    "loc": "Brimhaven"
+   },
+   {
+    "page": "Iron dragon",
+    "ver": "Standard",
+    "name": "Iron dragon (lvl 189)",
+    "loc": "Isle of Souls"
+   },
+   {
+    "page": "Steel dragon",
+    "ver": "Level 246",
+    "name": "Steel dragon (lvl 246)",
+    "loc": "Catacombs"
+   },
+   {
+    "page": "Rune dragon",
+    "ver": null,
+    "name": "Rune dragon (lvl 380)",
+    "loc": "Lithkren"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Brimhaven Dungeon (task-only bronze room, iron and steel)",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Karamja gloves 3/4 or Brimhaven house, 875 coins to enter (free with the gloves); 30 Agility pipe.",
+    "notes": "Five bronze dragons in a small task-only area: cannon them and the task is done. Irons and steels further in. Karamja Elite diary notes the hides."
+   },
+   {
+    "name": "Catacombs of Kourend (bronze, iron, steel)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's Heart, dragons in the north-east.",
+    "notes": "Multi but no cannon; dark totem pieces and the catacombs table."
+   },
+   {
+    "name": "Isle of Souls Dungeon (iron dragons)",
+    "region": "Isle of Souls",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Soul Wars portal in Edgeville/Ferox, then the dungeon on the island.",
+    "notes": "Several iron dragons in a quiet single-way dungeon; cannon allowed."
+   },
+   {
+    "name": "Lithkren Vault (adamant and rune dragons)",
+    "region": "Lithkren",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Digsite pendant to Lithkren (after Dragon Slayer II), down the stairs.",
+    "notes": "Rune dragons: melee, ranged, magic, a ruby/onyx-style ranged special and long-range dragonfire. The profit version (dragon metal lumps, visage). Pray magic and use a lance or dragon hunter crossbow."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "0-20 stab defence versus 70-115 slash/crush: stab only, ideally a Dragon hunter lance. Heavy ranged (ballistae, dragon hunter crossbow) is the alternative on the lower dragons. Weak to Earth (+50%) if you mage.",
+  "pray": "Protect from Melee (Protect from Magic for rune and adamant)",
+  "hazards": [
+   {
+    "kind": "dragonfire",
+    "text": "Long-range metallic dragonfire up to 50 that Protect from Magic does NOT reduce: an Anti-dragon shield or Dragonfire shield is mandatory unless you drink super antifire. Shield plus antifire or super antifire alone blocks it fully."
+   },
+   {
+    "kind": "ranged",
+    "text": "Adamant and rune dragons add ranged and magic attacks and a ranged special that mimics enchanted bolts (rune: onyx-style hit up to 40)."
+   }
+  ],
+  "need": [
+   {
+    "item": "Anti-dragon shield",
+    "why": "Or Dragonfire shield, unless you use super antifire potions; Protect from Magic does not block metal dragonfire",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Extended super antifire(4)",
+    "why": "Full protection on its own, freeing the shield slot for a defender"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   },
+   {
+    "item": "Dragon hunter lance",
+    "why": "Stab plus dragonbane is the task"
+   }
+  ],
+  "mechanics": "Fast task: cannon the five bronze dragons in Brimhaven's task-only room with shield plus antifire and Protect from Melee. Iron dragons if you want visage odds. Rune dragons at Lithkren for money: Protect from Magic, super antifire, lance on stab, eat through the ranged specials.",
+  "tips": [
+   "The highest-weight task in the game (12-15): block it unless you cannon bronzes or farm rune dragons.",
+   "Only mithril dragons cannot be cannoned.",
+   "Extension is for rune dragon farmers only."
+  ],
+  "verdict": "block",
+  "verdictWhy": "Very high weight and slow unless you commit to bronzes or runes.",
+  "aoe": false
+ },
+ {
+  "slug": "red-dragons",
+  "name": "Red dragons",
+  "image": "Red dragon.png",
+  "attr": [
+   "dragon",
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "'Seeing red' (50 points) and Dragon Slayer I started.",
+  "targets": [
+   {
+    "page": "Baby red dragon",
+    "ver": "1",
+    "name": "Baby red dragon (lvl 48)",
+    "loc": "Brimhaven"
+   },
+   {
+    "page": "Red dragon",
+    "ver": "1",
+    "name": "Red dragon (lvl 152)",
+    "loc": null
+   },
+   {
+    "page": "Brutal red dragon",
+    "ver": null,
+    "name": "Brutal red dragon (lvl 289)",
+    "loc": "Catacombs"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Brimhaven Dungeon",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Karamja gloves 3/4 or Brimhaven house portal; 30 Agility.",
+    "notes": "16 adults plus babies, cannonable, safespot by the pipe to the black demons. Karamja Elite diary notes the hides."
+   },
+   {
+    "name": "Forthos Dungeon",
+    "region": "Hosidius",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman to Xeric's Glade and run, or Hosidius house portal.",
+    "notes": "Six adults and babies, safespot by the fire; an altar nearby and the Sacred Bone Burner for the bones. No cannon."
+   },
+   {
+    "name": "Myths' Guild Dungeon (Corsair Cove)",
+    "region": "Feldip",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Mythical cape teleport; bank upstairs.",
+    "notes": "Three adults and two babies right under the bank (Dragon Slayer II)."
+   },
+   {
+    "name": "Catacombs of Kourend (brutal red dragons)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's Heart.",
+    "notes": "Brutal reds: long-range dragonfire plus magic and melee, a visage chance, but a slow task. Pray magic."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "0 stab defence: lance or hasta on stab. Babies are the quick clear. Weak to Water (+50%) for mages.",
+  "pray": "Protect from Melee (Protect from Magic for brutals)",
+  "hazards": [
+   {
+    "kind": "dragonfire",
+    "text": "Dragonfire up to 50: Anti-dragon shield plus antifire, super antifire alone, or Protect from Magic for the normal ones."
+   },
+   {
+    "kind": "magic",
+    "text": "Brutal red dragons use magic and long-range dragonfire; keep Protect from Magic on."
+   }
+  ],
+  "need": [
+   {
+    "item": "Anti-dragon shield",
+    "why": "Or Dragonfire shield; with an antifire potion this blocks adult dragonfire",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Extended antifire(4)",
+    "why": "Adults; not needed for babies"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   }
+  ],
+  "mechanics": "Babies in Brimhaven or Corsair Cove for a five-minute task; adults with shield, antifire and Protect from Melee if you want hides and bones. Avoid brutals unless hunting the visage.",
+  "tips": [
+   "Only unlock 'Seeing red' if you want more dragon bone tasks for prayer.",
+   "Corsair Cove is a bank-adjacent dragon spot; Forthos has an altar and bone burner.",
+   "Low weight (5-8), short task."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Fine but unremarkable; most do not unlock it.",
+  "aoe": false
+ },
+ {
+  "slug": "smoke-devils",
+  "name": "Smoke devils",
+  "image": "Smoke devil.png",
+  "attr": [],
+  "superior": "Nuclear smoke devil",
+  "unlock": "None beyond 93 Slayer. Konar, Nieve, Duradel and Mortimer only.",
+  "targets": [
+   {
+    "page": "Smoke devil",
+    "ver": null,
+    "name": "Smoke devil (lvl 160)",
+    "loc": "Smoke Devil Dungeon"
+   },
+   {
+    "page": "Thermonuclear smoke devil",
+    "ver": null,
+    "name": "Thermonuclear smoke devil (boss)",
+    "loc": "Thermonuclear"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Smoke Devil Dungeon (task-only)",
+    "region": "Kandarin",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Castle Wars (ring of dueling), run south to the dungeon; or fairy ring BKP.",
+    "notes": "36 spawns in a huge multi cave. Cannon in the centre to pull them, stack on the remains at the sides and barrage; restock when three or fewer are left. Nuclear smoke devil superior has the second-best imbued heart rate."
+   },
+   {
+    "name": "Thermonuclear smoke devil lair",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Same dungeon, the boss hole.",
+    "notes": "The boss counts; occult necklace and smoke battlestaff drops. Magic is faster, melee cheaper. 100% prayer penetration on its attacks."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "275 Defence and 0 melee defence bonuses, but a 1 Magic level: barrages are accurate despite the 600 magic defence bonus and they are 1x1 in multi. Melee works but is slower; cannon regardless.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "drain",
+    "text": "Without a Facemask or Slayer helmet their smoke always hits and drains your stats."
+   },
+   {
+    "kind": "ranged",
+    "text": "Magical ranged up to 20, blocked by Protect from Missiles."
+   }
+  ],
+  "need": [
+   {
+    "item": "Facemask",
+    "why": "Or the smoke always hits and drains stats",
+    "helm": true
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "The cave is huge; the cannon is the gather tool"
+   }
+  ],
+  "mechanics": "Slayer helm on, cannon in the middle, Protect from Missiles. Let the cannon pull devils, run through them to stack on the remains, Ice Barrage the pile; rebuild the stack when it thins. Kill the Thermonuclear boss instead for profit.",
+  "tips": [
+   "Good XP once you learn the stacking; Nuclear superiors roll the imbued heart often.",
+   "The boss drops occult necklaces and the dragon chainbody.",
+   "High magic defence but 1 Magic level: do not worry about the 600."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Strong XP and drops with a cannon and barrages.",
+  "aoe": true
+ },
+ {
+  "slug": "waterfiends",
+  "name": "Waterfiends",
+  "image": "Waterfiend.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": null,
+  "unlock": "Access to the Ancient Cavern (Barbarian Training up to pyre ships). Konar and Duradel only.",
+  "targets": [
+   {
+    "page": "Waterfiend",
+    "ver": "Normal",
+    "name": "Waterfiend (lvl 115)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Ancient Cavern",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Games necklace to Barbarian Outpost, whirlpool at Otto's grotto; or fairy ring.",
+    "notes": "Many spawns on the lower level among mithril dragons and brutal green dragons; crowded with other monsters, no cannon."
+   },
+   {
+    "name": "Iorwerth Dungeon",
+    "region": "Prifddinas",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Prifddinas teleport (Song of the Elves).",
+    "notes": "Quiet spot near a bank; cannon allowed."
+   },
+   {
+    "name": "Kraken Cove",
+    "region": "Piscatoris",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring AKQ then east, or Piscatoris teleport.",
+    "notes": "Waterfiends in the cove before the kraken area; no 87 Slayer needed for them. No cannon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "100 stab/slash defence but only 10 crush: a crush weapon (Inquisitor's mace, Abyssal bludgeon, Zombie axe). Their magic and magical ranged both roll against your magic defence, so dragonhide or Masori-type armour helps more than plate. 100% weakness to Earth spells if you mage.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Magic and magical ranged (max 11), both against your magic defence; prayer only blocks one style, so wear magic-defensive armour."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles for the ranged half"
+   },
+   {
+    "item": "Nature rune",
+    "why": "High Alchemy for their frequent armour and staff drops"
+   }
+  ],
+  "mechanics": "Crush weapon, dragonhide or other high magic defence armour, Protect from Missiles. Arclight/Emberlight work (they count as demons) but crush is better. Alch the drops.",
+  "tips": [
+   "Weight 2: do not waste a block slot, just skip it.",
+   "Mist battlestaff drop for ironmen.",
+   "Iorwerth Dungeon is the comfortable spot with a cannon and bank."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Accurate, tanky and poor loot; skip, never block.",
+  "aoe": false
+ },
+ {
+  "slug": "aquanites",
+  "name": "Aquanites",
+  "image": "Aquanite.png",
+  "attr": [],
+  "superior": "Elder Aquanite",
+  "unlock": "73 Sailing and a boat with an adamant keel to reach Ynysdail (70 Construction to build its rowboat; Song of the Elves for the Gwenith rowboat). 'Lured In' (80 points) for Nieve/Duradel; Mortimer assigns them by default.",
+  "targets": [
+   {
+    "page": "Aquanite",
+    "ver": "Lure",
+    "name": "Aquanite (lvl 145, lure intact)",
+    "loc": null
+   },
+   {
+    "page": "Aquanite",
+    "ver": "No lure",
+    "name": "Aquanite (lure severed)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Ynysdail Cavern",
+    "region": "Ynysdail",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Sail to Ynysdail (73 Sailing) or the rowboat north of Gwenith once built; through the crystalline maze.",
+    "notes": "Only location. Single-way, the ground is too damp for a cannon. Safespottable with a 9-10 tile attack range. Aquanite tendon for the Aquanite hopper."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Slash their lure first (60 stab defence drops to 10), then stab them: a scimitar or whip hit followed by a stab weapon, or a Ghrazi rapier switching styles. 140 magic defence makes magic poor; ranged from a safespot is the lazy option.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Accurate magic up to 18: Protect from Magic or a long-range safespot."
+   },
+   {
+    "kind": "special",
+    "text": "Elder Aquanite (superior) hits 50 if Protect from Magic has been on for a while: flick the prayer between its attacks."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic"
+   }
+  ],
+  "mechanics": "Hit each aquanite once with a fast slash weapon (damage not required) to cut the lure, then switch to stab. Pray magic. If the superior appears, flick Protect from Magic instead of leaving it on.",
+  "tips": [
+   "Short task (30-60), no cannon, so budget the time.",
+   "Mortimer gives them without the unlock and with modifiers.",
+   "Rapier or any stab/slash hybrid saves the weapon switch."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Slow and sailing-gated; do it for the hopper, otherwise skip.",
+  "aoe": false
+ },
+ {
+  "slug": "araxytes",
+  "name": "Araxytes",
+  "image": "Araxyte (lv 146).png",
+  "attr": [],
+  "superior": "Dreadborn araxyte",
+  "unlock": "Priest in Peril. 'More eyes than sense' (150 points) extends to 200-250.",
+  "targets": [
+   {
+    "page": "Araxyte",
+    "ver": "Level 146",
+    "name": "Araxyte (lvl 146)",
+    "loc": null
+   },
+   {
+    "page": "Araxyte",
+    "ver": "Level 96",
+    "name": "Araxyte (lvl 96, avoid)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Morytania Spider Cave (southern task-only cave, lvl 146)",
+    "region": "Morytania",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [],
+    "tele": "Spider cave teleport (scroll), or Ver Sinhaza / Drakan's medallion and run west.",
+    "notes": "Multi with only level 146 araxytes: cannon plus venator bow (2x2, so barrages need diagonal stacking). The eastern cave mixes in 96s, the northern one is single-way 146s."
+   },
+   {
+    "name": "Morytania Spider Cave (main chamber and Araxxor)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same.",
+    "notes": "Mixed levels in the main chamber. Araxxor the boss counts for the task (87 Slayer boosted for spiders tasks; crush weapon)."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "2x2 in multi: venator bow with a cannon beats barrages (crush 20 is their weak melee side if you melee). Weak to Fire (+50%).",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "venom",
+    "text": "Melee hits inflict venom starting at 6: venom immunity for the whole trip (extended anti-venom+, serpentine helm or an anti-venom sip)."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Anti-venom+(4)",
+    "why": "Venom from the start; extended anti-venom+ for long trips"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee"
+   }
+  ],
+  "mechanics": "Only kill the level 146s: better drops and they alone spawn the superior. Cannon in the southern task-only cave, Protect from Melee, venator bow or run diagonally through them to stack for barrages. Pick up venom sacs; herb sack and seed box.",
+  "tips": [
+   "Very profitable even with a cannon: alchables, seeds, herbs, venom sacs.",
+   "Bracelets of slaughter stretch the task.",
+   "Araxxor instead for the big drops if you have a strong crush weapon."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast, profitable, cannonable.",
+  "aoe": true
+ },
+ {
+  "slug": "frost-dragons",
+  "name": "Frost dragons",
+  "image": "Frost dragon.png",
+  "attr": [
+   "dragon",
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "87 Sailing to reach Grimstone (fairy ring DLP after the first mooring). 'Chance of Heavy Frost' raises the odds; 'I see Dragons' extends to 180-240. Nieve and Duradel only.",
+  "targets": [
+   {
+    "page": "Frost dragon",
+    "ver": null,
+    "name": "Frost dragon (lvl 202)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Grimstone Dungeon (task-only area west of the main room)",
+    "region": "Grimstone",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [],
+    "tele": "Fairy ring DLP once you have moored at Grimstone (87 Sailing).",
+    "notes": "Aggressive 230 HP dragons; cannot be cannoned. Safespottable since they only melee and breathe short range. Loot lands on their north-east tile."
+   },
+   {
+    "name": "Grimstone Dungeon (main room)",
+    "region": "Grimstone",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same.",
+    "notes": "~20 spawns shared with everyone; same dragons."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Crush (15) then stab (25) are the weak sides, unlike other dragons; a Dragon hunter lance still wins on dragonbane. 100% weakness to Fire spells makes Fire Surge or a fire staff build genuinely good. Ranged is weak against them except heavy ammo.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "icebreath",
+    "text": "Icy dragonfire up to 50 that also freezes you briefly: antifire plus Anti-dragon shield, or a super antifire alone, blocks it fully; a plain antifire only partly."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Aggressive 202s hitting 16 with melee; pray melee or safespot."
+   }
+  ],
+  "need": [
+   {
+    "item": "Anti-dragon shield",
+    "why": "With an antifire potion, or skip it with super antifire",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Extended super antifire(4)",
+    "why": "Full protection and no freeze without the shield"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee"
+   },
+   {
+    "item": "Dragon hunter lance",
+    "why": "Dragonbane, use crush or stab"
+   }
+  ],
+  "mechanics": "Super antifire (or shield plus antifire), Protect from Melee, lance on crush. Safespot if you prefer: they never attack from range. Dragon metal sheets and nails are the reason to be here, better on task.",
+  "tips": [
+   "Best source of dragon metal sheets and nails, boosted on task.",
+   "Fire spells with the 100% weakness are a real option for mages.",
+   "They do not count as blue or metal dragons; separate task."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Good drops and easy mechanics once you can sail there.",
+  "aoe": false
+ },
+ {
+  "slug": "scabarites",
+  "name": "Scabarites",
+  "image": "Locust rider (ranged).png",
+  "attr": [
+   "kalphite"
+  ],
+  "superior": null,
+  "unlock": "Contact! mostly completed. Nieve/Steve only. Small scarabs, scarab swarms, locust riders and scarab mages count (and the Giant Scarab in NMZ).",
+  "targets": [
+   {
+    "page": "Locust rider",
+    "ver": "Ranger",
+    "name": "Locust rider (lvl 98, ranger)",
+    "loc": "Sophanem Dungeon"
+   },
+   {
+    "page": "Scarab Mage",
+    "ver": "Level 93",
+    "name": "Scarab mage (lvl 93)",
+    "loc": "Sophanem Dungeon"
+   },
+   {
+    "page": "Small scarab",
+    "ver": null,
+    "name": "Small scarab (lvl 41)",
+    "loc": "Uzer Mastaba"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Sophanem Dungeon (west of the entrance)",
+    "region": "Kharidian Desert",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Pharaoh's sceptre to Jalsavrah, or magic carpet to Sophanem; bank and altar in town.",
+    "notes": "Locust riders and two scarab mages near the entrance for easy banking. Floor trap at the entrance, pitch black: light source and tinderbox. Cannon for fast XP, Guthan's for sustain."
+   },
+   {
+    "name": "Uzer Mastaba (small scarabs)",
+    "region": "Kharidian Desert",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Necklace of passage or Uzer teleport, into the mastaba (The Curse of Arrav started).",
+    "notes": "40 HP scarabs with no Strength: the safest and fastest clear, but they drop nothing."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Locust riders have 50 stab/crush defence and 90 slash: stab or crush. Scarab mages 40 stab. Everything here is weak to Fire (+40-50%) if you mage. Protect from Missiles against the riders, Protect from Magic at the mages.",
+  "pray": "Protect from Missiles (Protect from Magic at the scarab mages)",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Locust riders' ranged hits over 20 on mid-level players."
+   },
+   {
+    "kind": "magic",
+    "text": "Scarab mages hit up to 17 with slow magic, extinguish your light or summon swarms (which also count)."
+   },
+   {
+    "kind": "special",
+    "text": "Dark dungeon: a light source is required; traps on the floor at the entrance."
+   }
+  ],
+  "need": [
+   {
+    "item": "Light source",
+    "why": "The Sophanem Dungeon is dark (Kandarin headgear or a bullseye lantern cannot be put out)",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Tinderbox",
+    "why": "Relight a lantern the mages extinguish"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protection prayer"
+   }
+  ],
+  "mechanics": "Light source lit, hop the entrance trap, fight locust riders one at a time west of the entrance with Protect from Missiles (or the two mages in the north-west with Protect from Magic and prayer flicking). Bank and pray in Sophanem upstairs. Small scarabs in the Uzer Mastaba when you just want it over.",
+  "tips": [
+   "Only Nieve assigns them; low weight (4).",
+   "Locust riders drop 2k coin stacks and noted items; bring alchs.",
+   "Cannon plus melee in the dungeon is the fast XP version."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Awkward dungeon for average XP; skip unless you like the desert.",
+  "aoe": false
+ },
+ {
+  "slug": "suqahs",
+  "name": "Suqahs",
+  "image": "Suqah (1).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Lunar Diplomacy started (seal of passage until Dream Mentor). 'Suq-a-nother one' extends to 186-250. Nieve and Duradel only.",
+  "targets": [
+   {
+    "page": "Suqah",
+    "ver": "1",
+    "name": "Suqah (lvl 111)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Lunar Isle (south, by the Astral Altar)",
+    "region": "Lunar Isle",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Lunar Isle teleport (Lunar spellbook) or the boat from Pirates' Cove; Moonclan teleport.",
+    "notes": "Melee-only suqah: cannon north-west of the dead tree over the bridge and avoid the lone mage. Bank in the town."
+   },
+   {
+    "name": "Lunar Isle (north)",
+    "region": "Lunar Isle",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same, run north.",
+    "notes": "Mixed melee and magic suqah; Protect from Magic with melee armour, or safespot by the hill with ranged and a cannon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "50 stab defence is their weakest melee side; 2x2 in multi so a cannon does the work. Weak to Earth (+20%).",
+  "pray": "Protect from Magic (none needed at the melee-only south)",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Shield-wielding suqah cast weak ice spells; the dual-wielders only melee (max 10)."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Aggressive to anyone outside the Moon Clan; wear a seal of passage before Dream Mentor."
+   }
+  ],
+  "need": [
+   {
+    "item": "Seal of passage",
+    "why": "Required on Lunar Isle until Dream Mentor is done",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic if you fight the northern ones"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "The task is a cannon task"
+   }
+  ],
+  "mechanics": "Cannon the melee-only group south of the town, stab weapon, no prayer needed. In the north pray magic and wear melee armour. Suqah hides, teeth and bones are the only loot.",
+  "tips": [
+   "Fast cannon XP; a cost in cannonballs with no drops to speak of.",
+   "Weight 8: common at Nieve and Duradel.",
+   "Lunar Isle bank is a short walk."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Quick and easy with a cannon.",
+  "aoe": false
+ },
+ {
+  "slug": "venators",
+  "name": "Venators",
+  "image": "Venator (1).png",
+  "attr": [
+   "vampyre"
+  ],
+  "superior": "Blood-starved venator",
+  "unlock": "The Blood Moon Rises. Only Mortimer assigns Venators by name; other masters' Vampyre tasks (after 'Actual Vampyre Slayer') can be done on them.",
+  "targets": [
+   {
+    "page": "Venator",
+    "ver": "1",
+    "name": "Venator (lvl 246)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Vampyrium, Virer Hunting Ground",
+    "region": "Vampyrium",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Portal from The Blood Moon Rises; run south of the entrance.",
+    "notes": "12 venators, less crowded, further from the altar. One needs ranged to reach."
+   },
+   {
+    "name": "Vampyrium, Apsul Hunting Ground",
+    "region": "Vampyrium",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same portal.",
+    "notes": "7 venators closer to the altar for prayer."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Tier 3 vampyres: only the Ivandis flail, Blisterwood flail, Hallowed flail, Sunspear or blisterwood stakes can hurt them, so melee with a flail (or stakes). -5 stab defence; Efaritay's aid ring stacks with the slayer helm.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Immune to everything except Ivandis/blisterwood/hallowed flails, the Sunspear and blisterwood stakes."
+   },
+   {
+    "kind": "ranged",
+    "text": "Stab and ranged attacks up to 21; 345 HP each."
+   }
+  ],
+  "need": [
+   {
+    "item": "Ivandis flail",
+    "why": "Minimum weapon that damages them (Blisterwood flail, Hallowed flail or Sunspear are better)",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee; the altar in Vampyrium helps"
+   },
+   {
+    "item": "Efaritay's aid",
+    "why": "200 charges of extra accuracy and damage on vampyres, stacks with the slayer helm"
+   }
+  ],
+  "mechanics": "Flail in hand, Efaritay's aid on, Protect from Melee, kill them one at a time in the hunting grounds; pray back up at the altar between kills. The blood-starved superior has a hugely increased blood shard chance.",
+  "tips": [
+   "Mortimer's modifiers (superior rate) make this the blood shard task.",
+   "No cannon, single-way, 345 HP: a slow but steady task.",
+   "A Vampyre task from Konar/Nieve/Duradel also counts here."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Slow, but blood shards and Mortimer's bonuses pay for it.",
+  "aoe": false
+ }
+]

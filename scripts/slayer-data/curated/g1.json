@@ -1,0 +1,497 @@
+[
+{
+  "slug": "banshees", "name": "Banshees", "image": "Banshee.png", "attr": ["undead", "spectral"], "superior": "Screaming banshee",
+  "unlock": "Priest in Peril.",
+  "targets": [
+    { "page": "Banshee", "ver": null, "name": "Banshee (lvl 23)", "loc": "Slayer Tower" },
+    { "page": "Twisted Banshee", "ver": null, "name": "Twisted Banshee (lvl 89)", "loc": "Catacombs of Kourend" }
+  ],
+  "locations": [
+    { "name": "Slayer Tower (ground floor)", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Slayer ring to the tower, or Kharyrll teleport / Canifis and walk north.", "notes": "A dozen level 23 banshees right inside the door, with crawling hands next door. Safe, quick, no drops worth noting beyond herbs." },
+    { "name": "Catacombs of Kourend (Twisted Banshees)", "region": "Kourend", "multi": true, "cannon": false, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Xeric's talisman (Xeric's Heart) or Kourend Castle teleport, down the statue.", "notes": "Level 89 Twisted Banshees in the south-east with 100 HP: much better XP and herb drops, plus ancient shards and totem pieces. Multi, so bursts stack them. Hit 9 even with earmuffs." }
+  ],
+  "style": "melee",
+  "styleWhy": "Low defence everywhere. Melee with a salve amulet (ei) or slayer helm; burst the Twisted ones in the Catacombs if you have Ancients. Weak to Air spells (+30%).",
+  "pray": "None needed (Protect from Melee at Twisted Banshees if your Defence is low)",
+  "hazards": [
+    { "kind": "drain", "text": "Their scream hits 6 and drains Agility, Attack, Strength, Defence, Ranged, Magic and Prayer unless you wear earmuffs or a slayer helmet." }
+  ],
+  "need": [ { "item": "Earmuffs", "why": "Blocks the scream (stat drain and the 6s)", "helm": true } ],
+  "bring": [],
+  "mechanics": "Wear earmuffs or a slayer helm and they are harmless melee monsters. Kill the normal ones for speed, the Twisted ones in the Catacombs for XP and herbs.",
+  "tips": ["Slayer Tower banshees sit right next to the crawling hands: finish both low tasks in one trip.", "Twisted Banshees drop herbs and noted coins and count as undead for the salve amulet.", "Mortimer's banshee task only counts Slayer Tower banshees or Twisted Banshees for the clue modifier."],
+  "verdict": "do", "verdictWhy": "Fast, safe, and the Catacombs version is decent XP for a low-level task.", "aoe": true
+},
+{
+  "slug": "bats", "name": "Bats", "image": "Giant bat.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Giant bat", "ver": "Normal", "name": "Giant bat (lvl 27)", "loc": null },
+    { "page": "Albino bat", "ver": null, "name": "Albino bat (lvl 52)", "loc": "Mos Le'Harmless" },
+    { "page": "Death wing", "ver": null, "name": "Death wing (lvl 83)", "loc": "Viyeldi" }
+  ],
+  "locations": [
+    { "name": "Silvarea, north of the Digsite", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Digsite pendant or Varrock teleport then walk east along the path to Paterdomus.", "notes": "A handful of giant bats along the path near the Odd Old Man. Safe and close to a teleport." },
+    { "name": "Taverley Dungeon (entrance)", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Falador or Taverley teleport, then the dungeon ladder.", "notes": "Giant bats in the first rooms. Cannon allowed, nothing dangerous around." },
+    { "name": "Mos Le'Harmless caves (Albino bats)", "region": "Mos Le'Harmless", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Charter ship or Harmony Island/Mos Le'Harmless teleport; needs Cabin Fever and a light source.", "notes": "Level 52 albino bats hit up to 7 and are aggressive. Only worth it if you are already there." }
+  ],
+  "style": "melee", "styleWhy": "Weak 2x2 flyers with little defence; any melee or a cannon. Weak to Air spells.", "pray": "None needed",
+  "hazards": [],
+  "need": [], "bring": [],
+  "mechanics": "Hit them. Giant bats fly but can still be meleed. Nothing special to do.",
+  "tips": ["Taverley Dungeon or Silvarea for speed; the task is 15-50 and takes minutes.", "Death wings in the Viyeldi caves (Legends' Quest) count but are not worth the trip."],
+  "verdict": "do", "verdictWhy": "Trivial filler task from the low masters.", "aoe": false
+},
+{
+  "slug": "bears", "name": "Bears", "image": "Grizzly bear (level 21).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Grizzly bear", "ver": "Level 21", "name": "Grizzly bear (lvl 21)", "loc": null },
+    { "page": "Grizzly bear", "ver": "Level 42", "name": "Grizzly bear (lvl 42)", "loc": "Stranglewood" },
+    { "page": "Black bear", "ver": null, "name": "Black bear (lvl 19)", "loc": "Legends" }
+  ],
+  "locations": [
+    { "name": "South-west of the Legends' Guild", "region": "Kandarin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ardougne teleport and walk north-east, or Legends' Guild ring/cape.", "notes": "Several bears in the field south-west of the guild. Cannon allowed." },
+    { "name": "East of the Stranglewood rowboat (level 42 grizzlies)", "region": "Varlamore", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring or walk from the Stranglewood rowboat west of the Silent Chapel area.", "notes": "Level 42 grizzlies with more HP: better Slayer XP per kill for a short task." },
+    { "name": "North of Varrock (Grand Exchange side)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Grand Exchange teleport, walk north-east.", "notes": "A couple of bears in the woods north of the Exchange. Convenient, few spawns." }
+  ],
+  "style": "melee", "styleWhy": "No defence bonuses, 27-35 HP. Anything works. Weak to Fire spells.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Walk up and hit them. They are not aggressive outside the Wilderness.",
+  "tips": ["Legends' Guild bears are the closest cluster to a teleport.", "Callisto and Artio in the Wilderness also count (the Krystilia entry covers them)."],
+  "verdict": "do", "verdictWhy": "Ten to fifty bears is a two-minute task.", "aoe": false
+},
+{
+  "slug": "birds", "name": "Birds", "image": "Chicken (1).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Chicken", "ver": "Normal", "name": "Chicken (lvl 1)", "loc": null },
+    { "page": "Seagull", "ver": "Level 2", "name": "Seagull (lvl 2-3)", "loc": "Port Sarim" },
+    { "page": "Duck", "ver": "Male", "name": "Duck (lvl 1)", "loc": "Champions" }
+  ],
+  "locations": [
+    { "name": "Lumbridge chicken farm (Fred's farm)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, walk north-west.", "notes": "Fenced pen full of chickens: feathers, bones and raw chicken. Fastest version." },
+    { "name": "Port Sarim docks (Seagulls)", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Falador teleport and walk south, or any charter ship to Port Sarim.", "notes": "Seagulls on the docks, 6 HP. Slightly more Slayer XP than chickens." },
+    { "name": "West of the Champions' Guild (Ducks)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Varrock teleport, walk south-west to the river.", "notes": "Ducks on the river; they are in the water so you need Ranged or Magic. Cannon can hit them." }
+  ],
+  "style": "melee", "styleWhy": "3 HP chickens die to anything; use Ranged or Magic only for ducks in the water.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill chickens. Birds added with Sailing give no Slayer XP and do not count.",
+  "tips": ["Chickens are the only bird with a useful drop (feathers).", "Terrorbirds in the Gnome Stronghold and penguins at the Ardougne Zoo also count."],
+  "verdict": "do", "verdictWhy": "Beginner task; it is over before you have thought about it.", "aoe": false
+},
+{
+  "slug": "cave-bugs", "name": "Cave bugs", "image": "Cave bug (level 6).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Cave bug", "ver": "Level 6", "name": "Cave bug (lvl 6)", "loc": "Lumbridge" },
+    { "page": "Cave bug", "ver": "Level 96", "name": "Cave bug (lvl 96)", "loc": "Dorgesh-Kaan" }
+  ],
+  "locations": [
+    { "name": "Lumbridge Swamp Caves", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, swamp entrance under the trapdoor south-west, bring a rope the first time.", "notes": "Level 6 bugs by the entrance; a light source is required and exposed candles can explode near swamp gas, so use a lantern." },
+    { "name": "Dorgesh-Kaan South Dungeon (level 96 bugs)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Dorgesh-Kaan sphere or the Lumbridge cellar train; needs Death to the Dorgeshuun.", "notes": "Level 96 cave bugs with 93 HP: far more XP per kill, hit up to 9 and drop herbs. No light source needed." }
+  ],
+  "style": "melee", "styleWhy": "Weak; the level 96 ones have decent melee defence, so crush or Fire spells (weak to Fire, +50%) if you go there.", "pray": "None needed",
+  "hazards": [ { "kind": "special", "text": "Lumbridge Swamp Caves need a light source; an open flame can set off swamp gas for up to 15 damage." } ],
+  "need": [ { "item": "Light source", "why": "Lumbridge Swamp Caves are dark (lantern, not a candle)", "helm": false } ],
+  "bring": [],
+  "mechanics": "Kill the level 6 bugs in the swamp caves for speed, or the level 96 ones in Dorgesh-Kaan South for XP and herbs.",
+  "tips": ["A bullseye or oil lantern avoids the swamp gas explosions.", "Cave bugs and cave slimes are in the same caves: do both tasks in one trip."],
+  "verdict": "do", "verdictWhy": "Short and safe.", "aoe": false
+},
+{
+  "slug": "cave-crawlers", "name": "Cave crawlers", "image": "Cave crawler (1).png", "attr": [], "superior": "Chasm Crawler",
+  "unlock": null,
+  "targets": [ { "page": "Cave crawler", "ver": "Standard (1)", "name": "Cave crawler (lvl 23)", "loc": null } ],
+  "locations": [
+    { "name": "Fremennik Slayer Dungeon", "region": "Fremennik", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring AJR, or slayer ring to Rellekka Slayer Caves.", "notes": "First room past the entrance. Rocks along the walls are safespots for Ranged or Magic. Bank via the fairy ring." },
+    { "name": "Lumbridge Swamp Caves", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, trapdoor in the swamp (rope once).", "notes": "Needs a light source; use a lantern, candles can explode in the swamp gas. The Zanaris shed is nearby for banking." },
+    { "name": "Dorgesh-Kaan South Dungeon", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Dorgesh-Kaan sphere; needs Death to the Dorgeshuun.", "notes": "Crawlers near the entrance, lit dungeon." }
+  ],
+  "style": "melee", "styleWhy": "22 HP and low defence. Range from the rocks if your Defence is low so you never get poisoned.", "pray": "None needed",
+  "hazards": [ { "kind": "poison", "text": "Their bite poisons for 8 (strong poison for this level)." } ],
+  "need": [],
+  "bring": [ { "item": "Antidote++(4)", "why": "They poison for 8", "helm": false } ],
+  "mechanics": "Kill them from a safespot or just tank them with antipoison. They regenerate 1 HP every 5 ticks, so do not let a fight drag.",
+  "tips": ["Fremennik Slayer Dungeon is the quick option with a fairy ring outside.", "They drop herbs and seeds, a nice early herblore source.", "Superior: Chasm Crawler, needs the Bigger and Badder unlock."],
+  "verdict": "do", "verdictWhy": "Easy task with herb drops.", "aoe": false
+},
+{
+  "slug": "cave-slime", "name": "Cave slime", "image": "Cave slime.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [ { "page": "Cave slime", "ver": null, "name": "Cave slime (lvl 23)", "loc": null } ],
+  "locations": [
+    { "name": "Lumbridge Swamp Caves", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, swamp trapdoor (rope once).", "notes": "Slimes near the cave crawlers. Needs a light source; swamp gas explodes near open flames, use a lantern." },
+    { "name": "Dorgesh-Kaan South Dungeon", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Dorgesh-Kaan sphere; needs Death to the Dorgeshuun.", "notes": "Lit dungeon, slimes right by the entrance. Easiest version." }
+  ],
+  "style": "melee", "styleWhy": "25 HP, no defence bonuses but 35 Defence; weak to Earth spells (+50%) if you prefer magic.", "pray": "None needed",
+  "hazards": [ { "kind": "poison", "text": "Poisons for 3." }, { "kind": "special", "text": "Swamp caves need a light source; open flames can explode." } ],
+  "need": [ { "item": "Light source", "why": "Lumbridge Swamp Caves are dark (not needed in Dorgesh-Kaan South)", "helm": false } ],
+  "bring": [ { "item": "Antidote++(4)", "why": "Weak poison, but it adds up on a 10-20 task", "helm": false } ],
+  "mechanics": "Hit them; they are slow to kill for their level because of 35 Defence. A slayer gem shows the count, task is only 10-20.",
+  "tips": ["Dorgesh-Kaan South needs no light source and has both slimes and bugs.", "They drop swamp tar and the occasional herb."],
+  "verdict": "do", "verdictWhy": "Tiny task; mildly annoying poison, nothing else.", "aoe": false
+},
+{
+  "slug": "cows", "name": "Cows", "image": "Cow (1).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [ { "page": "Cow", "ver": "1", "name": "Cow (lvl 2)", "loc": null } ],
+  "locations": [
+    { "name": "Lumbridge cow field", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, east across the bridge.", "notes": "Dozens of cows and calves. Cowhides pile up; a looting bag is not needed, just bank at Lumbridge." },
+    { "name": "Crafting Guild field", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Skills necklace to the Crafting Guild.", "notes": "Cows beside the guild; tan the hides inside if you have 40 Crafting." },
+    { "name": "Alice's farm west of the Ectofuntus (Undead cows)", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ectophial.", "notes": "Undead cows count for both cows and zombies." }
+  ],
+  "style": "melee", "styleWhy": "8 HP. Anything.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill cows. Cow calves count too.",
+  "tips": ["Keep the cowhides: they sell or tan into leather for early Crafting.", "Brutus, the cow boss on Sailing ships, also counts."],
+  "verdict": "do", "verdictWhy": "Starter task.", "aoe": false
+},
+{
+  "slug": "crawling-hands", "name": "Crawling Hands", "image": "Crawling Hand (level 7).png", "attr": ["undead"], "superior": "Crushing hand",
+  "unlock": "Priest in Peril.",
+  "targets": [ { "page": "Crawling Hand", "ver": "Level 7", "name": "Crawling Hand (lvl 7-12)", "loc": null } ],
+  "locations": [
+    { "name": "Slayer Tower (ground floor)", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Slayer ring to the tower, or Kharyrll / Canifis.", "notes": "Right inside the entrance, east room. Twenty-odd hands, 15 HP each. Drop gloves of every colour." },
+    { "name": "Meiyerditch Laboratories", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Drakan's medallion; needs Sins of the Father progress.", "notes": "Hands spread through the labs. Only if you are already there." }
+  ],
+  "style": "melee", "styleWhy": "15 HP, 3 Defence. Anything kills them in one hit.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill them. They are undead, so a salve amulet works, but nothing is needed.",
+  "tips": ["Slayer Tower hands and banshees are in adjacent rooms: do both tasks in one visit.", "Superior Crushing hand needs Bigger and Badder."],
+  "verdict": "do", "verdictWhy": "One-hit kills next to a teleport.", "aoe": false
+},
+{
+  "slug": "dogs", "name": "Dogs", "image": "Guard dog.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Jackal", "ver": null, "name": "Jackal (lvl 21)", "loc": "Nardah" },
+    { "page": "Guard dog", "ver": "Normal", "name": "Guard dog (lvl 44)", "loc": "Zoo" }
+  ],
+  "locations": [
+    { "name": "South-west of the Nardah fairy ring (Jackals)", "region": "Kharidian Desert", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring DLQ, walk south-west.", "notes": "Jackals wander the sand; 27 HP. Bring a waterskin or do it quickly, the desert heat hurts." },
+    { "name": "Ardougne Zoo (Guard dogs)", "region": "Kandarin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ardougne teleport, walk south.", "notes": "Guard dogs in the pen; they hit 5 but are not aggressive to higher levels." },
+    { "name": "McGrubor's Wood (Guard dogs)", "region": "Kandarin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring ALS, or Seers' Village and walk north.", "notes": "Guard dogs inside the wood; squeeze through the loose railing on the east side." }
+  ],
+  "style": "melee", "styleWhy": "No defence bonuses; melee them. Weak to Fire spells.", "pray": "None needed",
+  "hazards": [ { "kind": "special", "text": "Desert heat: jackals are in the desert, carry a waterskin or finish fast." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill any dog variety. Guard dogs give more XP per kill than jackals for a 15-50 task.",
+  "tips": ["Ardougne Zoo guard dogs are the most convenient teleport-to-task spot.", "Wild dogs in Brimhaven Dungeon count if you are already there."],
+  "verdict": "do", "verdictWhy": "Quick low task.", "aoe": false
+},
+{
+  "slug": "dwarves", "name": "Dwarves", "image": "Dwarf.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Dwarf", "ver": "Standard (Level 10)", "name": "Dwarf (lvl 10)", "loc": null },
+    { "page": "Chaos dwarf", "ver": null, "name": "Chaos dwarf (lvl 48)", "loc": "Taverley" }
+  ],
+  "locations": [
+    { "name": "White Wolf Mountain tunnel pub (Keldagrim side)", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Keldagrim mine cart from the Grand Exchange, or the White Wolf Mountain tunnel after Fishing Contest.", "notes": "Level 20 dwarves in the pub and tunnels: the highest-XP regular dwarves." },
+    { "name": "Dwarven Mine / Ice Mountain", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Falador teleport, walk north to the mine, or Lassar for Ice Mountain.", "notes": "Level 10 dwarves and Black Guards on the mountain; dwarf gang members in the mine also count." },
+    { "name": "Taverley Dungeon (Chaos dwarves)", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Taverley teleport or Falador; chaos dwarves are past the poison spiders.", "notes": "Level 48 chaos dwarves with 61 HP for 61 XP each; they hit 6." }
+  ],
+  "style": "melee", "styleWhy": "Weak melee monsters; chaos dwarves wear armour (40 stab defence) so use crush if you fight those.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill dwarves. Black Guards, dwarf gang members and chaos dwarves all count.",
+  "tips": ["Dwarves have no useful drops; pick the closest spot to a teleport and move on.", "Chaos dwarves in the Wilderness also count but are not worth the risk."],
+  "verdict": "do", "verdictWhy": "Ten to twenty-five dwarves, over in minutes.", "aoe": false
+},
+{
+  "slug": "ghosts", "name": "Ghosts", "image": "Ghost.png", "attr": ["undead", "spectral"], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Ghost", "ver": "Level 19", "name": "Ghost (lvl 19-29)", "loc": null },
+    { "page": "Ghost", "ver": "Level 76", "name": "Ghost (lvl 76-77, Sepulchre of Death)", "loc": "Stronghold" }
+  ],
+  "locations": [
+    { "name": "Catacombs of Kourend", "region": "Kourend", "multi": true, "cannon": false, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Xeric's talisman (Heart) or Kourend Castle teleport, down the statue.", "notes": "Ghosts in the north-west with the other spectral things. Multi, totem pieces and ancient shards drop." },
+    { "name": "Taverley Dungeon", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Taverley teleport, dungeon ladder.", "notes": "Level 19 ghosts near the entrance by the skeletons." },
+    { "name": "Stronghold of Security, Sepulchre of Death (level 76-77)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Barbarian Village, down all four levels (or the portal if you finished the stronghold).", "notes": "The only high-level plain ghosts: 75 HP, hit 7. Better XP if you can take a few hits." }
+  ],
+  "style": "melee", "styleWhy": "Low defence, -5 magic defence; melee with a salve amulet, or Air spells (weak to Air, +50%).", "pray": "None needed",
+  "hazards": [],
+  "need": [], "bring": [],
+  "mechanics": "Only plain ghosts, forgotten souls, tortured souls, death wings and revenants count. Spectres, ghasts, banshees and shades do not.",
+  "tips": ["Catacombs ghosts for the ancient shard chance; Taverley for pure speed.", "Revenants count as ghosts if you want Wilderness loot with the task."],
+  "verdict": "do", "verdictWhy": "Quick, safe, undead for the salve.", "aoe": true
+},
+{
+  "slug": "goblins", "name": "Goblins", "image": "Goblin.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [ { "page": "Goblin", "ver": "Level 2", "name": "Goblin (lvl 2-13)", "loc": null } ],
+  "locations": [
+    { "name": "East of Lumbridge (Goblin Village side of the river)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, east over the bridge.", "notes": "Dozens of level 2-5 goblins by the river and the cow field." },
+    { "name": "Goblin Village", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Falador teleport, walk north.", "notes": "Level 5 and 13 goblins packed together." }
+  ],
+  "style": "melee", "styleWhy": "5 HP. Anything.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill goblins. Cave goblin guards and the Sergeants in the God Wars Dungeon also count, not that you need them.",
+  "tips": ["Fastest at Lumbridge: no travel after the teleport."],
+  "verdict": "do", "verdictWhy": "Starter task.", "aoe": false
+},
+{
+  "slug": "icefiends", "name": "Icefiends", "image": "Icefiend.png", "attr": ["demon"], "superior": null, "unlock": null,
+  "targets": [ { "page": "Icefiend", "ver": "Level 13", "name": "Icefiend (lvl 13)", "loc": null } ],
+  "locations": [
+    { "name": "Ice Mountain", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lassar teleport (Ancients) lands on them; otherwise Falador teleport and walk north-east.", "notes": "About ten icefiends on the mountain top. Drop fiendish ashes and easy clues." },
+    { "name": "Ruins of Tapoyauik", "region": "Varlamore", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Needs The Heart of Darkness; Quetzal to Tal Teklan then walk.", "notes": "Icefiends here drop moon key halves. Only worth it if you want those." }
+  ],
+  "style": "melee", "styleWhy": "15 HP and no defence; weak to Fire spells (+100%), so a Fire Strike one-shots them.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill them; their 'magical melee' only hits 2. Demon attribute means Arclight works, pointlessly.",
+  "tips": ["Lassar teleport puts you on top of them; 15-20 assigned.", "God Wars icefiends count too if you happen to be there."],
+  "verdict": "do", "verdictWhy": "Tiny, safe task.", "aoe": false
+},
+{
+  "slug": "kalphite", "name": "Kalphite", "image": "Kalphite Soldier.png", "attr": ["kalphite"], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Kalphite Worker", "ver": null, "name": "Kalphite Worker (lvl 28)", "loc": null },
+    { "page": "Kalphite Soldier", "ver": "Kalphite Lair", "name": "Kalphite Soldier (lvl 85)", "loc": "Kalphite Lair" },
+    { "page": "Kalphite Guardian", "ver": "Upper level", "name": "Kalphite Guardian (lvl 141)", "loc": "Kalphite Lair" },
+    { "page": "Kalphite Soldier", "ver": "Kalphite Cave (task only)", "name": "Kalphite Soldier (lvl 85, task-only cave)", "loc": "Kalphite Cave" }
+  ],
+  "locations": [
+    { "name": "Kalphite Cave (east of Shantay Pass)", "region": "Kharidian Desert", "multi": true, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": ["konar"],
+      "tele": "Shantay Pass (ring of dueling to Al Kharid, walk south) or fairy ring BIQ; rope not needed.", "notes": "Workers everywhere plus task-only soldiers and guardians in multi; cannon friendly. Workers are safe for anyone, the task-only soldiers hit 8 and poison." },
+    { "name": "Kalphite Lair (Bedabin camp)", "region": "Kharidian Desert", "multi": true, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": ["konar"],
+      "tele": "Fairy ring BIQ then north-west, or Bedabin camp; a rope is needed once for the entrance.", "notes": "Workers in the first room, soldiers deeper, guardians by the Queen's tunnel. Multi and cannonable; the Queen counts too." },
+    { "name": "Kalphite Queen's chamber", "region": "Kharidian Desert", "multi": true, "cannon": false, "wildy": false, "danger": 3, "task_only": false, "masters": [],
+      "tele": "Kalphite Lair, rope down the second shaft.", "notes": "Boss variant: both phases count as kalphite kills. Proper boss gear and prayer switching needed." }
+  ],
+  "style": "melee", "styleWhy": "Workers have nothing; soldiers and guardians have 50 magic defence but only 5 crush defence, so crush weapons or a cannon. All kalphites are weak to Fire spells (+40%). Keris and the keris partisan get bonus damage against kalphites.", "pray": "Protect from Melee (if you fight soldiers or guardians)",
+  "hazards": [ { "kind": "poison", "text": "Soldiers poison for 4 and guardians for 6; workers do not poison." }, { "kind": "special", "text": "Desert heat applies on the walk in; it does not inside the lair or cave." } ],
+  "need": [],
+  "bring": [ { "item": "Antidote++(4)", "why": "Soldiers and guardians poison", "helm": false }, { "item": "Rope", "why": "First entry to the Kalphite Lair", "helm": false } ],
+  "mechanics": "Low levels kill workers only: 40 HP, no poison. Higher levels cannon the soldiers in the task-only cave or the lair with Protect from Melee on. Keris weapons hit kalphites harder and can hit triple.",
+  "tips": ["Konar sends you to the Kalphite Lair or the Kalphite Cave specifically; both are cannon and multi.", "Workers give 40 XP each and never poison, which is why they are the pick for low masters.", "Kalphite Queen kills count if you want to turn the task into a boss trip."],
+  "verdict": "do", "verdictWhy": "Fast with a cannon; weak points make workers trivial for anyone.", "aoe": false
+},
+{
+  "slug": "lizards", "name": "Lizards", "image": "Desert Lizard (green).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Desert Lizard", "ver": "Green", "name": "Desert Lizard (lvl 24)", "loc": "Nardah" },
+    { "page": "Small Lizard", "ver": "Green", "name": "Small Lizard (lvl 12)", "loc": "Nardah" },
+    { "page": "Sulphur Lizard", "ver": null, "name": "Sulphur Lizard (lvl 50)", "loc": "Karuulm" }
+  ],
+  "locations": [
+    { "name": "North of the Nardah fairy ring (desert lizards)", "region": "Kharidian Desert", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring DLQ, walk north; or Nardah teleport and walk north.", "notes": "Small, desert and plain lizards together. Each kill needs an ice cooler to finish (one per lizard), buy them from any Slayer master. Desert heat: bring waterskins." },
+    { "name": "Karuulm Slayer Dungeon (Sulphur lizards, 44 Slayer)", "region": "Kebos", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Fairy ring CIR or Rada's blessing, down the elevator to the first floor.", "notes": "No ice coolers needed and a frequent gem drop, but the floor burns you without boots of stone, brimstone or granite (elite Kourend diary exempts you)." }
+  ],
+  "style": "melee", "styleWhy": "Weak melee monsters; the only thing that matters is the finishing item.", "pray": "None needed",
+  "hazards": [ { "kind": "special", "text": "Desert lizards cannot be killed below 4 HP without an ice cooler; the heat drains your water." }, { "kind": "special", "text": "Karuulm floor burns without boots of stone/brimstone/granite boots." } ],
+  "need": [
+    { "item": "Ice cooler", "why": "One per desert lizard to deal the finishing blow (not needed for sulphur lizards)", "helm": false },
+    { "item": "Boots of stone", "why": "Only for the Karuulm sulphur lizards", "helm": false }
+  ],
+  "bring": [],
+  "mechanics": "Lower a desert lizard to under 4 HP, then use an ice cooler on it (or have the Reptile freezer unlock, 10 points, which does it automatically). Sulphur lizards in Karuulm die normally.",
+  "tips": ["Buy as many ice coolers as the task count; they are consumed one per kill.", "Reptile freezer (10 Slayer points) removes the clicking.", "At 44 Slayer the sulphur lizards are better: gems and no coolers."],
+  "verdict": "do", "verdictWhy": "Fine once you have the coolers or the unlock.", "aoe": false
+},
+{
+  "slug": "minotaurs", "name": "Minotaurs", "image": "Minotaur.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [ { "page": "Minotaur", "ver": "Level 12", "name": "Minotaur (lvl 12-27)", "loc": null } ],
+  "locations": [
+    { "name": "Stronghold of Security, first level (Vault of War)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Barbarian Village hole; the portal at the end of the level returns you to the start.", "notes": "Only place they exist. Level 12 ones near the entrance, level 27 deeper. -21 defence bonuses, they fall over." }
+  ],
+  "style": "melee", "styleWhy": "10 HP and negative defence bonuses. Anything.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Walk into the stronghold and kill them. Right half of a bronze key... no, that is left-handed; they drop iron arrows and the right skull half.",
+  "tips": ["Finish the whole first level once for the 2k coins and the fancy boots emote, since you are there anyway."],
+  "verdict": "do", "verdictWhy": "Ten to twenty one-hit minotaurs.", "aoe": false
+},
+{
+  "slug": "monkeys", "name": "Monkeys", "image": "Monkey.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Monkey (monster)", "ver": "Common", "name": "Monkey (lvl 3)", "loc": null },
+    { "page": "Maniacal monkey", "ver": null, "name": "Maniacal monkey (lvl 140)", "loc": "Kruk" },
+    { "page": "Monkey Guard", "ver": "Unbearded", "name": "Monkey Guard (lvl 167)", "loc": "Marimbo" }
+  ],
+  "locations": [
+    { "name": "Ardougne Zoo", "region": "Kandarin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ardougne teleport, walk south.", "notes": "Monkeys in a pen; 6 HP. Safest and fastest." },
+    { "name": "Karamja (north-west of the gnome glider / Musa Point)", "region": "Karamja", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Gnome glider to Karamja or the charter to Musa Point.", "notes": "Monkeys in the jungle around the volcano and Brimhaven. Spread out." },
+    { "name": "Kruk's Dungeon (Maniacal monkeys)", "region": "Ape Atoll", "multi": true, "cannon": false, "wildy": false, "danger": 3, "task_only": false, "masters": [],
+      "tele": "Ape Atoll teleport; needs Monkey Madness II progress and the dungeon access.", "notes": "Level 140 maniacal monkeys in multi: 65 HP, 10 Defence, hit 18, swarm you. The classic chinning spot with Protect from Melee." }
+  ],
+  "style": "melee", "styleWhy": "Zoo monkeys die to anything. Maniacal monkeys are the Ranged chinchompa training spot, not a task spot.", "pray": "None needed (Protect from Melee at maniacal monkeys)",
+  "hazards": [ { "kind": "aggressive", "text": "Maniacal monkeys swarm in multi and hit 18; only relevant if you go to Kruk's Dungeon." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill plain monkeys at the zoo. Monkey Archers, Guards, Zombies, tortured and demonic gorillas and maniacal monkeys all count if you want a fight.",
+  "tips": ["Ardougne Zoo: teleport, kill 15-30, leave.", "Demonic gorillas count, so an MM2 player can take this task to the Crash Site Cavern for zenyte drops."],
+  "verdict": "do", "verdictWhy": "Trivial unless you choose the gorillas.", "aoe": false
+},
+{
+  "slug": "rats", "name": "Rats", "image": "Giant rat.png", "attr": ["rat"], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Giant rat", "ver": "Level 3", "name": "Giant rat (lvl 3-26)", "loc": null },
+    { "page": "Crypt rat", "ver": null, "name": "Crypt rat (lvl 43)", "loc": "Haunted" },
+    { "page": "Dungeon rat", "ver": null, "name": "Dungeon rat (lvl 12)", "loc": "Ferox" }
+  ],
+  "locations": [
+    { "name": "Varrock Sewers", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Varrock teleport, manhole east of the palace.", "notes": "Giant rats right at the bottom of the ladder with zombies and skeletons around." },
+    { "name": "Ferox Enclave dungeon (Dungeon rats)", "region": "Wilderness edge", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ring of dueling to Ferox Enclave; the dungeon under it is safe (not PvP).", "notes": "Dungeon rats in the safe cellar under Ferox; bank and pool next to you." },
+    { "name": "Haunted Mine (Crypt rats)", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Burgh de Rott / Mort Myre; needs Haunted Mine started.", "notes": "Level 43 crypt rats with 35 HP for more XP, next to the crypt spiders." }
+  ],
+  "style": "melee", "styleWhy": "5-35 HP, no defence. Anything.", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill rats. Scurrius, the rat boss under Varrock Sewers, counts and is a reasonable low-level boss.",
+  "tips": ["Ferox Enclave's cellar rats are the quickest with a bank beside them.", "Scurrius counts for the task and drops the rat bone weapons."],
+  "verdict": "do", "verdictWhy": "Starter task.", "aoe": false
+},
+{
+  "slug": "scorpions", "name": "Scorpions", "image": "Scorpion.png", "attr": [], "superior": null, "unlock": null,
+  "targets": [ { "page": "Scorpion", "ver": "Level 14", "name": "Scorpion (lvl 14)", "loc": null } ],
+  "locations": [
+    { "name": "Al Kharid mine", "region": "Kharidian Desert", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ring of dueling to Al Kharid duel arena area, walk north; or Al Kharid teleport.", "notes": "Level 14 scorpions among the miners. Not aggressive to most players." },
+    { "name": "Dwarven Mine / Mining Guild", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Skills necklace to the Mining Guild (60 Mining) or Falador and walk.", "notes": "Scorpions and king scorpions around the mine; king scorpions (level 32) count." }
+  ],
+  "style": "melee", "styleWhy": "17 HP, little defence; weak to Fire spells. Anything.", "pray": "None needed",
+  "hazards": [ { "kind": "poison", "text": "Poison scorpions (Karamja, Pirates' Hideout) and pit scorpions poison; the plain level 14 ones do not." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill scorpions. King scorpions, poison and pit scorpions count; Scorpia and her offspring in the Wilderness count too.",
+  "tips": ["Al Kharid mine: closest to a teleport.", "Scorpia's offspring respawn constantly, which makes her lair the fast Wilderness version."],
+  "verdict": "do", "verdictWhy": "Quick, safe.", "aoe": false
+},
+{
+  "slug": "skeletons", "name": "Skeletons", "image": "Skeleton (level 21, 1).png", "attr": ["undead"], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Skeleton", "ver": "1 (Unarmed)", "name": "Skeleton (lvl 21-25)", "loc": null },
+    { "page": "Skeleton (Catacombs of Kourend)", "ver": null, "name": "Skeleton (lvl 22, Catacombs)", "loc": "Catacombs" },
+    { "page": "Skeleton (Shayzien Crypts)", "ver": "Melee", "name": "Skeleton (lvl 132, Shayzien Crypts)", "loc": "Shayzien" }
+  ],
+  "locations": [
+    { "name": "Digsite Dungeon / Varrock Sewers", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Digsite pendant, or Varrock teleport to the sewer manhole.", "notes": "Low-level skeletons in numbers. Safe." },
+    { "name": "Catacombs of Kourend", "region": "Kourend", "multi": true, "cannon": false, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Xeric's talisman (Heart) or Kourend Castle teleport.", "notes": "Skeletons near the entrance in multi; ancient shards and totem pieces." },
+    { "name": "Edgeville Dungeon (non-Wilderness part)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Amulet of glory to Edgeville, trapdoor.", "notes": "Skeletons by the hill giants, outside the Wilderness line." },
+    { "name": "Shayzien Crypts (level 132 skeletons)", "region": "Kourend", "multi": false, "cannon": false, "wildy": false, "danger": 3, "task_only": false, "masters": [],
+      "tele": "Shayzien, graveyard south of the encampment.", "notes": "Melee, Ranged and Magic skeletons that hit 19. Loot chests in the crypt; only for higher levels." }
+  ],
+  "style": "melee", "styleWhy": "-5 crush defence: a crush weapon with a salve amulet. Many skeletons are weak to Earth spells (+35%).", "pray": "None needed",
+  "hazards": [], "need": [], "bring": [],
+  "mechanics": "Kill any skeleton. Skeleton mages, Stronghold and Ancient Cavern skeletons, skogres and Fremennik skeletons count; so do Vet'ion and Calvar'ion and their skeleton hellhounds.",
+  "tips": ["Digsite Dungeon or Edgeville Dungeon for the fastest safe task.", "Vet'ion / Calvar'ion turn the task into a boss trip (covered by the Wilderness entry)."],
+  "verdict": "do", "verdictWhy": "Easy undead task.", "aoe": true
+},
+{
+  "slug": "spiders", "name": "Spiders", "image": "Giant spider (Level 27).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Giant spider", "ver": "Level 27", "name": "Giant spider (lvl 27)", "loc": null },
+    { "page": "Spider", "ver": "Stronghold of Security", "name": "Spider (lvl 1, Stronghold)", "loc": "Stronghold" }
+  ],
+  "locations": [
+    { "name": "Outside the H.A.M. Hideout", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Lumbridge teleport, walk west to the trapdoor.", "notes": "Low-level spiders around the hideout entrance." },
+    { "name": "Stronghold of Security, second level (Giant spiders)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Barbarian Village hole, down one ladder.", "notes": "Level 50 giant spiders in packs; aggressive and they hit 7, but tons of them." },
+    { "name": "Clock Tower dungeon (black door)", "region": "Kandarin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ardougne teleport, walk south to the Clock Tower.", "notes": "Giant spiders behind the black-square door." }
+  ],
+  "style": "melee", "styleWhy": "Weak; weak to Fire spells (+50%). Anything.", "pray": "None needed (Protect from Melee in the Stronghold swarm)",
+  "hazards": [ { "kind": "poison", "text": "Poison spiders (Taverley Dungeon, Wilderness) poison; giant spiders do not." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill spiders. Shadow, giant crypt and temple spiders count, as do Sarachnis, Venenatis, Spindel and Araxxor.",
+  "tips": ["H.A.M. Hideout is the no-risk version right next to Lumbridge.", "Sarachnis counts, a cheap mid-level boss with a nice drop table.", "Venenatis/Spindel are the Wilderness boss route (covered by the Wilderness entry)."],
+  "verdict": "do", "verdictWhy": "Quick, no requirements.", "aoe": false
+},
+{
+  "slug": "wolves", "name": "Wolves", "image": "Wolf (level 11).png", "attr": [], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "White wolf", "ver": "Level 25", "name": "White wolf (lvl 25)", "loc": "White Wolf" },
+    { "page": "Wolf", "ver": "Level 64", "name": "Wolf (lvl 64, Stronghold / Feldip)", "loc": "Stronghold" },
+    { "page": "Big Wolf", "ver": "White Wolf Mountain", "name": "Big Wolf (lvl 73)", "loc": "White Wolf" }
+  ],
+  "locations": [
+    { "name": "White Wolf Mountain", "region": "Asgarnia", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Taverley or Catherby side; climb the mountain path.", "notes": "White wolves (25) and big wolves (73) all over the pass. Aggressive to low levels." },
+    { "name": "Stronghold of Security, second level (Wolves)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Barbarian Village hole, down one ladder.", "notes": "Level 64 wolves with 74 HP: decent XP for a 15-50 task." },
+    { "name": "Feldip Hills", "region": "Feldip", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Fairy ring AKS.", "notes": "Jungle wolves and big wolves around the fairy ring." }
+  ],
+  "style": "melee", "styleWhy": "No defence bonuses; weak to Fire spells. Melee.", "pray": "None needed",
+  "hazards": [ { "kind": "aggressive", "text": "Wolves are aggressive to lower-level players and come in packs." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill wolves of any kind. Desert, ice, jungle, dire and white wolves count.",
+  "tips": ["Stronghold wolves give the best XP per kill of the common ones.", "No drops at all; pick the closest spot."],
+  "verdict": "do", "verdictWhy": "Short, no drops, no danger.", "aoe": false
+},
+{
+  "slug": "zombies", "name": "Zombies", "image": "Zombie (Level 13).png", "attr": ["undead"], "superior": null, "unlock": null,
+  "targets": [
+    { "page": "Zombie", "ver": "Level 13, 1", "name": "Zombie (lvl 13-30)", "loc": null },
+    { "page": "Undead chicken", "ver": null, "name": "Undead chicken (lvl 1)", "loc": "Alice" },
+    { "page": "Undead Druid", "ver": null, "name": "Undead Druid (lvl 105)", "loc": "Forthos" }
+  ],
+  "locations": [
+    { "name": "Alice's farm west of the Ectofuntus (Undead cows and chickens)", "region": "Morytania", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Ectophial.", "notes": "Undead cows and chickens count as zombies and die in one hit. Fastest version by far." },
+    { "name": "Varrock Sewers / Edgeville Dungeon", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 1, "task_only": false, "masters": [],
+      "tele": "Varrock teleport (manhole) or glory to Edgeville (trapdoor).", "notes": "Plain level 13-25 zombies near the entrances." },
+    { "name": "Forthos Dungeon (Undead Druids)", "region": "Kourend", "multi": false, "cannon": true, "wildy": false, "danger": 3, "task_only": false, "masters": [],
+      "tele": "Xeric's talisman (Lookout) then walk south-east to Hosidius, dungeon under the ruins.", "notes": "Level 105 undead druids hit 22 with magic, drop herbs and the dragon pieces. Protect from Magic. Only for stronger players." }
+  ],
+  "style": "melee", "styleWhy": "Undead with no defence: melee with a salve amulet. Weak to Fire spells (+50%).", "pray": "None needed (Protect from Magic at the Undead Druids)",
+  "hazards": [ { "kind": "magic", "text": "Undead Druids in Forthos hit up to 22 with Magic." } ],
+  "need": [], "bring": [],
+  "mechanics": "Kill any zombie. Undead cows and chickens, monkey zombies, zogres, armoured zombies and zombie pirates all count; so does Vorkath.",
+  "tips": ["Ectophial to Alice's farm: 15-50 undead chickens take two minutes.", "Zombie pirates in the Wilderness are the profitable version (covered by the Wilderness entry).", "Undead Druids are excellent herb drops if you can handle them."],
+  "verdict": "do", "verdictWhy": "One of the easiest tasks in the game.", "aoe": false
+},
+{
+  "slug": "sourhogs", "name": "Sourhogs", "image": "Sourhog.png", "attr": [], "superior": null,
+  "unlock": "A Porcine of Interest.",
+  "targets": [ { "page": "Sourhog", "ver": null, "name": "Sourhog (lvl 37)", "loc": null } ],
+  "locations": [
+    { "name": "Sourhog Cave (east of Draynor Manor)", "region": "Misthalin", "multi": false, "cannon": true, "wildy": false, "danger": 2, "task_only": false, "masters": [],
+      "tele": "Draynor Manor teleport or Varrock teleport then walk west; the cave is north of the manor's east side.", "notes": "Only location. Several sourhogs in a small cave; they hit 6 with reinforced goggles on, 20-30 without." }
+  ],
+  "style": "melee", "styleWhy": "0 stab defence (30 slash, 30 magic): stab weapons. 40 HP.", "pray": "None needed",
+  "hazards": [ { "kind": "ranged", "text": "Their spit hits 20-30 unless you wear reinforced goggles or a slayer helmet; with them it hits at most 6." } ],
+  "need": [ { "item": "Reinforced goggles", "why": "Caps their spit at 6 instead of 20-30 (from A Porcine of Interest)", "helm": true } ],
+  "bring": [],
+  "mechanics": "Put the goggles (or slayer helm) on before you enter and stab them. The task is only assigned by Spria.",
+  "tips": ["Keep the goggles from the quest; without them a sourhog can two-shot a low-level account.", "They drop a decent amount of herbs and seeds for a level 37 monster."],
+  "verdict": "do", "verdictWhy": "Short and safe with the goggles on.", "aoe": false
+}
+]

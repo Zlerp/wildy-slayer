@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="Wildy Slayer" />
   <meta name="mobile-web-app-capable" content="yes" />
   <script src="/pwa.js" defer></script>
-  <meta name="description" content="Old School RuneScape Wilderness Slayer helper: look up your stats, pick a Krystilia task, get the spot, the gear, the supplies and the cost." />
+  <meta name="description" content="Old School RuneScape Slayer helper for every master: look up your stats, pick the task, see what it is weak to, what it does to you, the gear, the spot, what to bring and the cost." />
   <link rel="icon" href="/icons/icon-192.png" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -20,9 +20,9 @@
   <a class="home" href="https://playground-zlerps-projects.vercel.app/">← playground</a>
   <main>
     <header class="top">
-      <p class="eyebrow">Old School RuneScape · Krystilia</p>
+      <p class="eyebrow">Old School RuneScape · every Slayer master</p>
       <h1>Wildy <span>Slayer</span></h1>
-      <p class="lede">Pick the task, get the spot, the gear for your levels, what to bring, and what it all costs at today's prices.</p>
+      <p class="lede">Pick your master and the task: what it is weak to, what it does to you, the gear for your levels, the spot, what to bring, and what it all costs at today's prices.</p>
     </header>
 
     <section class="card" id="lookup">
@@ -69,12 +69,15 @@
     <section class="card" id="tasks">
       <h2>2. The task</h2>
       <div class="banner hidden" id="rl-task"></div>
-      <input id="task-q" type="search" placeholder="Search tasks (dust devils, undead, cannon, cave…)" aria-label="Search tasks" />
+      <div class="filters masters" id="master-chips" aria-label="Slayer master"></div>
+      <p class="hint master-note" id="master-note"></p>
+      <input id="task-q" type="search" placeholder="Search tasks (dust devils, undead, poison, cannon, Catacombs…)" aria-label="Search tasks" />
       <div class="filters" id="task-filters">
         <button class="chip" data-f="all" aria-pressed="true">All</button>
+        <button class="chip" data-f="mine">My level</button>
         <button class="chip" data-f="do">Worth doing</button>
         <button class="chip" data-f="aoe">Burst / cannon</button>
-        <button class="chip" data-f="safe">Low wildy</button>
+        <button class="chip" data-f="safe">Safe</button>
         <button class="chip" data-f="block">Usually blocked</button>
       </div>
       <div class="task-grid" id="task-grid"></div>
@@ -114,10 +117,11 @@
     <div class="toast" id="rl-toast" role="status" aria-live="polite"></div>
 
     <footer>
-      <p>Monster, location and item data from the <a href="https://oldschool.runescape.wiki/w/Krystilia" rel="noopener">OSRS Wiki</a> (CC BY-NC-SA 3.0). Prices from the wiki's real-time price API. Hiscores from Jagex. Supply counts are estimates from the standard combat formulas; the Wilderness has PKers in it, so bring more than the maths says.</p>
+      <p>Monster, master, location and item data from the <a href="https://oldschool.runescape.wiki/w/Slayer_task" rel="noopener">OSRS Wiki</a> (CC BY-NC-SA 3.0): every target's stats, weaknesses, poison and venom flags come straight from its infobox. Prices from the wiki's real-time price API. Hiscores from Jagex. Supply counts are estimates from the standard combat formulas; bring more than the maths says, and in the Wilderness bring a lot more.</p>
     </footer>
   </main>
   <script src="/data.js"></script>
+  <script src="/slayer.js"></script>
   <script src="/items.js"></script>
   <script src="/app.js"></script>
 </body>

@@ -138,7 +138,11 @@ Own-account data only; nothing about other players.
   differs from the table's name at `loc` (the app's list changed after that
   plugin build), the location is looked up by that name within the task
   instead; `locationName` is only a lookup key and is never shown. An unknown
-  slug, an out-of-range index or an unmatched name means no target. Because
+  slug, an out-of-range index or an unmatched name means no target. The app's
+  non-Wilderness tasks (from `web/slayer.js`) use `task` ids of the form
+  `slayer/<slug>` on purpose: the plugin's table is Wilderness only, so for
+  those the panel shows "-" for task and spot and no route, while the gear
+  highlights and setups still work. Because
   released plugin builds keep their own table, a task's `locations` in
   `web/data.js` are append-only and slugs never change. The app keeps sending
   `target` (the same `wp`) for its own use.

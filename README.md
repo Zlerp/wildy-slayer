@@ -4,11 +4,20 @@ An Old School RuneScape Wilderness Slayer helper and its RuneLite companion
 plugin.
 
 - **Web app**: https://wildy-slayer.vercel.app/ (source in `web/`, deployed by Vercel from `main`,
-  root directory `web`). Look up your character, pick the Krystilia task, get
-  the spot, the gear for your levels and what you own, the supplies and the
-  cost at today's prices. Serverless functions in `web/api/slayer/` proxy the
-  hiscores, wiki images and prices, and `web/api/slayer/sync.js` is the sync
-  endpoint the plugin talks to (one row per pairing code in Supabase).
+  root directory `web`). Look up your character, pick your Slayer master
+  (Turael through Duradel, Konar, Krystilia and Mortimer) and the task, and
+  get what the monster is weak to (elemental weakness and its lowest
+  defence), what it does to you (poison, venom, dragonfire, icy breath, stat
+  drains), what you must bring (nose peg, mirror shield, boots of stone,
+  antifire, anti-venom...), what to do, the spots (Konar's assignable ones
+  flagged), the gear for your levels and what you own, the supplies and the
+  cost at today's prices. Krystilia's Wilderness tasks are hand-curated in
+  `web/data.js`; every other master's tasks are in `web/slayer.js`, built by
+  `scripts/slayer-data/` from curated JSON plus each target's OSRS Wiki
+  infobox and the masters' assignment tables. Serverless functions in
+  `web/api/slayer/` proxy the hiscores, wiki pages, images and prices, and
+  `web/api/slayer/sync.js` is the sync endpoint the plugin talks to (one row
+  per pairing code in Supabase).
 - **RuneLite plugin**: this repository root is a standard RuneLite plugin
   Gradle project (`build.gradle`, `src/`, `runelite-plugin.properties`),
   submitted to the Plugin Hub (pending review). Install page:

@@ -3,8 +3,27 @@
    images come through /api/slayer/* (Vercel functions that reach the OSRS Wiki); the RuneLite plugin
    and this page meet at /api/slayer/sync/ (shapes in runelite/PROTOCOL.md). */
 (() => {
-const { TASKS, KIT } = window.WILDY;
+const { KIT } = window.WILDY;
 const ITEMS = window.WILDY_ITEMS, SPELLS = window.WILDY_SPELLS;
+/* Two task tables, one list. data.js: Krystilia's Wilderness tasks (ids = slug, unchanged so saved setups and the
+   plugin's spot table keep working). slayer.js: every other master's tasks (ids = "slayer/" + slug; the plugin shows
+   "-" for a task it does not know, which is fine: its spot table is Wilderness only). */
+const MASTERS = (window.SLAYER?.MASTERS || []);
+const MASTER = Object.fromEntries(MASTERS.map((m) => [m.id, m]));
+const KRYS_IMPLIED = { dragon: { kind: "dragonfire", text: "Dragonfire hits up to 50 without an anti-dragon shield or antifire potion." } };
+function normKrystilia(t) {
+  const amount = t.amount, hazards = [{ kind: "pk", text: "Wilderness: player killers. Keep an escape ready, risk only what the tier allows." }];
+  if (t.attr.includes("dragon")) hazards.push(KRYS_IMPLIED.dragon);
+  if (/spider|Spindel|Venenatis/i.test(t.name + t.locations.map((l) => l.name).join(" "))) hazards.push({ kind: "poison", text: "Poison spiders and the spider bosses poison or venom you." });
+  if (t.slug === "revenants") hazards.push({ kind: "magic", text: "Revenants hit with all three styles and are very accurate; a charged bracelet of ethereum cuts their damage by 75%." });
+  const targets = t.targets.map((x) => ({ ...x, immune: {}, elem: null, poison: false, venom: false, attributes: t.attr }));
+  const locations = t.locations.map((l) => ({ ...l, wildy: true, region: "Wilderness", masters: [] }));
+  return { ...t, id: t.slug, master: "krystilia", krystilia: true, targets, locations, masters: { krystilia: { amount, extended: t.extended || null, weight: t.weight } }, hazards, need: [], bring: (t.gear || []).map((g) => ({ item: null, why: g })), mechanics: null, superior: null, combat: 0, verdictWhy: null };
+}
+function normGeneral(t) { return { ...t, id: "slayer/" + t.slug, master: null, krystilia: false, locations: t.locations.map((l) => ({ ...l, wildy: !!l.wildy })) }; }
+const TASKS = [...window.WILDY.TASKS.map(normKrystilia), ...(window.SLAYER?.TASKS || []).map(normGeneral)];
+const masterIds = (t) => Object.keys(t.masters);
+const taskMasters = (t) => masterIds(t).map((id) => MASTER[id]?.name || id);
 const API = "/api/slayer";
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -21,7 +40,8 @@ const SKILL_ICON = { attack: "Attack icon.png", strength: "Strength icon.png", d
 /* ---------- state ---------- */
 const S = {
   rsn: "", levels: { attack: 70, strength: 70, defence: 70, ranged: 70, magic: 70, prayer: 52, hitpoints: 70, slayer: 60, agility: 60 },
-  task: null, loc: 0, style: null, tier: "mid", protect: true, cannon: false, offPray: true, pots: true, spell: null, amount: null,
+  master: "all", // "all" or a master id; filters the task list and picks which amounts/weights are shown
+  task: null, loc: 0, target: null, style: null, tier: "mid", protect: true, cannon: false, offPray: true, pots: true, spell: null, amount: null,
   overrides: {}, // slot -> item name
   prices: {}, pricesAt: 0,
   filter: "all",
@@ -29,9 +49,11 @@ const S = {
   ownOnly: null, // "Only gear I own"; null = not decided yet, becomes true the first time a bank syncs
 };
 try { Object.assign(S, JSON.parse(localStorage.getItem("wildy:state") || "{}"), { prices: {}, pricesAt: 0 }); } catch (_) {}
-const persist = () => { try { localStorage.setItem("wildy:state", JSON.stringify({ rsn: S.rsn, levels: S.levels, task: S.task, loc: S.loc, style: S.style, tier: S.tier, protect: S.protect, cannon: S.cannon, offPray: S.offPray, pots: S.pots, spell: S.spell, amount: S.amount, overrides: S.overrides, useRl: S.useRl, ownOnly: S.ownOnly })); } catch (_) {} };
+const persist = () => { try { localStorage.setItem("wildy:state", JSON.stringify({ rsn: S.rsn, levels: S.levels, master: S.master, task: S.task, loc: S.loc, target: S.target, style: S.style, tier: S.tier, protect: S.protect, cannon: S.cannon, offPray: S.offPray, pots: S.pots, spell: S.spell, amount: S.amount, overrides: S.overrides, useRl: S.useRl, ownOnly: S.ownOnly })); } catch (_) {} };
+if (S.task && !TASKS.some((t) => t.id === S.task)) S.task = null;
+if (S.master !== "all" && !MASTER[S.master] && S.master !== "krystilia") S.master = "all";
 window.__wildy = {
-  S, TASKS, ITEMS, calc: () => CALC,
+  S, TASKS, MASTERS, ITEMS, calc: () => CALC,
   sync: () => ({ code: SYNC.code, version: SYNC.version, player: SYNC.player, selection: SYNC.selection, setups: setups(), lastPushed: SYNC.lastPushedSel, lastPushedAt: SYNC.lastPushedAt, error: SYNC.error, syncedAt: SYNC.syncedAt, appliedSelectionAt: SYNC.appliedSelectionAt, setupsWrote: SYNC.setupsWrote }),
   poll: () => poll(),
   pushNow: () => pushSelection(true),
@@ -89,132 +111,234 @@ function renderLevels() {
   const box = $("#levels"), lock = rlLevelsActive();
   box.innerHTML = SKILLS.map((k) => `<label>${k}<input type="number" min="1" max="99" data-k="${k}" value="${S.levels[k]}"${lock ? " disabled" : ""} /></label>`).join("")
     + (lock ? `<p class="hint" style="grid-column:1/-1;margin:0">Levels come from RuneLite. Untick "Use RuneLite levels" to edit them by hand.</p>` : "");
-  box.oninput = (e) => { const k = e.target.dataset.k; if (!k) return; S.levels[k] = clamp(parseInt(e.target.value, 10) || 1, 1, 99); persist(); renderStats(); renderTasks(); renderAll(); };
+  box.oninput = (e) => { const k = e.target.dataset.k; if (!k) return; S.levels[k] = clamp(parseInt(e.target.value, 10) || 1, 1, 99); persist(); renderStats(); renderMasters(); renderTasks(); renderAll(); };
 }
 
 /* ---------- tasks ---------- */
-const task = () => TASKS.find((t) => t.slug === S.task);
-const hay = (t) => [t.name, t.attr.join(" "), t.style, t.verdict, t.locations.map((l) => l.name + (l.multi ? " multi" : " single") + (l.cannon ? " cannon" : "")).join(" "), t.aoe ? "burst barrage aoe" : "", t.gear?.join(" ") || "", t.tips.join(" ")].join(" ").toLowerCase();
+const task = () => TASKS.find((t) => t.id === S.task);
+const hay = (t) => [t.name, t.attr.join(" "), t.style, t.verdict, t.krystilia ? "wilderness krystilia" : "", taskMasters(t).join(" "), t.locations.map((l) => l.name + " " + (l.region || "") + (l.multi ? " multi" : " single") + (l.cannon ? " cannon" : "")).join(" "), t.aoe ? "burst barrage aoe" : "", (t.hazards || []).map((h) => h.kind + " " + h.text).join(" "), (t.need || []).map((n) => n.item).join(" "), (t.bring || []).map((b) => b.item || b.why).join(" "), t.tips.join(" "), t.superior || ""].join(" ").toLowerCase();
+// the task's amount range for the chosen master (or across every master that assigns it)
+function amountFor(t, master = S.master) {
+  const m = t.masters[master]; if (m?.amount) return m.amount;
+  const all = Object.values(t.masters).map((x) => x.amount).filter(Boolean);
+  if (!all.length) return t.amount || [1, 1];
+  return [Math.min(...all.map((a) => a[0])), Math.max(...all.map((a) => a[1]))];
+}
+const masterOf = (t) => (S.master !== "all" && t.masters[S.master]) ? S.master : masterIds(t)[0];
+const canGet = (m) => (!m.combat || combatLevel(S.levels) >= m.combat) && (!m.slayer || S.levels.slayer >= m.slayer);
+function renderMasters() {
+  const box = $("#master-chips"); if (!box) return;
+  const order = ["all", ...MASTERS.map((m) => m.id)];
+  box.innerHTML = order.map((id) => {
+    if (id === "all") return `<button class="chip master" data-m="all" aria-pressed="${S.master === "all"}">All masters<small>${TASKS.length} tasks</small></button>`;
+    const m = MASTER[id], n = TASKS.filter((t) => t.masters[id]).length, lock = !canGet(m);
+    const req = [m.combat ? `${m.combat} cb` : "", m.slayer ? `${m.slayer} Slayer` : ""].filter(Boolean).join(", ") || "any level";
+    return `<button class="chip master${lock ? " locked" : ""}" data-m="${id}" aria-pressed="${S.master === id}" title="${esc(m.where)}">${esc(m.name)}<small>${req} · ${m.points ? m.points + " pts" : "0 pts"} · ${n}</small></button>`;
+  }).join("");
+  $$("button", box).forEach((b) => b.addEventListener("click", () => { S.master = b.dataset.m; persist(); renderMasters(); renderTasks(); renderAll(); }));
+  const note = $("#master-note"), m = MASTER[S.master];
+  if (!m) note.innerHTML = `Every task from every master. Pick a master to see their amounts and weights; <b>Krystilia</b>'s tasks are the Wilderness ones.`;
+  else note.innerHTML = `<b>${esc(m.name)}</b>${m.alt ? ` <span class="muted">(${esc(m.alt)})</span>` : ""}, ${esc(m.where)}. ${m.combat || m.slayer ? `Needs ${[m.combat ? m.combat + " combat" : "", m.slayer ? m.slayer + " Slayer" : ""].filter(Boolean).join(" and ")}${m.req ? " and " + esc(m.req) : ""}.` : m.req ? `Needs ${esc(m.req)}.` : "No requirements."} ${m.points} points a task, ${m.block} to block. <span class="muted">${esc(m.notes)} Get there: ${esc(m.tele)}.</span>${canGet(m) ? "" : ` <span class="err">Your levels are too low for this master.</span>`}`;
+}
 function renderTasks() {
   const q = ($("#task-q").value || "").toLowerCase().trim();
   const list = TASKS.filter((t) => {
+    if (S.master !== "all" && !t.masters[S.master]) return false;
     if (q && !hay(t).includes(q)) return false;
+    if (S.filter === "mine") return S.levels.slayer >= t.slayer && (!t.combat || combatLevel(S.levels) >= t.combat);
     if (S.filter === "do") return t.verdict === "do";
     if (S.filter === "block") return t.verdict !== "do";
     if (S.filter === "aoe") return t.aoe || t.locations.some((l) => l.cannon && l.multi);
-    if (S.filter === "safe") return t.locations.some((l) => l.danger === 1);
+    if (S.filter === "safe") return t.locations.some((l) => l.danger === 1 && !l.wildy);
     return true;
-  });
+  }).sort((a, b) => a.name.localeCompare(b.name) || (a.krystilia ? 1 : -1));
   $("#task-grid").innerHTML = list.map((t) => {
-    const locked = S.levels.slayer < t.slayer;
-    return `<button class="task${locked ? " locked" : ""}" type="button" data-slug="${t.slug}" aria-pressed="${S.task === t.slug}">
-      <span class="v ${t.verdict}">${t.verdict === "do" ? "do" : t.verdict === "block" ? "block" : "skip"}</span>
+    const locked = S.levels.slayer < t.slayer, amt = amountFor(t);
+    return `<button class="task${locked ? " locked" : ""}" type="button" data-id="${esc(t.id)}" aria-pressed="${S.task === t.id}">
+      ${t.krystilia ? `<span class="mk">Wildy</span>` : ""}<span class="v ${t.verdict}">${t.verdict === "do" ? "do" : t.verdict === "block" ? "block" : "skip"}</span>
       <img src="${img(t.image)}" alt="" loading="lazy" />
       <b>${esc(t.name)}</b>
-      <small>${t.amount[0]}–${t.amount[1]}${t.slayer > 1 ? ` · ${t.slayer} Slayer` : ""}</small>
-      <small>${t.locations[0].multi ? "Multi" : "Singles"}${t.locations.some((l) => l.cannon) ? " · Cannon" : ""}</small>
+      <small>${amt[0]}–${amt[1]}${t.slayer > 1 ? ` · ${t.slayer} Slayer` : ""}</small>
+      <small>${t.locations[0].multi ? "Multi" : "Singles"}${t.locations.some((l) => l.cannon) ? " · Cannon" : ""}${(t.hazards || []).some((h) => h.kind === "poison" || h.kind === "venom") ? " · Poison" : ""}${(t.hazards || []).some((h) => h.kind === "dragonfire") ? " · Dragonfire" : ""}</small>
     </button>`;
-  }).join("") || `<p class="hint">Nothing matches.</p>`;
+  }).join("") || `<p class="hint">Nothing matches${S.master !== "all" ? ` for ${esc(MASTER[S.master]?.name || S.master)}` : ""}.</p>`;
   renderTaskBanner();
 }
-function pickTask(slug, scroll = true) {
-  if (S.task !== slug) { S.task = slug; S.loc = 0; S.overrides = {}; S.spell = null; S.amount = null; S.style = null; }
+function pickTask(id, scroll = true) {
+  if (S.task !== id) { S.task = id; S.loc = 0; S.target = null; S.overrides = {}; S.spell = null; S.amount = null; S.style = null; }
   persist(); renderTasks(); renderAll();
   if (scroll) $("#detail").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ---------- detail ---------- */
+const HAZ = { poison: ["☠", "Poison"], venom: ["☠", "Venom"], dragonfire: ["🔥", "Dragonfire"], icebreath: ["❄", "Icy breath"], drain: ["⬇", "Stat drain"], prayer: ["⬇", "Prayer drain"], freeze: ["❄", "Freezes you"], teleport: ["✦", "Teleports you"], stun: ["✦", "Stuns"], magic: ["⚡", "Magic"], ranged: ["➶", "Ranged"], disease: ["☠", "Disease"], aggressive: ["‼", "Aggressive"], pk: ["⚔", "PKers"], special: ["✦", "Special"] };
+// weakest sides of the target: lowest melee defence bonus, then how magic and ranged compare; plus the wiki's elemental weakness
+function weaknesses(tg) {
+  const melee = [["stab", tg.dstab], ["slash", tg.dslash], ["crush", tg.dcrush]].sort((a, b) => a[1] - b[1]);
+  const sides = [["melee (" + melee[0][0] + ")", melee[0][1], "melee"], ["ranged", tg.drange, "ranged"], ["magic", tg.dmagic, "magic"]].sort((a, b) => a[1] - b[1]);
+  return { melee, sides, elem: tg.elem || null, mageLvl: tg.mage, defLvl: tg.def };
+}
+const styleOf = (st) => String(st || "").toLowerCase();
 function renderDetail() {
   const t = task(), box = $("#detail");
   if (!t) { box.classList.add("hidden"); return; }
   box.classList.remove("hidden");
   const loc = t.locations[S.loc] || t.locations[0];
   const tg = targetFor(t, loc);
-  const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent("osrs wilderness slayer " + t.name + " guide")}`;
-  const wiki = `https://oldschool.runescape.wiki/w/${encodeURIComponent(t.name.replace(/ /g, "_"))}`;
+  const m = masterOf(t), mm = t.masters[m] || {}, amt = amountFor(t, m);
+  const w = weaknesses(tg);
+  const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent("osrs slayer " + t.name + " guide" + (t.krystilia ? " wilderness" : ""))}`;
+  const wiki = `https://oldschool.runescape.wiki/w/${encodeURIComponent((tg.page || t.name).replace(/ /g, "_"))}`;
+  const taskWiki = t.krystilia ? "https://oldschool.runescape.wiki/w/Krystilia/Strategies" : `https://oldschool.runescape.wiki/w/Slayer_task/${encodeURIComponent(t.name.replace(/ /g, "_"))}`;
+  const attacks = styleOf(tg.style);
+  const prot = /Protect/.test(t.pray);
+  const helmWorn = !!CALC && CALC.t === t && Object.values(CALC.pick || {}).some((i) => i.tags.includes("helm"));
+  const needRows = (t.need || []).map((n) => {
+    const it = ITEMS[n.item];
+    const covered = n.helm;
+    return `<li class="need"><span class="ic">${it ? `<img src="${img(it.image)}" alt="" />` : "✓"}</span><div><b>Required: ${esc(n.item)}</b>${esc(n.why)}${covered ? `<small>A Slayer helmet covers this${helmWorn ? " (yours does)" : ""}.</small>` : ""}</div></li>`;
+  });
+  const bringRows = (t.bring || []).map((b) => { const it = b.item ? ITEMS[b.item] : null; return `<li class="info"><span class="ic">${it ? `<img src="${img(it.image)}" alt="" />` : "•"}</span><div>${b.item ? `<b>${esc(b.item)}</b>` : ""}${esc(b.why)}</div></li>`; });
+  const hazRows = (t.hazards || []).map((h) => { const [ic, label] = HAZ[h.kind] || HAZ.special; return `<li><span class="ic">${ic}</span><div><b>${label}</b>${esc(h.text)}</div></li>`; });
+  const poisonRow = tg.venom ? `<li><span class="ic">☠</span><div><b>Venom</b>${esc(tg.poisonNote || "Their hits can venom you")}: bring anti-venom, or wear a serpentine helm.</div></li>` : tg.poison && !(t.hazards || []).some((h) => h.kind === "poison") ? `<li><span class="ic">☠</span><div><b>Poison</b>${esc(tg.poisonNote || "Their hits can poison you")}: an antidote++ or anti-venom.</div></li>` : "";
+  const immune = [tg.immune?.poison ? "immune to poison" : "", tg.immune?.venom ? "immune to venom" : "", tg.immune?.cannon ? "cannot be cannoned" : "", tg.immune?.thrall ? "thralls do nothing" : ""].filter(Boolean);
+  const amounts = Object.entries(t.masters).map(([id, x]) => `<span class="${id === m ? "on" : ""}"><b>${esc(MASTER[id]?.name || id)}</b> ${x.amount ? x.amount[0] + "–" + x.amount[1] : "?"}${x.extended ? ` <span class="muted">(${x.extended[0]}–${x.extended[1]} ext.)</span>` : ""}${x.weight ? ` · w${x.weight}` : ""}</span>`).join("");
   box.innerHTML = `
     <h2 style="font-size:13px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">3. Where and how</h2>
     <div class="monster">
       <img src="${img(tg.image)}" alt="${esc(tg.name)}" />
       <div>
-        <h2>${esc(t.name)}</h2>
+        <h2>${esc(t.name)}${t.krystilia ? ` <span class="badge warn">Wilderness</span>` : ""}</h2>
         <div class="badges">
-          <span class="badge">${t.amount[0]}–${t.amount[1]} assigned</span>
+          <span class="badge">${amt[0]}–${amt[1]} from ${esc(MASTER[m]?.name || m)}</span>
           <span class="badge ${t.verdict === "do" ? "good" : t.verdict === "block" ? "bad" : "warn"}">${t.verdict === "do" ? "Worth doing" : t.verdict === "block" ? "Usually blocked" : "Skip unless keen"}</span>
-          <span class="badge">Weight ${t.weight}</span>
+          ${mm.weight ? `<span class="badge">Weight ${mm.weight}</span>` : ""}
           ${t.slayer > 1 ? `<span class="badge ${S.levels.slayer >= t.slayer ? "good" : "bad"}">${t.slayer} Slayer</span>` : ""}
+          ${t.combat ? `<span class="badge ${combatLevel(S.levels) >= t.combat ? "good" : "bad"}">${t.combat} Combat</span>` : ""}
           ${t.attr.map((a) => `<span class="badge info">${esc(a)}</span>`).join("")}
+          ${t.superior ? `<span class="badge">Superior: ${esc(t.superior)}</span>` : ""}
         </div>
         ${t.unlock ? `<p class="hint">${esc(t.unlock)}</p>` : ""}
+        ${t.verdictWhy ? `<p class="hint">${esc(t.verdictWhy)}</p>` : ""}
       </div>
     </div>
+    ${Object.keys(t.masters).length > 1 ? `<div class="amounts">${amounts}</div>` : ""}
+    ${t.targets.length > 1 ? `<div class="amounts targets">${t.targets.map((x, i) => `<button type="button" class="tgt${x === tg ? " on" : ""}" data-i="${i}">${esc(x.name)}${x.loc ? ` <span class="muted">${esc(x.loc)}</span>` : ""}</button>`).join("")}</div>` : ""}
     <div class="kv">
       <div><span>Target</span>${esc(tg.name)}</div>
       <div><span>Combat</span>${tg.cb}</div>
       <div><span>Hitpoints</span>${tg.hp}</div>
-      <div><span>Defence</span>${tg.def}</div>
+      <div><span>Defence</span>${tg.def}${tg.mage ? ` <span class="muted" style="display:inline;text-transform:none;letter-spacing:0">· Magic ${tg.mage}</span>` : ""}</div>
       <div><span>Def bonuses</span>stab ${tg.dstab} · slash ${tg.dslash} · crush ${tg.dcrush}<br/>magic ${tg.dmagic} · range ${tg.drange}</div>
-      <div><span>Attacks with</span>${esc(tg.style)} · max ${tg.maxhit}</div>
+      <div><span>Attacks with</span>${esc(tg.style)} · max ${tg.maxhit}${tg.breath ? ` (${tg.breath} breath)` : ""}</div>
       <div><span>Pray</span>${esc(t.pray)}</div>
       <div><span>Size</span>${tg.size}x${tg.size}${tg.size === 1 ? " (stacks for AoE)" : ""}</div>
     </div>
+    <h3>Weak to</h3>
+    <div class="weak">
+      ${w.elem ? `<div class="hot"><span>Elemental weakness</span><b>${esc(w.elem.type)} spells</b><br/>+${w.elem.pct}% accuracy and damage with ${esc(w.elem.type)} spells (${w.elem.type === "Water" ? "Water and Ice" : w.elem.type === "Fire" ? "Fire and Smoke" : w.elem.type === "Earth" ? "Earth and Blood" : "Air and Shadow"}).</div>` : `<div><span>Elemental weakness</span><b>None</b><br/>No spell element gets a bonus.</div>`}
+      <div class="hot"><span>Lowest defence</span><b>${esc(w.sides[0][0])}</b><br/>${w.sides.map((x) => `${esc(x[0])} ${x[1]}`).join(" · ")}</div>
+      <div class="${w.melee[0][1] <= 0 ? "hot" : ""}"><span>Melee side</span><b>${esc(w.melee[0][0])} (${w.melee[0][1]})</b><br/>vs ${w.melee[1][0]} ${w.melee[1][1]}, ${w.melee[2][0]} ${w.melee[2][1]}</div>
+      <div class="${tg.mage <= 1 && tg.dmagic <= 0 ? "hot" : tg.dmagic >= 100 ? "bad" : ""}"><span>Magic</span><b>${tg.mage <= 1 && tg.dmagic <= 0 ? "Very weak" : tg.dmagic >= 100 ? "Resists magic" : "Normal"}</b><br/>Magic level ${tg.mage}, magic defence ${tg.dmagic}</div>
+      ${immune.length ? `<div class="bad"><span>Immune</span><b>${esc(immune.join(", "))}</b></div>` : ""}
+    </div>
     <p><b>Best style: ${t.style}.</b> <span class="muted">${esc(t.styleWhy)}</span></p>
-    ${t.gear?.length ? `<p class="muted"><b>Bring:</b> ${t.gear.map(esc).join(" · ")}</p>` : ""}
+    <h3>What they do to you</h3>
+    <ul class="haz">
+      <li class="${prot ? "ok" : "info"}"><span class="ic">${prot ? "🛡" : "•"}</span><div><b>${esc(t.pray)}</b>They attack with ${esc(attacks)}, max hit ${tg.maxhit}${tg.breath ? `, breath ${tg.breath}` : ""}${/melee/.test(attacks) && !/magic|ranged|dragonfire|breath|\+/.test(attacks) ? ". Protect from Melee blocks all of it." : ""}</div></li>
+      ${hazRows.join("")}${poisonRow}
+      ${!hazRows.length && !poisonRow ? `<li class="ok"><span class="ic">✓</span><div><b>Nothing special</b>No poison, venom, dragonfire or drains.</div></li>` : ""}
+    </ul>
+    ${needRows.length || bringRows.length ? `<h3>What you need</h3><ul class="haz">${needRows.join("")}${bringRows.join("")}</ul>` : ""}
+    ${t.mechanics ? `<div class="mech"><b>What to do:</b> ${esc(t.mechanics)}</div>` : ""}
     <h3>Spots</h3>
     <div class="locs">${t.locations.map((l, i) => `
       <button class="loc" type="button" data-i="${i}" aria-pressed="${i === S.loc}">
         <div>
-          <b>${esc(l.name)}</b>
+          <b>${esc(l.name)}</b>${l.region && !l.wildy ? `<span class="region">${esc(l.region)}</span>` : ""}
           <div class="flags">
             <span class="badge ${l.multi ? "warn" : "good"}">${l.multi ? "Multi-combat" : "Single-way"}</span>
             <span class="badge ${l.cannon ? "good" : "bad"}">${l.cannon ? "Cannon OK" : "No cannon"}</span>
+            ${l.wildy ? `<span class="badge warn">Wilderness</span>` : ""}
             ${l.task_only ? `<span class="badge info">Task only</span>` : ""}${l.boss ? `<span class="badge info">Boss</span>` : ""}
+            ${(l.masters || []).includes("konar") ? `<span class="badge konar">Konar sends you here</span>` : ""}
             <span class="badge">Danger <span class="danger">${"●".repeat(l.danger)}${"○".repeat(3 - l.danger)}</span></span>
           </div>
           <p><b>Get there:</b> ${esc(l.tele)}</p>
           <p>${esc(l.notes)}</p>
         </div>
-        <div class="wl">${esc(l.wildy)}<small>wildy</small></div>
+        ${l.wildy ? `<div class="wl">${esc(l.wildy === true ? l.wildyLevel || l.wildy : l.wildy)}<small>wildy</small></div>` : ""}
       </button>`).join("")}</div>
+    ${S.master === "konar" && !t.krystilia && !(loc.masters || []).includes("konar") ? `<p class="hint err">Konar does not assign this spot. Pick one marked "Konar sends you here" for her task.</p>` : ""}
     <h3>Tips</h3>
     <ul class="tips">${t.tips.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
     <div class="links">
       <a class="btn" href="${yt}" target="_blank" rel="noopener">▶ Watch a guide on YouTube</a>
-      <a class="btn" href="${wiki}" target="_blank" rel="noopener">Wiki page</a>
-      <a class="btn" href="https://oldschool.runescape.wiki/w/Krystilia/Strategies" target="_blank" rel="noopener">Krystilia strategies</a>
+      <a class="btn" href="${wiki}" target="_blank" rel="noopener">Wiki: ${esc(tg.page || t.name)}</a>
+      <a class="btn" href="${taskWiki}" target="_blank" rel="noopener">${t.krystilia ? "Krystilia strategies" : "Wiki: the task"}</a>
     </div>`;
-  $$(".loc", box).forEach((b) => b.addEventListener("click", () => { S.loc = +b.dataset.i; S.overrides = {}; persist(); renderAll(); }));
+  $$(".loc", box).forEach((b) => b.addEventListener("click", () => { S.loc = +b.dataset.i; S.target = null; S.overrides = {}; persist(); renderAll(); }));
+  $$(".tgt", box).forEach((b) => b.addEventListener("click", () => { S.target = +b.dataset.i; S.overrides = {}; persist(); renderAll(); }));
 }
-function targetFor(t, loc) { return t.targets.find((x) => x.loc && loc.name.includes(x.loc.split(" / ")[0])) || t.targets[0]; }
+// the monster variant for a spot: the user's pick, else the main (non-alt) variant tied to the spot, else the general one
+function targetFor(t, loc) {
+  if (S.target != null && t.targets[S.target]) return t.targets[S.target];
+  const at = (x) => x.loc && loc.name.toLowerCase().includes(x.loc.split(" / ")[0].toLowerCase());
+  return t.targets.find((x) => at(x) && !x.alt) || t.targets.find((x) => !x.loc && !x.alt) || t.targets.find(at) || t.targets[0];
+}
 
 /* ---------- gear engine ---------- */
 const SLOTS = ["head", "cape", "neck", "ammo", "weapon", "body", "shield", "legs", "hands", "feet", "ring"];
-const WEAPON_AMMO = { "Magic shortbow": "arrow", "Magic shortbow (i)": "arrow", "Dark bow": "arrow", "Rune crossbow": "bolt", "Dragon crossbow": "bolt", "Dragon hunter crossbow": "bolt", "Karil's crossbow": "none", "Toxic blowpipe": "dart", "Craw's bow": "none", "Webweaver bow": "none", "Venator bow": "none" };
-const AMMO_KIND = (n) => /arrow/.test(n) ? "arrow" : /bolt/.test(n) ? "bolt" : /dart/.test(n) ? "dart" : "blessing";
-const BOLT_MAX = { "Rune crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)"], "Dragon crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)", "Dragon bolts"], "Dragon hunter crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)", "Dragon bolts"] };
+const WEAPON_AMMO = { "Magic shortbow": "arrow", "Magic shortbow (i)": "arrow", "Dark bow": "arrow", "Rune crossbow": "bolt", "Dragon crossbow": "bolt", "Dragon hunter crossbow": "bolt", "Karil's crossbow": "rack", "Toxic blowpipe": "dart", "Craw's bow": "none", "Webweaver bow": "none", "Venator bow": "none" };
+const AMMO_KIND = (n) => /arrow/.test(n) ? "arrow" : /bolt rack/i.test(n) ? "rack" : /bolt/.test(n) ? "bolt" : /dart/.test(n) ? "dart" : "blessing";
+const BOLT_MAX = { "Rune crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)"], "Dragon crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)", "Dragon bolts"], "Dragon hunter crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)", "Dragon bolts"], "Armadyl crossbow": ["Broad bolts", "Adamant bolts", "Runite bolts", "Diamond bolts (e)", "Ruby bolts (e)", "Dragon bolts"] };
+Object.assign(WEAPON_AMMO, { "Armadyl crossbow": "bolt", "Twisted bow": "arrow" });
 function meets(it, l) { const r = it.req || {}; return (!r.att || l.attack >= r.att) && (!r.str || l.strength >= r.str) && (!r.def || l.defence >= r.def) && (!r.ran || l.ranged >= r.ran) && (!r.mag || l.magic >= r.mag) && (!r.pra || l.prayer >= r.pra) && (!r.sla || l.slayer >= r.sla) && (!r.hp || l.hitpoints >= r.hp); }
 function attBest(st) { return Math.max(st.astab, st.aslash, st.acrush); }
 function styleKey(style, st) { return style === "melee" ? attBest(st) : style === "ranged" ? st.arange : st.amagic; }
 function score(it, style, ctx) {
   const st = it.stats || {}; let s = 0;
-  const defv = (st.dmagic * 0.6 + st.drange * 0.2 + st.dslash * 0.2) * 0.12; // mostly magic defence: PKers freeze you
+  // Wilderness: mostly magic defence (PKers freeze and teleblock you). Elsewhere: defence against what the monster actually attacks with.
+  const ts = styleOf(ctx.tg?.style);
+  const defv = ctx.wildy ? (st.dmagic * 0.6 + st.drange * 0.2 + st.dslash * 0.2) * 0.12
+    : ((/magic/.test(ts) ? st.dmagic : 0) * 0.5 + (/ranged/.test(ts) ? st.drange : 0) * 0.5 + (/melee|stab|slash|crush/.test(ts) || !ts ? (st.dstab + st.dslash + st.dcrush) / 3 : 0) * 0.5) * 0.08;
   if (style === "melee") s = st.str * 10 + attBest(st) * 4;
   else if (style === "ranged") s = st.rstr * 10 + st.arange * 4;
   else s = (st.mdmg || 0) * 25 + st.amagic * 4;
+  if ((it.slot === "weapon" || it.slot === "2h") && it.speed && style !== "magic") s *= 4 / Math.max(2, style === "ranged" ? it.speed - 1 : it.speed); // a slow weapon is worth less: dark bow, 2h swords
   s += (st.prayer || 0) * 1.5 + defv;
   if (it.bonus) {
     const b = it.bonus;
-    const mult = (b[style] || 1) * ((ctx.attr.includes("undead") && b.undead?.[style]) || 1) * ((ctx.attr.includes("demon") && b.demon?.[style]) || 1) * ((ctx.attr.includes("dragon") && b.dragon?.[style]) || 1) * (b.wildy?.[style] || 1) * ((ctx.multi && b.multi?.[style]) || 1);
+    const mult = (b[style] || 1) * ((ctx.attr.includes("undead") && b.undead?.[style]) || 1) * ((ctx.attr.includes("demon") && b.demon?.[style]) || 1) * ((ctx.attr.includes("dragon") && b.dragon?.[style]) || 1) * ((ctx.wildy && b.wildy?.[style]) || 1) * ((ctx.multi && b.multi?.[style]) || 1);
     if (mult > 1) s += 120 * (mult - 1) * (it.slot === "weapon" || it.slot === "2h" ? 3 : 1);
   }
   if (it.tags.includes("powered") && style === "magic") s += 60 + (it.name.includes("Accursed") ? 70 : it.name.includes("Thammaron") ? 20 : it.name.includes("Swamp") ? 25 : 0);
   if (it.tags.includes("firestaff") && style === "magic") s += 10;
+  if (style === "magic" && ctx.tg?.elem && it.tags.includes(ctx.tg.elem.type.toLowerCase() + "staff") && S.levels.magic >= 47) s += ctx.tg.elem.pct * 1.5; // elemental weakness: the matching staff beats a trident when the weakness is big
   if (it.tags.includes("iban") && style === "magic") s += 45;
   if (it.name.includes("Smoke battlestaff")) s += 15;
-  if (ctx.attr.includes("dragon") && it.tags.includes("dragon")) s += 80;
+  if (ctx.fire && it.tags.includes("dragon")) s += 80;           // dragonfire: anti-dragon / dragonfire / wyvern shields
+  if (ctx.ice && it.tags.includes("wyvern")) s += 120;           // icy breath: elemental, mind, DFS or ancient wyvern shield
+  if (ctx.venom && it.tags.includes("venom")) s += 60;           // serpentine helm: immune to venom
   if (ctx.task.slug === "revenants" && it.tags.includes("revenant")) s += 150;
-  if (it.name === "Anti-dragon shield" && !ctx.attr.includes("dragon")) s -= 50;
+  if (ctx.req?.names.has(it.name)) s += 400;                     // a required item always wins its slot
+  if (it.tags.includes("dragon") && !ctx.fire && !ctx.ice) s -= 50;
+  if (it.tags.includes("wildy") && !ctx.wildy) s -= 30;         // Wilderness weapons lose their 50% outside it
   return s;
+}
+// equipment the task makes mandatory (need[] entries that are wearable). helm: a Slayer helmet satisfies the head item.
+function requiredEquipment(t) {
+  const bySlot = {}, names = new Set(); let helmOk = false;
+  for (const n of t.need || []) {
+    const it = ITEMS[n.item]; if (!it || !it.stats) continue;
+    const slot = it.slot === "2h" ? "weapon" : it.slot;
+    names.add(it.name);
+    if (slot === "weapon" || slot === "ammo") continue;           // a required weapon (leaf-bladed, Wolfbane) only matters for its own style; candidates() handles those
+    (bySlot[slot] = bySlot[slot] || new Set()).add(it.name);
+    if (slot === "head" && n.helm) helmOk = true;
+    if (it.name === "Mirror shield") { bySlot.shield.add("V's shield"); names.add("V's shield"); }
+  }
+  return { bySlot, names, helmOk };
 }
 function candidates(slot, style, ctx) {
   const l = S.levels;
@@ -227,7 +351,20 @@ function candidates(slot, style, ctx) {
     if (it.tags.includes("revenant") && ctx.task.slug !== "revenants") return false;
     if (it.name.includes("Salve") && !ctx.attr.includes("undead")) return false;
     if (it.name === "Amulet of avarice") return false;
-    if (it.name === "Anti-dragon shield" && !ctx.attr.includes("dragon")) return false;
+    if (it.tags.includes("dragon") && !it.tags.includes("wyvern") && !ctx.fire) return false;   // anti-dragon / dragonfire shield only vs dragonfire
+    if (it.tags.includes("wyvern") && !ctx.ice && !ctx.fire) return false;
+    const req = ctx.req || { bySlot: {}, names: new Set() };
+    if (it.tags.includes("slayerreq") && !req.names.has(it.name)) return false;                 // nose pegs and co. only when the task needs them
+    if (it.tags.includes("vampyre") && !ctx.attr.includes("vampyre")) return false;
+    if (req.bySlot[slot] && !req.bySlot[slot].has(it.name) && !(slot === "head" && req.helmOk && it.tags.includes("helm"))) return false;
+    if (slot === "weapon" && req.bySlot.shield && it.slot === "2h") return false;               // a required shield rules out two-handers
+    if (ctx.attr.includes("leafy")) {                                                             // turoth and kurask: leaf-bladed, broad ammo or Magic Dart only
+      if (slot === "weapon" && style === "melee" && !it.tags.includes("leafy")) return false;
+      if (slot === "weapon" && style === "ranged" && !["arrow", "bolt"].includes(WEAPON_AMMO[it.name] || "none")) return false;
+      if (slot === "weapon" && style === "magic" && !it.tags.includes("slayerstaff")) return false;
+      if (slot === "ammo" && !it.tags.includes("blessing") && !/^Broad/.test(it.name)) return false;
+    }
+    if (ctx.attr.includes("vampyre") && slot === "weapon" && style === "melee" && !it.tags.includes("vampyre")) return false;
     if (slot !== "ammo" && ownOnlyActive() && !owns(it)) return false; // ammo is bought, so it is never filtered, only marked
     return meets(it, l);
   });
@@ -236,13 +373,13 @@ function ammoFor(weapon, style, ctx) {
   if (style !== "ranged" || !weapon) return candidates("ammo", style, ctx).filter((a) => a.tags.includes("blessing"));
   const kind = WEAPON_AMMO[weapon.name] || "none";
   if (kind === "none") return candidates("ammo", style, ctx).filter((a) => a.tags.includes("blessing"));
-  return candidates("ammo", style, ctx).filter((a) => AMMO_KIND(a.name) === kind && (kind !== "bolt" || BOLT_MAX[weapon.name].includes(a.name)));
+  return candidates("ammo", style, ctx).filter((a) => AMMO_KIND(a.name) === kind && (kind !== "bolt" || (BOLT_MAX[weapon.name] || []).includes(a.name)));
 }
 const TIER_CAP = { budget: 150e3, mid: 750e3, high: 3e6, max: Infinity };
 const TIER_TOTAL = { budget: 600e3, mid: 5e6, high: 30e6, max: Infinity };
 function buildGear(style, ctx, overrides = S.overrides) {
-  const cap = TIER_CAP[S.tier] ?? Infinity, capTotal = TIER_TOTAL[S.tier] ?? Infinity;
-  const keep = S.protect ? 4 : 3;
+  const cap = ctx.wildy ? (TIER_CAP[S.tier] ?? Infinity) : Infinity, capTotal = TIER_TOTAL[S.tier] ?? Infinity;
+  const keep = ctx.wildy ? (S.protect ? 4 : 3) : 0;
   const pick = {};
   const pool = {};
   for (const slot of SLOTS) { if (slot === "ammo" || slot === "shield") continue; pool[slot] = candidates(slot, style, ctx).sort((a, b) => score(b, style, ctx) - score(a, style, ctx)); }
@@ -291,20 +428,25 @@ function bestPrayer(style, lvl) {
 }
 function spellOptions(pick, ctx) {
   const w = pick.weapon, l = S.levels;
-  if (w?.tags.includes("powered")) {
-    const base = Math.floor(l.magic / 3) - (w.name.includes("Swamp") ? 2 : w.name.includes("Seas") ? 5 : w.name.includes("Accursed") ? 1 : 8);
-    return [{ name: w.name + " (built-in)", max: Math.max(1, base), cost: {}, speed: 4, aoe: false, wildy: w.tags.includes("wildy") }];
+  const leafy = ctx.attr.includes("leafy");
+  if (w?.tags.includes("powered") && !leafy) {
+    const base = Math.floor(l.magic / 3) - (w.name.includes("Swamp") ? 2 : w.name.includes("Seas") ? 5 : w.name.includes("Accursed") || w.name.includes("Sanguinesti") ? 1 : 8);
+    return [{ name: w.name + " (built-in)", max: Math.max(1, base), cost: {}, speed: 4, aoe: false, wildy: w.tags.includes("wildy"), elem: null }];
   }
+  const weak = ctx.tg?.elem || null;
   const out = [];
   for (const [name, sp] of Object.entries(SPELLS)) {
     if (l.magic < sp.level) continue;
-    if (sp.book === "Ancient" && !(w?.name === "Ancient staff" || w?.name === "Staff of the Dead" || w?.name === "Smoke battlestaff" || ctx.allowAncients)) {}
     if (name === "Iban Blast" && !w?.tags.includes("iban")) continue;
     if (name === "Crumble Undead" && !ctx.attr.includes("undead")) continue;
+    if (sp.needs && !w?.tags.includes(sp.needs)) continue;
+    if (leafy && name !== "Magic Dart") continue;
     const aoe = sp.book === "Ancient" && /Burst|Barrage/.test(name);
-    out.push({ name, max: sp.damage, cost: sp.cost, speed: 5, aoe, book: sp.book, level: sp.level });
+    const max = sp.dynamic === "dart" ? 10 + Math.floor(l.magic / 10) : sp.damage;
+    const bonus = weak && sp.elem === weak.type ? weak.pct / 100 : 0;
+    out.push({ name, max, cost: sp.cost, speed: 5, aoe, book: sp.book, level: sp.level, elem: sp.elem || null, bonus, eff: max * (1 + bonus) * (aoe && ctx.multi && ctx.tg?.size === 1 ? 2.5 : 1) });
   }
-  return out.sort((a, b) => b.max - a.max);
+  return out.sort((a, b) => b.eff - a.eff);
 }
 // compute(style, opts): the full loadout + maths for one style. Default style is S.style || the task's.
 // opts.strict: return { ok: false, why } instead of falling back when the style is not viable (used by the comparison strip).
@@ -313,7 +455,8 @@ function compute(styleArg, opts = {}) {
   const t = task(); if (!t) return null;
   const loc = t.locations[S.loc] || t.locations[0];
   const tg = targetFor(t, loc);
-  const ctx = { task: t, attr: t.attr, multi: loc.multi };
+  const ts = styleOf(tg.style), hz = (t.hazards || []).map((h) => h.kind);
+  const ctx = { task: t, attr: t.attr, multi: loc.multi, wildy: !!loc.wildy, tg, fire: /dragonfire/.test(ts) || hz.includes("dragonfire"), ice: /icebreath/.test(ts) || hz.includes("icebreath"), venom: !!tg.venom || hz.includes("venom"), poison: !!tg.poison || hz.includes("poison"), req: requiredEquipment(t) };
   const own = ownOnlyActive();
   const viable = { melee: candidates("weapon", "melee", ctx).length > 0, ranged: candidates("weapon", "ranged", ctx).length > 0 && S.levels.ranged >= 30, magic: S.levels.magic >= 13 };
   const whyNot = (s) => s === "magic" ? "Needs 13 Magic" : s === "ranged" && S.levels.ranged < 30 ? "Needs 30 Ranged" : `No ${s} weapon ${own ? "in your bank" : "for your levels"}`;
@@ -331,19 +474,20 @@ function compute(styleArg, opts = {}) {
   const salve = Object.values(pick).find((i) => i.name.includes("Salve"));
   const salveMult = salve && t.attr.includes("undead") ? 1.2 : 1;
   const specialMult = Math.max(helmMult, salveMult);
-  const wildyW = Object.values(pick).find((i) => i.tags.includes("wildy"));
+  const wildyW = ctx.wildy && Object.values(pick).find((i) => i.tags.includes("wildy"));
   const demonbane = Object.values(pick).find((i) => i.tags.includes("demonbane")) && t.attr.includes("demon");
   const dragonbane = Object.values(pick).find((i) => i.tags.includes("dragonbane")) && t.attr.includes("dragon");
+  const dragonMult = dragonbane ? (pick.weapon?.bonus?.dragon?.[style] || 1) : 1;
   let maxHit = 0, atkRoll = 0, defRoll = 0, speed = 4, spell = null, aoeTargets = 1;
   if (style === "melee") {
     const boost = S.pots ? Math.floor(5 + l.strength * 0.15) : 0, boostA = S.pots ? Math.floor(5 + l.attack * 0.15) : 0;
     const effStr = Math.floor((l.strength + boost) * (pray?.dmg || 1)) + 3 + 8;
     const effAtt = Math.floor((l.attack + boostA) * (pray?.acc || 1)) + 8;
     maxHit = Math.floor(0.5 + effStr * (st.str + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (demonbane) maxHit = Math.floor(maxHit * 1.7);
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (demonbane) maxHit = Math.floor(maxHit * 1.7); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
     const bonus = { stab: st.astab, slash: st.aslash, crush: st.acrush };
     const best = Object.entries(bonus).sort((a, b) => (b[1] - tg["d" + b[0]]) - (a[1] - tg["d" + a[0]]))[0];
-    atkRoll = Math.floor(effAtt * (best[1] + 64) * specialMult * (wildyW ? 1.5 : 1) * (demonbane ? 1.7 : 1));
+    atkRoll = Math.floor(effAtt * (best[1] + 64) * specialMult * (wildyW ? 1.5 : 1) * (demonbane ? 1.7 : 1) * dragonMult);
     defRoll = (tg.def + 9) * (tg["d" + best[0]] + 64);
     speed = pick.weapon?.speed || 4;
     label = best[0];
@@ -352,8 +496,9 @@ function compute(styleArg, opts = {}) {
     const eff = Math.floor((l.ranged + boost) * (pray?.dmg || 1)) + 8;
     const effA = Math.floor((l.ranged + boost) * (pray?.acc || 1)) + 8;
     maxHit = Math.floor(0.5 + eff * (st.rstr + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (dragonbane) maxHit = Math.floor(maxHit * 1.25);
-    atkRoll = Math.floor(effA * (st.arange + 64) * specialMult * (wildyW ? 1.5 : 1) * (dragonbane ? 1.3 : 1));
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
+    atkRoll = Math.floor(effA * (st.arange + 64) * specialMult * (wildyW ? 1.5 : 1) * (dragonMult > 1 ? dragonMult + 0.05 : 1));
+    if (pick.weapon?.name === "Twisted bow") { const mg = Math.min(250, tg.mage || 1); maxHit = Math.floor(maxHit * Math.min(2.5, Math.max(0.5, (250 + (3 * mg - 14) / 100 - Math.pow((3 * mg / 10 - 140), 2) / 100) / 100))); } // tbow scaling (wiki formula, capped)
     defRoll = (tg.def + 9) * (tg.drange + 64);
     speed = (pick.weapon?.speed || 5) - 1; // rapid
     if (pick.weapon?.name === "Webweaver bow") maxHit = Math.floor(maxHit * 1.1); // multi-hit spec-less approximation
@@ -365,8 +510,9 @@ function compute(styleArg, opts = {}) {
     spell = opts.find((o) => o.name === S.spell) || opts[0];
     const effA = Math.floor((l.magic + boost) * (pray?.acc || 1)) + 8;
     const mdmg = (st.mdmg || 0) / 100 + (pick.weapon?.name === "Staff of the Dead" ? 0.15 : 0) + (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 0.10 : 0) + (pick.shield?.name === "Tome of Fire" && /Fire/.test(spell?.name || "") ? 0.10 : 0);
-    maxHit = spell ? Math.floor(spell.max * (1 + mdmg) * (onTask ? 1.15 : 1) * salveMult * (spell.wildy ? 1.5 : 0 + 1)) : 0;
-    atkRoll = Math.floor(effA * (st.amagic + 64) * (onTask ? 1.15 : 1) * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy ? 1.5 : 1));
+    const elemB = 1 + (spell?.bonus || 0); // elemental weakness: +pct% accuracy and damage with the matching element
+    maxHit = spell ? Math.floor(spell.max * (1 + mdmg) * (onTask ? 1.15 : 1) * salveMult * (spell.wildy && ctx.wildy ? 1.5 : 1) * elemB) : 0;
+    atkRoll = Math.floor(effA * (st.amagic + 64) * (onTask ? 1.15 : 1) * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy && ctx.wildy ? 1.5 : 1) * elemB);
     defRoll = (tg.mage + 9) * (tg.dmagic + 64);
     speed = spell?.speed || 5;
     if (spell?.aoe && loc.multi && tg.size === 1) aoeTargets = /Barrage/.test(spell.name) ? 3 : 2.5;
@@ -376,7 +522,7 @@ function compute(styleArg, opts = {}) {
   const dpsSingle = acc * (maxHit + 1) / 2 / (speed * 0.6);
   const dps = dpsSingle * aoeTargets;
   // cannon
-  const cannonOn = S.cannon && loc.cannon;
+  const cannonOn = S.cannon && loc.cannon && !tg.immune?.cannon;
   let cannon = null;
   if (cannonOn) {
     const cAtk = style === "ranged" ? atkRoll : style === "melee" ? atkRoll : Math.floor((l.ranged + 8) * (st.arange + 64));
@@ -384,35 +530,43 @@ function compute(styleArg, opts = {}) {
     const rate = loc.multi ? 1 / 1.2 : 1 / 2.4; // balls per second, assumption
     cannon = { acc: cAcc, rate, dps: rate * cAcc * 15.5 };
   }
-  const amount = S.amount || Math.round((t.amount[0] + t.amount[1]) / 2);
+  const range = amountFor(t, masterOf(t));
+  const amount = S.amount || Math.round((range[0] + range[1]) / 2);
   const totalHp = amount * tg.hp;
   const combatDps = dps + (cannon?.dps || 0);
   const combatSec = totalHp / Math.max(0.1, combatDps);
   const sec = combatSec * 1.3 + amount * 1.5; // 30% overhead + walking/looting per kill
   const kills = amount;
-  const supplies = buildSupplies({ t, loc, tg, style, pick, st, pray, spell, cannon, acc, maxHit, sec, combatSec, kills, aoeTargets, speed, dpsSingle, dps });
-  return { ok: true, t, loc, tg, style, fallback, viable, whyNot, gear, pick, st, pray, onTask, maxHit, acc, speed, dps, dpsSingle, aoeTargets, cannon, amount, sec, combatSec, spell, supplies, styleLabel: label };
+  const supplies = buildSupplies({ t, loc, tg, style, pick, st, pray, spell, cannon, acc, maxHit, sec, combatSec, kills, aoeTargets, speed, dpsSingle, dps, ctx });
+  return { ok: true, t, loc, tg, ctx, wildy: ctx.wildy, style, fallback, viable, whyNot, gear, pick, st, pray, onTask, maxHit, acc, speed, dps, dpsSingle, aoeTargets, cannon, amount, sec, combatSec, spell, supplies, styleLabel: label };
 }
 
 /* ---------- supplies ---------- */
+// In the Wilderness: blighted restores, brews, karambwans, the escape kit, a PK buffer. Anywhere else: prayer potions,
+// plain food, the task's required and recommended items (antifire, antidotes, rock hammers...), nothing PK-related.
 function buildSupplies(c) {
-  const { t, loc, tg, style, pick, st, pray, spell, cannon, sec, combatSec, kills, aoeTargets, speed, dpsSingle, dps } = c;
+  const { t, loc, tg, style, pick, st, pray, spell, cannon, sec, combatSec, kills, aoeTargets, speed, dpsSingle, dps, ctx } = c;
+  const wildy = !!ctx.wildy;
   const l = S.levels, rows = [];
   const add = (name, qty, why, group) => { if (qty > 0) rows.push({ name, qty: Math.ceil(qty), why, group, each: price(name), img: ITEMS[name]?.image || name + ".png" }); };
+  const has = (name) => rows.some((r) => r.name === name);
   const mins = sec / 60;
   // attacks by the player: share of damage done by the player
   const playerShare = dps / Math.max(0.01, dps + (cannon?.dps || 0));
   const playerDmg = kills * tg.hp * playerShare;
   const attacks = playerDmg / Math.max(0.1, (c.acc * (c.maxHit + 1) / 2) * aoeTargets); // number of attacks/casts
   if (style === "magic" && spell) {
+    const wn = pick.weapon?.name || "";
     const staffFree = pick.weapon?.tags.includes("firestaff") ? ["Fire"] : [];
-    if (pick.weapon?.name === "Smoke battlestaff") staffFree.push("Air");
+    if (wn === "Smoke battlestaff") staffFree.push("Air");
+    for (const el of ["Water", "Earth", "Air"]) if (wn.includes(el) && !staffFree.includes(el)) staffFree.push(el);
     for (const [rune, n] of Object.entries(spell.cost || {})) { if (staffFree.includes(rune)) continue; add(rune + " rune", attacks * n * 1.1, `${n} per cast × ~${Math.ceil(attacks)} casts (+10%)`, "ammo"); }
-    if (pick.weapon?.tags.includes("powered")) add("Death rune", attacks / 100 * 1, `Charges: 1 death, 1 chaos, 5 fire + 10 coins per 100 casts`, "ammo"), add("Chaos rune", attacks / 100, "trident charges", "ammo"), add("Fire rune", attacks / 100 * 5, "trident charges", "ammo");
+    if (pick.weapon?.tags.includes("powered") && !/Sanguinesti/.test(wn)) add("Death rune", attacks / 100 * 1, `Charges: 1 death, 1 chaos, 5 fire + 10 coins per 100 casts`, "ammo"), add("Chaos rune", attacks / 100, "trident charges", "ammo"), add("Fire rune", attacks / 100 * 5, "trident charges", "ammo");
+    if (/Sanguinesti/.test(wn)) add("Blood rune", attacks * 3 / 100, "3 blood runes per 100 casts", "ammo");
   }
   if (style === "ranged" && pick.ammo && !pick.ammo.tags.includes("blessing")) {
     const breakRate = pick.weapon?.name === "Toxic blowpipe" ? 1 / 3 : 0.2 + (pick.cape?.name?.startsWith("Ava") ? -0.08 : 0);
-    const shots = attacks * (pick.weapon?.name === "Webweaver bow" ? 1 : 1);
+    const shots = attacks;
     add(pick.ammo.name, shots * Math.max(0.1, breakRate) * 1.15, `~${Math.ceil(shots)} shots, ${Math.round(Math.max(0.1, breakRate) * 100)}% lost (Ava's picks up the rest)`, "ammo");
   }
   if (cannon) { const balls = cannon.rate * combatSec * 1.1; add("Steel cannonball", balls, `${(cannon.rate * 60).toFixed(0)}/min fired over ${Math.round(combatSec / 60)} min of combat, ${Math.round(cannon.acc * 100)}% accuracy`, "cannon"); }
@@ -420,41 +574,69 @@ function buildSupplies(c) {
   let drain = 0; const prot = /Protect/.test(t.pray);
   if (prot) drain += 20 * mins; // protection prayer: 20 points/min base
   if (pray) drain += pray.drain * mins;
-  if (S.protect) drain += 2 * mins; // Protect Item is cheap
+  if (wildy && S.protect) drain += 2 * mins; // Protect Item is cheap
   drain = drain / (1 + st.prayer / 30);
-  const restoreDose = Math.floor(8 + l.prayer / 4);
-  const doses = Math.max(0, drain - l.prayer) / restoreDose;
-  add("Blighted super restore(4)", doses / 4, `${Math.round(drain)} prayer points over ${Math.round(mins)} min${pray ? " with " + pray.name : ""}; blighted = cheap and Wilderness-only`, "potions");
-  // food: incoming damage
-  const protCovers = prot && !/\+|varies|all|type|Boss/i.test(tg.style) && (!/magic/.test(t.pray.toLowerCase()) || /magic/.test(tg.style));
+  const restoreDose = Math.floor(8 + l.prayer / 4), prayDose = Math.floor(7 + l.prayer / 4);
+  if (wildy) add("Blighted super restore(4)", Math.max(0, drain - l.prayer) / restoreDose / 4, `${Math.round(drain)} prayer points over ${Math.round(mins)} min${pray ? " with " + pray.name : ""}; blighted = cheap and Wilderness-only`, "potions");
+  else add("Prayer potion(4)", Math.max(0, drain - l.prayer) / prayDose / 4, `${Math.round(drain)} prayer points over ${Math.round(mins)} min${pray ? " with " + pray.name : ""}`, "potions");
+  // food: incoming damage. A protection prayer only "covers" a monster that attacks with that one style.
+  const atkStyle = styleOf(tg.style), prayLow = t.pray.toLowerCase();
+  const pure = (re) => re.test(atkStyle) && atkStyle.split("+").every((p) => re.test(p));
+  const protCovers = prot && ((/melee/.test(prayLow) && pure(/^melee$/)) || (/magic/.test(prayLow) && pure(/^magic(-melee)?$/)) || (/missiles|ranged/.test(prayLow) && pure(/^(magic-)?ranged$/)));
   let intake = 0;
   if (!protCovers) {
-    const mAtk = (tg.cb * 0.6 + 9) * 64, pDef = (l.defence + 8) * ((style === "melee" ? st.dslash : st.dstab) + 64);
+    const mAtk = (tg.cb * 0.6 + 9) * 64, pDef = (l.defence + 8) * ((/magic/.test(atkStyle) ? st.dmagic : /ranged/.test(atkStyle) ? st.drange : st.dslash) + 64);
     const mAcc = accuracy(mAtk, Math.max(1, pDef));
-    intake = mAcc * (tg.maxhit + 1) / 2 / ((tg.speed || 4) * 0.6) * (loc.multi ? 1.8 : 1) * 0.5; // you are not always being hit
+    intake = mAcc * (tg.maxhit + 1) / 2 / ((tg.speed || 4) * 0.6) * (loc.multi ? 1.8 : 1) * (prot ? 0.3 : 0.5); // you are not always being hit; a prayer blocks part of a mixed attacker
   }
-  const foodHeal = l.hitpoints >= 80 ? 22 : 20, foodName = l.hitpoints >= 80 ? "Blighted manta ray" : "Shark";
+  const foodHeal = l.hitpoints >= 80 ? 22 : 20, foodName = wildy ? (l.hitpoints >= 80 ? "Blighted manta ray" : "Shark") : (l.hitpoints >= 80 ? "Manta ray" : "Shark");
   const foodN = intake * combatSec / foodHeal;
-  add(foodName, foodN + 6, protCovers ? "Prayer blocks the task's damage; this is the PK buffer" : `${intake.toFixed(2)} damage/s taken, plus a PK buffer of 6`, "food");
-  add("Blighted karambwan", Math.ceil(mins / 15) + 2, "Combo eats when a PKer lands a big hit", "food");
-  add("Saradomin brew(4)", 1 + Math.floor(mins / 60), "Survive a teleblock", "potions");
+  add(foodName, foodN + (wildy ? 6 : 3), protCovers ? (wildy ? "Prayer blocks the task's damage; this is the PK buffer" : "Prayer blocks the task's damage; a few in case") : `${intake.toFixed(2)} damage/s taken${wildy ? ", plus a PK buffer of 6" : ", plus 3 spare"}`, "food");
+  if (wildy) { add("Blighted karambwan", Math.ceil(mins / 15) + 2, "Combo eats when a PKer lands a big hit", "food"); add("Saradomin brew(4)", 1 + Math.floor(mins / 60), "Survive a teleblock", "potions"); }
   // boosts
   if (S.pots) {
     if (style === "melee") add("Super combat potion(4)", Math.ceil(mins / 6) / 4 + 0.25, "one dose every ~6 min", "potions");
     if (style === "ranged") add("Ranging potion(4)", Math.ceil(mins / 6) / 4 + 0.25, "one dose every ~6 min", "potions");
     if (style === "magic") add("Magic potion(4)", Math.ceil(mins / 6) / 4 + 0.25, "one dose every ~6 min", "potions");
   }
-  add("Stamina potion(4)", Math.max(1, mins / 40), "Running there, running away", "potions");
-  if (t.attr.includes("dragon")) add(l.hitpoints >= 1 && pick.shield?.name === "Anti-dragon shield" ? "Antifire potion(4)" : "Extended antifire(4)", Math.max(1, mins / 24), "Dragonfire hits 50 without it (shield + potion = full block)", "potions");
-  if (/spider|Spindel|Venenatis/i.test(t.name + loc.name)) add("Anti-venom+(4)", 1, "Poison and venom", "potions");
+  add("Stamina potion(4)", wildy ? Math.max(1, mins / 40) : (mins > 25 ? 1 : 0), wildy ? "Running there, running away" : "Running between spawns", "potions");
+  // the task's own dangers
+  const shieldBlocks = !!(pick.shield?.tags.includes("dragon") || pick.shield?.tags.includes("wyvern"));
+  if (ctx.fire) {
+    const superNeeded = !shieldBlocks;
+    add(superNeeded ? "Extended super antifire(4)" : "Extended antifire(4)", Math.max(1, mins / 24), superNeeded ? "No dragonfire shield in this setup: a super antifire blocks dragonfire on its own" : "Shield plus antifire = dragonfire fully blocked", "potions");
+  }
+  const venomImmune = !!pick.head?.tags.includes("venom");
+  if (ctx.venom && !venomImmune) add("Anti-venom+(4)", 1 + Math.floor(mins / 45), "They venom you; one dose cures and protects for a while", "potions");
+  else if (ctx.poison && !venomImmune) add("Antidote++(4)", 1 + Math.floor(mins / 60), "They poison you", "potions");
+  if (wildy && /spider|Spindel|Venenatis/i.test(t.name + loc.name) && !has("Anti-venom+(4)")) add("Anti-venom+(4)", 1, "Poison and venom", "potions");
   if (t.slug === "revenants") add("Revenant ether", 50, "Charge the bracelet of ethereum", "ammo");
-  if (/lockpick/i.test(loc.notes + (t.gear || []).join(" "))) add("Lockpick", 1, "Required for the door", "kit");
-  if (/web|lever|knife/i.test(loc.tele + loc.notes)) add("Knife", 1, "Webs on the way", "kit");
-  if (/axe to chop/i.test(t.tips.join(" "))) rows.push({ name: "Any axe", qty: 1, why: "Chop ent remains for logs", group: "kit", each: 0, img: "Rune axe.png" });
-  if (cannon) add("Dwarf cannon set", 1, "Set up, leave it if a PKer shows up; never lost on death", "cannon");
-  for (const k of KIT) { if (k.cannon) continue; if (!k.always) continue; if (rows.some((r) => r.name === k.name)) continue; rows.push({ name: k.name, qty: k.name.includes("restore") ? 0 : 1, why: k.why, group: "kit", each: price(k.name), img: ITEMS[k.name]?.image || k.name + ".png" }); }
-  const trips = Math.max(1, Math.ceil(rows.filter((r) => r.group === "food").reduce((s, r) => s + r.qty, 0) / 16));
-  return { rows: rows.filter((r) => r.qty > 0), trips, intake, protCovers, attacks, mins };
+  // required and recommended items that are not worn (worn ones are in the gear grid)
+  const worn = new Set(Object.values(pick).map((i) => i.name));
+  const helmWorn = Object.values(pick).some((i) => i.tags.includes("helm"));
+  const PER_KILL = { "Ice cooler": 1, "Bag of salt": 1 };
+  for (const n of t.need || []) {
+    const it = ITEMS[n.item];
+    if (it?.stats) { if (!["weapon", "2h", "ammo"].includes(it.slot) && !worn.has(n.item) && !(n.helm && helmWorn) && !(n.item === "Mirror shield" && worn.has("V's shield"))) rows.push({ name: n.item, qty: 1, why: n.why + " (required; not in this setup, so carry it)", group: "kit", each: price(n.item), img: it.image }); continue; }
+    if (has(n.item)) continue;
+    const q = PER_KILL[n.item] ? kills * PER_KILL[n.item] : /^Fungicide/.test(n.item) ? Math.ceil(kills / 10) : 1;
+    rows.push({ name: n.item, qty: q, why: n.why, group: "kit", each: price(n.item), img: it?.image || (n.item === "Light source" ? "Bullseye lantern.png" : n.item + ".png") });
+  }
+  for (const b of t.bring || []) {
+    if (!b.item || has(b.item) || worn.has(b.item)) continue;
+    const it = ITEMS[b.item]; if (it?.stats) continue;
+    rows.push({ name: b.item, qty: 1, why: b.why, group: "kit", each: price(b.item), img: it?.image || b.item + ".png" });
+  }
+  if (has("Anti-venom+(4)") && has("Antidote++(4)")) rows.splice(rows.findIndex((r) => r.name === "Antidote++(4)"), 1); // anti-venom covers poison too
+  if (wildy) {
+    if (/lockpick/i.test(loc.notes + (t.gear || []).join(" "))) add("Lockpick", 1, "Required for the door", "kit");
+    if (/web|lever|knife/i.test(loc.tele + loc.notes)) add("Knife", 1, "Webs on the way", "kit");
+    if (/axe to chop/i.test(t.tips.join(" "))) rows.push({ name: "Any axe", qty: 1, why: "Chop ent remains for logs", group: "kit", each: 0, img: "Rune axe.png" });
+  }
+  if (cannon) add("Dwarf cannon set", 1, wildy ? "Set up, leave it if a PKer shows up; never lost on death" : "Set it up where the spawns cluster", "cannon");
+  if (wildy) for (const k of KIT) { if (k.cannon) continue; if (!k.always) continue; if (has(k.name)) continue; rows.push({ name: k.name, qty: k.name.includes("restore") ? 0 : 1, why: k.why, group: "kit", each: price(k.name), img: ITEMS[k.name]?.image || k.name + ".png" }); }
+  const trips = Math.max(1, Math.ceil(rows.filter((r) => r.group === "food").reduce((s, r) => s + r.qty, 0) / (wildy ? 16 : 20)));
+  return { rows: rows.filter((r) => r.qty > 0), trips, intake, protCovers, attacks, mins, wildy };
 }
 
 /* ---------- render loadout ---------- */
@@ -464,7 +646,7 @@ function renderLoadout() {
   if (!c) { box.classList.add("hidden"); sup.classList.add("hidden"); return; }
   box.classList.remove("hidden"); sup.classList.remove("hidden");
   const t = c.t, loc = c.loc;
-  const spellOpts = c.style === "magic" ? spellOptions(c.pick, { task: t, attr: t.attr }) : [];
+  const spellOpts = c.style === "magic" ? spellOptions(c.pick, c.ctx) : [];
   // three-style comparison: the selected style is the full calc, the other two are computed strictly with no overrides
   const trio = ["melee", "ranged", "magic"].map((s) => (s === c.style ? c : compute(s, { strict: true, overrides: {} })));
   const best = trio.filter((x) => x && x.ok).sort((a, b) => a.sec - b.sec)[0];
@@ -481,11 +663,11 @@ function renderLoadout() {
       <div class="styles" id="style-segs">${cards}</div>
       ${c.fallback ? `<p class="err hint" style="margin:6px 0 0">${cap(c.fallback)} is recommended here, but ${ownOnlyActive() ? "nothing in your bank" : "your levels"} cannot use it yet, so this is a ${c.style} setup.</p>` : ""}
     </div>
-    <label>Risk tier<select id="tier">${[["budget", "Budget: risk under 150k"], ["mid", "Mid: risk under 750k"], ["high", "High: risk under 3m"], ["max", "Max: best you can wear"]].map(([k, v]) => `<option value="${k}"${S.tier === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
-    ${c.style === "magic" ? `<label>Spell<select id="spell">${spellOpts.map((o) => `<option value="${esc(o.name)}"${c.spell?.name === o.name ? " selected" : ""}>${esc(o.name)} (max ${o.max}${o.aoe ? ", AoE" : ""})</option>`).join("")}</select></label>` : ""}
+    <label>${c.wildy ? "Risk tier" : "Gear budget"}<select id="tier">${(c.wildy ? [["budget", "Budget: risk under 150k"], ["mid", "Mid: risk under 750k"], ["high", "High: risk under 3m"], ["max", "Max: best you can wear"]] : [["budget", "Budget: under 600k worn"], ["mid", "Mid: under 5m worn"], ["high", "High: under 30m worn"], ["max", "Max: best you can wear"]]).map(([k, v]) => `<option value="${k}"${S.tier === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+    ${c.style === "magic" ? `<label>Spell<select id="spell">${spellOpts.map((o) => `<option value="${esc(o.name)}"${c.spell?.name === o.name ? " selected" : ""}>${esc(o.name)} (max ${o.max}${o.bonus ? ", +" + Math.round(o.bonus * 100) + "% weakness" : ""}${o.aoe ? ", AoE" : ""})</option>`).join("")}</select></label>` : ""}
     <label>Task amount<input id="amount" type="number" min="1" max="400" value="${c.amount}" style="width:100%" /></label>
-    <label class="check"><input type="checkbox" id="protect"${S.protect ? " checked" : ""} />Protect Item (keep 4)</label>
-    <label class="check${loc.cannon ? "" : " muted"}"><input type="checkbox" id="cannon"${S.cannon && loc.cannon ? " checked" : ""}${loc.cannon ? "" : " disabled"} />Cannon${loc.cannon ? "" : " (not allowed here)"}</label>
+    ${c.wildy ? `<label class="check"><input type="checkbox" id="protect"${S.protect ? " checked" : ""} />Protect Item (keep 4)</label>` : ""}
+    <label class="check${loc.cannon && !c.tg.immune?.cannon ? "" : " muted"}"><input type="checkbox" id="cannon"${S.cannon && loc.cannon && !c.tg.immune?.cannon ? " checked" : ""}${loc.cannon && !c.tg.immune?.cannon ? "" : " disabled"} />Cannon${c.tg.immune?.cannon ? " (immune)" : loc.cannon ? "" : " (not allowed here)"}</label>
     <label class="check"><input type="checkbox" id="offpray"${S.offPray ? " checked" : ""} />Offensive prayer${c.pray ? ` (${c.pray.name})` : ""}</label>
     <label class="check"><input type="checkbox" id="pots"${S.pots ? " checked" : ""} />Boost potions</label>
     ${hasBank() ? `<label class="check"><input type="checkbox" id="ownonly"${ownOnlyActive() ? " checked" : ""} />Only gear I own</label>` : ""}`;
@@ -493,7 +675,7 @@ function renderLoadout() {
   $("#tier").onchange = (e) => { S.tier = e.target.value; S.overrides = {}; persist(); renderLoadout(); };
   const own = $("#ownonly"); if (own) own.onchange = (e) => { S.ownOnly = e.target.checked; S.overrides = {}; persist(); renderAll(); renderRl(); };
   $("#amount").onchange = (e) => { S.amount = clamp(parseInt(e.target.value, 10) || 1, 1, 400); persist(); renderLoadout(); };
-  $("#protect").onchange = (e) => { S.protect = e.target.checked; persist(); renderLoadout(); };
+  const pr = $("#protect"); if (pr) pr.onchange = (e) => { S.protect = e.target.checked; persist(); renderLoadout(); };
   $("#cannon").onchange = (e) => { S.cannon = e.target.checked; persist(); renderLoadout(); };
   $("#offpray").onchange = (e) => { S.offPray = e.target.checked; persist(); renderLoadout(); };
   $("#pots").onchange = (e) => { S.pots = e.target.checked; persist(); renderLoadout(); };
@@ -502,7 +684,7 @@ function renderLoadout() {
   // equipment grid
   const vals = Object.entries(c.pick).map(([slot, it]) => [slot, price(it.name)]).sort((a, b) => b[1] - a[1]);
   const keptSlots = new Set(vals.slice(0, c.gear.keep).filter((v) => v[1] > 0).map((v) => v[0]));
-  const ctx = { task: t, attr: t.attr, multi: loc.multi };
+  const ctx = c.ctx;
   const bank = hasBank(), ownF = ownOnlyActive(), emptyOwn = [];
   $("#equip").innerHTML = SLOTS.map((slot) => {
     const it = c.pick[slot];
@@ -529,7 +711,7 @@ function renderLoadout() {
   const atkLabel = c.style === "melee" ? `stab ${st.astab} · slash ${st.aslash} · crush ${st.acrush}` : c.style === "ranged" ? `ranged ${st.arange}` : `magic ${st.amagic}`;
   const strLabel = c.style === "melee" ? `strength ${st.str}` : c.style === "ranged" ? `ranged str ${st.rstr}` : `magic dmg +${st.mdmg}%`;
   $("#totals").innerHTML = `
-    <div class="wide"><span>Risk if you die (${c.gear.keep} items kept${S.protect ? ", Protect Item on" : ""})</span><b class="big">${gp(c.gear.risk)}</b> <span class="muted" style="display:inline">of ${gp(total)} worn</span></div>
+    ${c.wildy ? `<div class="wide"><span>Risk if you die (${c.gear.keep} items kept${S.protect ? ", Protect Item on" : ""})</span><b class="big">${gp(c.gear.risk)}</b> <span class="muted" style="display:inline">of ${gp(total)} worn</span></div>` : `<div class="wide"><span>Worn value</span><b class="big">${gp(total)}</b> <span class="muted" style="display:inline">kept on death outside the Wilderness (Death's fee aside)</span></div>`}
     <div><span>Attack bonus</span>${atkLabel}</div>
     <div><span>Damage</span>${strLabel} · prayer +${st.prayer}</div>
     <div><span>Max hit</span><b class="big">${c.maxHit}</b> <span class="muted" style="display:inline">${esc(c.styleLabel)}</span></div>
@@ -538,7 +720,9 @@ function renderLoadout() {
     <div><span>Cannon DPS</span>${c.cannon ? c.cannon.dps.toFixed(2) + ` <span class="muted" style="display:inline">(${Math.round(c.cannon.acc * 100)}% acc)</span>` : "off"}</div>
     <div><span>Kill time</span>${(c.tg.hp / Math.max(0.1, c.dps + (c.cannon?.dps || 0))).toFixed(1)} s</div>
     <div><span>Task time</span><b class="big">${Math.round(c.sec / 60)} min</b> <span class="muted" style="display:inline">for ${c.amount}</span></div>
-    <div class="wide"><span>Magic defence (PKers freeze and TB you)</span>${st.dmagic >= 40 ? '<b class="ok">' : st.dmagic >= 0 ? "<b>" : '<b class="err">'}${st.dmagic}</b> <span class="muted" style="display:inline">· ranged def ${st.drange} · melee def ${Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</span></div>
+    ${c.wildy ? `<div class="wide"><span>Magic defence (PKers freeze and TB you)</span>${st.dmagic >= 40 ? '<b class="ok">' : st.dmagic >= 0 ? "<b>" : '<b class="err">'}${st.dmagic}</b> <span class="muted" style="display:inline">· ranged def ${st.drange} · melee def ${Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</span></div>` : `<div class="wide"><span>Your defence vs their ${esc(c.tg.style)}</span><b>${/magic/.test(styleOf(c.tg.style)) ? "magic " + st.dmagic : /ranged/.test(styleOf(c.tg.style)) ? "ranged " + st.drange : "melee " + Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</b> <span class="muted" style="display:inline">· magic ${st.dmagic} · ranged ${st.drange} · melee ${Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</span></div>`}
+    ${c.spell?.bonus ? `<div class="wide muted">${esc(c.spell.name)} gets +${Math.round(c.spell.bonus * 100)}% accuracy and damage from the target's ${esc(c.tg.elem.type)} weakness.</div>` : ""}
+    ${c.ctx.req?.names.size ? `<div class="wide muted">Required for this task: ${[...c.ctx.req.names].filter((n) => n !== "V's shield").map(esc).join(", ")}${c.ctx.req.helmOk ? " (a Slayer helmet covers the head item)" : ""}.</div>` : ""}
     ${c.onTask ? "" : `<div class="wide muted">No slayer helm or black mask in this setup: that is 15–17% of your damage. Add one if you own it.</div>`}`;
   renderSupplies(c);
   renderPresets(); // keeps the "current" marker honest: a changed control means the state no longer matches the loaded setup
@@ -555,8 +739,8 @@ function renderSupplies(c) {
   const inv = [];
   const push = (name, n, imgName) => { for (let i = 0; i < n && inv.length < 28; i++) inv.push({ name, img: imgName }); };
   const perTrip = (name) => { const r = s.rows.find((x) => x.name === name); return r ? Math.ceil(r.qty / s.trips) : 0; };
-  for (const k of ["Looting bag", "Royal seed pod", "Stamina potion(4)", "Blighted super restore(4)", "Saradomin brew(4)"]) { const r = s.rows.find((x) => x.name === k); if (r) push(k, Math.min(perTrip(k) || 1, 4), r.img); }
-  for (const r of s.rows.filter((x) => x.group === "potions" && !["Stamina potion(4)", "Blighted super restore(4)", "Saradomin brew(4)"].includes(x.name))) push(r.name, Math.min(perTrip(r.name), 2), r.img);
+  for (const k of ["Looting bag", "Royal seed pod", "Stamina potion(4)", "Blighted super restore(4)", "Prayer potion(4)", "Saradomin brew(4)"]) { const r = s.rows.find((x) => x.name === k); if (r) push(k, Math.min(perTrip(k) || 1, s.wildy ? 4 : 6), r.img); }
+  for (const r of s.rows.filter((x) => x.group === "potions" && !["Stamina potion(4)", "Blighted super restore(4)", "Prayer potion(4)", "Saradomin brew(4)"].includes(x.name))) push(r.name, Math.min(perTrip(r.name), 2), r.img);
   if (c.cannon) { push("Dwarf cannon set", 4, "Dwarf multicannon.png"); push("Steel cannonball", 1, "Steel cannonball.png"); }
   for (const r of s.rows.filter((x) => x.group === "ammo")) push(r.name, 1, r.img);
   for (const r of s.rows.filter((x) => x.group === "kit" && !["Looting bag", "Royal seed pod", "Burning amulet(5)"].includes(x.name))) push(r.name, 1, r.img);
@@ -574,9 +758,9 @@ function renderSupplies(c) {
   $("#supplies-body").innerHTML = `
     <div class="sup">
       <div>
-        <p class="hint" style="margin:0 0 8px">One trip of ${s.trips} (${Math.round(s.mins / s.trips)} min each). Wear the teleport jewellery.</p>
+        <p class="hint" style="margin:0 0 8px">One trip of ${s.trips} (${Math.round(s.mins / s.trips)} min each). ${s.wildy ? "Wear the teleport jewellery." : "Bring a teleport back to the bank."}</p>
         <div class="inv">${cells.join("")}</div>
-        <p class="assume">Assumptions: ${c.pray ? c.pray.name + " and " : ""}${/Protect/.test(c.t.pray) ? c.t.pray : "no protection prayer"} on${S.protect ? ", Protect Item on" : ""}; 30% time overhead for walking and looting; ${s.protCovers ? "prayer blocks the task's damage so food is only a PK buffer" : "you take " + s.intake.toFixed(2) + " damage/s while fighting"}${c.cannon ? "; the cannon fires about " + Math.round(c.cannon.rate * 60) + " balls a minute" : ""}${c.aoeTargets > 1 ? "; AoE hits ~" + c.aoeTargets + " targets per attack" : ""}. Prices: wiki real-time, ${S.pricesAt ? "loaded " + Math.round((Date.now() - S.pricesAt) / 60000) + " min ago" : "not loaded"}.</p>
+        <p class="assume">Assumptions: ${c.pray ? c.pray.name + " and " : ""}${/Protect/.test(c.t.pray) ? c.t.pray : "no protection prayer"} on${c.wildy && S.protect ? ", Protect Item on" : ""}; 30% time overhead for walking and looting; ${s.protCovers ? "prayer blocks the task's damage so food is only a " + (c.wildy ? "PK buffer" : "safety margin") : "you take " + s.intake.toFixed(2) + " damage/s while fighting"}${c.cannon ? "; the cannon fires about " + Math.round(c.cannon.rate * 60) + " balls a minute" : ""}${c.aoeTargets > 1 ? "; AoE hits ~" + c.aoeTargets + " targets per attack" : ""}. Prices: wiki real-time, ${S.pricesAt ? "loaded " + Math.round((Date.now() - S.pricesAt) / 60000) + " min ago" : "not loaded"}.</p>
       </div>
       <div>
         <table><tbody>${rows}<tr class="total"><td colspan="3">Supplies for the whole task</td><td class="num">${gp(total)}</td></tr></tbody></table>
@@ -611,9 +795,9 @@ function saveSetups(list, { push = true } = {}) {
   renderPresets();
   if (push) pushSetups();
 }
-function snapshot() { return { rsn: S.rsn, levels: { ...S.levels }, task: S.task, loc: S.loc, style: S.style, tier: S.tier, protect: S.protect, cannon: S.cannon, offPray: S.offPray, pots: S.pots, spell: S.spell, amount: S.amount, overrides: { ...S.overrides } }; }
+function snapshot() { return { rsn: S.rsn, levels: { ...S.levels }, master: S.master, task: S.task, loc: S.loc, target: S.target, style: S.style, tier: S.tier, protect: S.protect, cannon: S.cannon, offPray: S.offPray, pots: S.pots, spell: S.spell, amount: S.amount, overrides: { ...S.overrides } }; }
 // what makes two states "the same setup" (levels and rsn do not count)
-const presetKey = (p) => JSON.stringify([p.task ?? null, p.loc || 0, p.style || null, p.tier || "mid", !!p.protect, !!p.cannon, !!p.offPray, !!p.pots, p.spell || null, p.amount || null, p.overrides || {}]);
+const presetKey = (p) => JSON.stringify([p.task ?? null, p.loc || 0, p.target ?? null, p.style || null, p.tier || "mid", !!p.protect, !!p.cannon, !!p.offPray, !!p.pots, p.spell || null, p.amount || null, p.overrides || {}]);
 // presets come from localStorage, an imported file or the server row, so every field is checked before it reaches S
 function cleanPreset(p) {
   p = p && typeof p === "object" ? p : {};
@@ -622,7 +806,8 @@ function cleanPreset(p) {
   const amount = num(p.amount);
   return {
     rsn: typeof p.rsn === "string" ? p.rsn.slice(0, 12) : null, levels,
-    task: TASKS.some((t) => t.slug === p.task) ? p.task : null, loc: Math.max(0, Math.round(num(p.loc) || 0)),
+    master: p.master === "all" || MASTER[p.master] ? p.master : null,
+    task: TASKS.some((t) => t.id === p.task) ? p.task : null, loc: Math.max(0, Math.round(num(p.loc) || 0)), target: num(p.target) != null ? Math.max(0, Math.round(num(p.target))) : null,
     style: ["melee", "ranged", "magic"].includes(p.style) ? p.style : null, tier: typeof p.tier === "string" && Object.prototype.hasOwnProperty.call(TIER_CAP, p.tier) ? p.tier : null,
     protect: !!p.protect, cannon: !!p.cannon, offPray: !!p.offPray, pots: !!p.pots,
     spell: typeof p.spell === "string" ? p.spell : null, amount: amount ? clamp(Math.round(amount), 1, 400) : null, overrides, // spell is only ever compared with the computed options
@@ -630,9 +815,9 @@ function cleanPreset(p) {
 }
 function applyPreset(raw) {
   const p = cleanPreset(raw);
-  Object.assign(S, { rsn: p.rsn ?? S.rsn, levels: { ...S.levels, ...p.levels }, task: p.task, loc: p.loc, style: p.style, tier: p.tier || S.tier, protect: p.protect, cannon: p.cannon, offPray: p.offPray, pots: p.pots, spell: p.spell, amount: p.amount, overrides: p.overrides });
+  Object.assign(S, { rsn: p.rsn ?? S.rsn, levels: { ...S.levels, ...p.levels }, master: p.master || S.master, task: p.task, loc: p.loc, target: p.target, style: p.style, tier: p.tier || S.tier, protect: p.protect, cannon: p.cannon, offPray: p.offPray, pots: p.pots, spell: p.spell, amount: p.amount, overrides: p.overrides });
   if (rlLevelsActive()) adoptLevels(SYNC.player); // paired levels win over the ones saved in the setup
-  $("#rsn").value = S.rsn || ""; persist(); renderStats(); renderLevels(); renderTasks(); renderAll();
+  $("#rsn").value = S.rsn || ""; persist(); renderStats(); renderLevels(); renderMasters(); renderTasks(); renderAll();
 }
 function newSetup(name) {
   const s = { id: rid(), name, at: Date.now(), preset: snapshot(), selection: null };
@@ -641,7 +826,7 @@ function newSetup(name) {
 }
 function renderPresets() {
   const list = setups(), active = activeSetup();
-  $("#preset-list").innerHTML = list.map((s) => { const p = s.preset || {}; const t = TASKS.find((x) => x.slug === p.task); return `<li${active?.id === s.id ? ' class="active"' : ""}><b>${esc(s.name)}<small>${esc(t?.name || "no task")} · ${esc(p.style || t?.style || "")} · ${esc(p.tier || "")}${p.rsn ? " · " + esc(p.rsn) : ""}${active?.id === s.id ? ' · <span class="ok">current</span>' : ""}</small></b><button class="btn small" type="button" data-load="${esc(s.id)}">Load</button><button class="btn small danger" type="button" data-del="${esc(s.id)}" aria-label="Delete">✕</button></li>`; }).join("") || `<li class="muted" style="border:0;background:none">No saved setups yet.</li>`;
+  $("#preset-list").innerHTML = list.map((s) => { const p = s.preset || {}; const t = TASKS.find((x) => x.id === p.task); return `<li${active?.id === s.id ? ' class="active"' : ""}><b>${esc(s.name)}<small>${esc(t?.name || "no task")} · ${esc(p.style || t?.style || "")} · ${esc(p.tier || "")}${p.rsn ? " · " + esc(p.rsn) : ""}${active?.id === s.id ? ' · <span class="ok">current</span>' : ""}</small></b><button class="btn small" type="button" data-load="${esc(s.id)}">Load</button><button class="btn small danger" type="button" data-del="${esc(s.id)}" aria-label="Delete">✕</button></li>`; }).join("") || `<li class="muted" style="border:0;background:none">No saved setups yet.</li>`;
   $$("#preset-list [data-load]").forEach((b) => b.addEventListener("click", () => { const s = setups().find((x) => x.id === b.dataset.load); if (!s) return; setActiveSetup(s); applyPreset(s.preset); renderPresets(); }));
   $$("#preset-list [data-del]").forEach((b) => b.addEventListener("click", () => saveSetups(setups().filter((x) => x.id !== b.dataset.del))));
 }
@@ -711,13 +896,18 @@ function idsForName(name) { const it = ITEMS[name]; if (it) return idsFor(it); r
 // master is Krystilia or unknown: other masters assign some of the same bosses outside the Wilderness.
 const taskKey = (s) => String(s || "").toLowerCase().trim().replace(/s$/, "");
 const BOSS_NAMES = /^(callisto|artio|vet'?ion|calvar'?ion|venenatis|spindel|chaos elemental|chaos fanatic|crazy archaeologist|scorpia|king black dragon)$/;
+// VarbitID.SLAYER_MASTER values as the plugin reports them ("Krystilia" for 7, otherwise the number). Best effort for the
+// others: a wrong guess only changes which master's amounts are shown, never the task itself.
+const MASTER_VARBIT = { 1: "turael", 2: "mazchna", 3: "vannaka", 4: "chaeldar", 5: "duradel", 6: "nieve", 8: "konar", 9: "spria", 10: "mortimer" };
+function masterFromPlugin(master) { if (master === "Krystilia") return "krystilia"; const id = MASTER_VARBIT[+master]; return id && MASTER[id] ? id : null; }
 function matchTask(task) {
   const obj = task && typeof task === "object", name = obj ? task.name : task, master = obj ? task.master : null;
   if (!name || typeof name !== "string") return null;
-  const k = taskKey(name), low = name.toLowerCase().trim();
-  let t = TASKS.find((x) => taskKey(x.name) === k);
-  if (!t && (/\bboss/.test(low) || ((master == null || master === "Krystilia") && BOSS_NAMES.test(low)))) t = TASKS.find((x) => x.slug === "bosses");
-  return t ? t.slug : null;
+  const k = taskKey(name), low = name.toLowerCase().trim(), wild = master === "Krystilia";
+  const same = TASKS.filter((x) => taskKey(x.name) === k);
+  let t = same.find((x) => x.krystilia === wild) || same.find((x) => master == null || !x.krystilia) || same[0];
+  if (!t && (/\bboss/.test(low) || ((master == null || wild) && BOSS_NAMES.test(low)))) t = TASKS.find((x) => (wild || master == null) ? x.id === "bosses" : x.id === "slayer/bosses") || TASKS.find((x) => x.slug === "bosses");
+  return t ? t.id : null;
 }
 function adoptLevels(p) {
   if (!p?.levels) return;
@@ -727,9 +917,10 @@ function adoptLevels(p) {
 }
 function selectPluginTask(scroll) {
   const pt = SYNC.player?.task, slug = matchTask(pt); if (!slug) return;
-  if (S.task !== slug) { S.task = slug; S.loc = 0; S.overrides = {}; S.spell = null; S.amount = null; S.style = null; }
+  if (S.task !== slug) { S.task = slug; S.loc = 0; S.target = null; S.overrides = {}; S.spell = null; S.amount = null; S.style = null; }
   const amt = num(pt.amount); if (amt > 0) S.amount = clamp(Math.round(amt), 1, 400);
-  persist(); renderTasks(); renderAll();
+  const pm = masterFromPlugin(pt.master), tt = TASKS.find((x) => x.id === slug); if (pm && tt?.masters[pm]) S.master = pm;
+  persist(); renderMasters(); renderTasks(); renderAll();
   if (scroll) $("#detail").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 function onPlayer(p) {
@@ -744,10 +935,10 @@ function renderTaskBanner() {
   const el = $("#rl-task"); if (!el) return;
   const pt = SYNC.player?.task;
   if (!pt || !pt.name) { el.classList.add("hidden"); el.innerHTML = ""; return; }
-  const slug = matchTask(pt), t = TASKS.find((x) => x.slug === slug), amount = num(pt.amount);
+  const slug = matchTask(pt), t = TASKS.find((x) => x.id === slug), amount = num(pt.amount), pm = masterFromPlugin(pt.master);
   el.classList.remove("hidden");
-  if (!t) { el.innerHTML = `<span>Your current task: <b>${esc(pt.name)}</b>${amount ? `, ${amount} left` : ""}</span><span class="muted">${pt.master && pt.master !== "Krystilia" ? "Not a Krystilia task." : "Not in this list."}</span>`; return; }
-  el.innerHTML = `<span>Your current task: <b>${esc(t.name)}</b>, ${amount ?? "?"} left</span>${S.task === slug ? `<span class="badge good">Selected</span>` : `<button class="btn" type="button" id="rl-select">Select it</button>`}`;
+  if (!t) { el.innerHTML = `<span>Your current task: <b>${esc(pt.name)}</b>${amount ? `, ${amount} left` : ""}</span><span class="muted">Not in this list.</span>`; return; }
+  el.innerHTML = `<span>Your current task: <b>${esc(t.name)}</b>${t.krystilia ? " (Wilderness)" : ""}${pm ? ` from ${esc(MASTER[pm]?.name || pm)}` : ""}, ${amount ?? "?"} left</span>${S.task === slug ? `<span class="badge good">Selected</span>` : `<button class="btn" type="button" id="rl-select">Select it</button>`}`;
   const b = $("#rl-select"); if (b) b.onclick = () => selectPluginTask(true);
 }
 function toast(msg) { const el = $("#rl-toast"); if (!el) return; el.textContent = msg; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 4500); }
@@ -766,7 +957,7 @@ function buildSelection(c) {
   const a = activeSetup(), wp = c.loc.wp;
   return {
     source: "app", at: Date.now(),
-    task: t.slug, taskName: t.name,
+    task: t.id, taskName: t.name,
     loc: Math.max(0, t.locations.indexOf(c.loc)), locationName: c.loc.name,
     target: Array.isArray(wp) && wp.length >= 2 && Number.isFinite(+wp[0]) && Number.isFinite(+wp[1]) ? { x: +wp[0], y: +wp[1], plane: +wp[2] || 0 } : null,
     style: c.style, styleLabel: c.styleLabel,
@@ -934,11 +1125,11 @@ function initSync() {
 function renderAll() { renderDetail(); renderLoadout(); }
 function init() {
   $("#rsn").value = S.rsn || "";
-  renderStats(); renderLevels(); renderTasks(); renderPresets(); renderAll();
+  renderStats(); renderLevels(); renderMasters(); renderTasks(); renderPresets(); renderAll();
   $("#rsn-form").addEventListener("submit", (e) => { e.preventDefault(); const v = $("#rsn").value.trim(); if (v) lookup(v); });
   $("#task-q").addEventListener("input", renderTasks);
   $("#task-filters").addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (!b) return; S.filter = b.dataset.f; $$("#task-filters .chip").forEach((c) => c.setAttribute("aria-pressed", c === b)); renderTasks(); });
-  $("#task-grid").addEventListener("click", (e) => { const b = e.target.closest(".task"); if (b) pickTask(b.dataset.slug); });
+  $("#task-grid").addEventListener("click", (e) => { const b = e.target.closest(".task"); if (b) pickTask(b.dataset.id); });
   $("#preset-form").addEventListener("submit", (e) => { e.preventDefault(); const name = $("#preset-name").value.trim() || (task()?.name || "Setup") + " " + new Date().toLocaleDateString(); const s = newSetup(name); setActiveSetup(s); saveSetups([s, ...setups()]); $("#preset-name").value = ""; schedulePush(); });
   $("#preset-export").addEventListener("click", () => { const blob = new Blob([JSON.stringify(setups(), null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "wildy-slayer-setups.json"; a.click(); });
   $("#preset-import").addEventListener("change", async (e) => { const f = e.target.files[0]; if (!f) return; try { const arr = JSON.parse(await f.text()); if (!Array.isArray(arr)) throw new Error("not a setups file"); const inc = arr.map(migrateSetup).filter(Boolean); const have = new Set(inc.map((s) => s.id)); saveSetups([...inc, ...setups().filter((s) => !have.has(s.id))]); } catch (err) { alert("Could not import: " + err.message); } e.target.value = ""; });

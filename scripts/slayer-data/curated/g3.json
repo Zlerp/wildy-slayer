@@ -1,0 +1,2524 @@
+[
+ {
+  "slug": "aberrant-spectres",
+  "name": "Aberrant spectres",
+  "image": "Aberrant spectre.png",
+  "attr": [
+   "undead",
+   "spectral"
+  ],
+  "superior": "Abhorrent spectre",
+  "unlock": "Priest in Peril (Slayer Tower). Catacombs of Kourend needs no quest.",
+  "targets": [
+   {
+    "page": "Aberrant spectre",
+    "ver": null,
+    "name": "Aberrant spectre (lvl 96)",
+    "loc": "Slayer Tower"
+   },
+   {
+    "page": "Aberrant spectre",
+    "ver": null,
+    "name": "Aberrant spectre (lvl 96)",
+    "loc": "Stronghold Slayer Cave"
+   },
+   {
+    "page": "Deviant spectre",
+    "ver": null,
+    "name": "Deviant spectre (lvl 169)",
+    "loc": "Catacombs of Kourend"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Slayer Tower (2nd floor)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring to the tower, Kharyrll teleport, or Morytania legs 4 / Fenkenstrain's castle ring teleport then walk south-west.",
+    "notes": "About 10 spectres along the north side of the second floor. Cannon-able, single-way, often crowded. Climb the staircase from the crawling hands room."
+   },
+   {
+    "name": "Stronghold Slayer Cave",
+    "region": "Gnome Stronghold",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (cave entrance), spirit tree, or Gnome glider to the Stronghold.",
+    "notes": "Spectres in a side room; cannon-able and quiet. Nieve and Steve are right outside."
+   },
+   {
+    "name": "Catacombs of Kourend (Deviant spectres)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman (Xeric's Heart) or Kourend home teleport into the catacombs.",
+    "notes": "Deviant spectres: 190 HP and very high melee defence, so only burst or barrage them; no cannon. Bursts in multi make this the fastest version with Ancients."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Slayer Tower spectres have 90 Defence and only +20 melee bonuses, 0 magic defence: melee with a slayer helm is simple, Magic is accurate too. Deviants in the catacombs have +80 melee defence, so Blood or Ice Burst them instead. Weak to Air spells (+50%).",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "drain",
+    "text": "Their breath attack drains Attack, Strength, Defence, Ranged, Magic and Agility by about half unless you wear a nose peg or a slayer helmet. Restore potions do not cover it quickly."
+   },
+   {
+    "kind": "magic",
+    "text": "Max hit 8 with the nose peg, 14 without."
+   }
+  ],
+  "need": [
+   {
+    "item": "Nose peg",
+    "why": "Blocks the stat-draining breath; the slayer helmet includes it",
+    "helm": true
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic blocks their only attack"
+   }
+  ],
+  "mechanics": "Wear the nose peg or slayer helm, put Protect from Magic up, and attack. At the Slayer Tower just melee down the line; in the catacombs stand so the deviants stack and burst them. Note the herbs: aberrant spectres drop grimy herbs often enough to pay for the task.",
+  "tips": [
+   "Catacombs with bursts if you have Ancients; Slayer Tower with a cannon for a cheap melee task.",
+   "Noted herb drops (ranarr, snapdragon, a torstol chance) make this a profitable mid-level task.",
+   "Abhorrent spectre, the superior, hits up to 15 and drains too: same nose peg, same prayer."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast, cheap, herbs pay for supplies and it is cannon-able or burstable.",
+  "aoe": true
+ },
+ {
+  "slug": "bloodveld",
+  "name": "Bloodveld",
+  "image": "Bloodveld.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": "Insatiable Bloodveld",
+  "unlock": "Priest in Peril (Slayer Tower). God Wars Dungeon version needs Troll Stronghold and 60 Agility or Strength; Iorwerth Dungeon needs Song of the Elves.",
+  "targets": [
+   {
+    "page": "Bloodveld",
+    "ver": "Normal",
+    "name": "Bloodveld (lvl 76)",
+    "loc": "Slayer Tower"
+   },
+   {
+    "page": "Bloodveld",
+    "ver": "Normal",
+    "name": "Bloodveld (lvl 76)",
+    "loc": "Stronghold Slayer Cave"
+   },
+   {
+    "page": "Mutated Bloodveld",
+    "ver": null,
+    "name": "Mutated Bloodveld (lvl 123)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Bloodveld",
+    "ver": "GWD",
+    "name": "Bloodveld (lvl 81)",
+    "loc": "God Wars Dungeon"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend (Mutated Bloodveld)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman (Xeric's Heart) or Kourend home teleport.",
+    "notes": "Mutated bloodveld, 170 HP, 30 Defence, multi: the best XP, with Blood Burst, a venator bow, or AFK melee on Protect from Magic. No cannon anywhere in the catacombs."
+   },
+   {
+    "name": "Slayer Tower (1st floor)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring, Kharyrll teleport or Morytania legs 4 then walk.",
+    "notes": "Ten-ish bloodveld in the east room of the ground floor; single-way, cannon-able, often full of other slayers."
+   },
+   {
+    "name": "Stronghold Slayer Cave",
+    "region": "Gnome Stronghold",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (cave entrance) or spirit tree.",
+    "notes": "Several spawns in a cannon-able side chamber. Quiet, easy to AFK."
+   },
+   {
+    "name": "Iorwerth Dungeon (Mutated Bloodveld)",
+    "region": "Prifddinas",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Crystal teleport seed or Iorwerth Camp teleport, enter the cave east of the camp.",
+    "notes": "Mutated bloodveld in a multi, cannon-able dungeon: the only place to cannon the big ones. Needs Song of the Elves."
+   },
+   {
+    "name": "God Wars Dungeon (Zamorak side)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport, run to the dungeon entrance; 60 Agility or 60 Strength to get in.",
+    "notes": "Level 81 bloodveld around the Zamorak area; killcount for Zamorak. Everything else there is aggressive unless you wear god items."
+   },
+   {
+    "name": "Meiyerditch Laboratories (Mutated Bloodveld)",
+    "region": "Morytania",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Drakan's medallion to Ver Sinhaza, walk into the laboratories.",
+    "notes": "Mutated bloodveld in a multi area; no cannon. Fine if you already live in Morytania."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Zero defensive bonuses and 30 Defence: anything hits them. Melee with a slayer helm for AFK XP; Blood Burst or a venator bow in the catacombs where they are 2x2 but packed.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Their 'magical melee' is a magic attack with melee range: Protect from Magic blocks it, Protect from Melee does not. Mutated ones hit 12."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic makes the task hitless; Bones to Peaches or the catacombs' free prayer restore also work"
+   }
+  ],
+  "mechanics": "Put Protect from Magic on and hit them. Arclight or Emberlight get the demonbane bonus. In the catacombs stand where several mutated bloodveld pile on you and let the venator bow or Blood Burst heal you through the AoE.",
+  "tips": [
+   "Mutated bloodveld in the catacombs are among the best melee XP per hour in Slayer for the effort.",
+   "Insatiable (mutated) bloodveld superior hits up to 20 with magic: keep the prayer on.",
+   "Extend with 'Bleed me dry' (75 points) if you like the task; many players do."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy AFK XP with no requirements beyond Protect from Magic.",
+  "aoe": true
+ },
+ {
+  "slug": "blue-dragons",
+  "name": "Blue dragons",
+  "image": "Blue dragon.png",
+  "attr": [
+   "dragon",
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "Dragon Slayer I started. Taverley Dungeon shortcut needs 70 Agility; Myths' Guild needs Dragon Slayer II; Ogre Enclave needs Watchtower; Ruins of Tapoyauik is in Varlamore.",
+  "targets": [
+   {
+    "page": "Blue dragon",
+    "ver": "1",
+    "name": "Blue dragon (lvl 111)",
+    "loc": null
+   },
+   {
+    "page": "Baby blue dragon",
+    "ver": "1",
+    "name": "Baby blue dragon (lvl 48)",
+    "loc": "Taverley Dungeon"
+   },
+   {
+    "page": "Brutal blue dragon",
+    "ver": "Catacombs of Kourend",
+    "name": "Brutal blue dragon (lvl 271)",
+    "loc": "Catacombs of Kourend"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Taverley Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Falador teleport and walk, or Taverley house portal; 70 Agility pipe shortcut from the entrance, otherwise a dusty key.",
+    "notes": "Five blue dragons plus baby blue dragons (which count). Classic cannon spot; the babies die in one hit."
+   },
+   {
+    "name": "Myths' Guild Dungeon",
+    "region": "Feldip Hills",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Mythical cape or Myths' Guild teleport, go downstairs.",
+    "notes": "Several blue dragons and babies near the entrance, cannon-able, rarely crowded. Needs Dragon Slayer II."
+   },
+   {
+    "name": "Catacombs of Kourend (Brutal blue dragons)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport.",
+    "notes": "Brutal blue dragons: 245 HP, hit 21 with melee and magic plus dragonfire; 100 Combat to be sent here. Antifire plus Protect from Magic. Slow but good loot."
+   },
+   {
+    "name": "Ogre Enclave",
+    "region": "Gu'Tanoth",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Watchtower teleport (Yanille), walk to Gu'Tanoth and through the enclave.",
+    "notes": "Blue dragons among ogre shamans; needs Watchtower. Cannon-able. Rarely worth the walk."
+   },
+   {
+    "name": "Isle of Souls Dungeon",
+    "region": "Isle of Souls",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Soul Wars portal (Edgeville or Ferox), then the dungeon on the island.",
+    "notes": "Blue dragons and babies in a quiet, cannon-able dungeon."
+   },
+   {
+    "name": "Ruins of Tapoyauik",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Quetzal to Ralos' Rise or Tal Teklan, then walk into the ruins.",
+    "notes": "Blue dragons, babies and brutal blue dragons in the Varlamore ruins. No cannon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "0 stab defence against 70 slash/crush: stab (Zamorakian hasta, dragon hunter lance, rapier) or a dragon hunter crossbow. Weak to Water spells (+50%) if you mage. Babies count and die to anything.",
+  "pray": "Protect from Melee (Protect from Magic for brutal blue dragons)",
+  "hazards": [
+   {
+    "kind": "dragonfire",
+    "text": "Dragonfire hits up to 50 with no protection; an anti-dragon shield or antifire potion alone leaves a few damage, both together block it fully. Brutal blues also cast magic for 21."
+   }
+  ],
+  "need": [
+   {
+    "item": "Anti-dragon shield",
+    "why": "Or a dragonfire shield / antifire potion: dragonfire hits 50 unprotected",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Antifire potion(4)",
+    "why": "Shield plus a potion dose blocks dragonfire completely; extended antifire lasts 6 min a dose"
+   },
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee blocks the bite"
+   }
+  ],
+  "mechanics": "Shield (or super antifire) on, Protect from Melee, stab weapon. Kill babies when they are adjacent, they count. Loot blue dragonhide and dragon bones; the task roughly pays for itself.",
+  "tips": [
+   "Taverley with a cannon and the 70 Agility pipe is the standard spot; Myths' Guild if you have DS2 and want it quiet.",
+   "Dragon hunter lance / crossbow give +20% damage and accuracy against all dragons here.",
+   "Brutal blues are only worth it for the loot; they are slow for points.",
+   "Vorkath counts for blue dragon tasks if you have DS2."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy, cannon-able and the bones and hides pay for supplies.",
+  "aoe": false
+ },
+ {
+  "slug": "dagannoth",
+  "name": "Dagannoth",
+  "image": "Dagannoth.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Horror from the Deep. Waterbirth Island needs The Fremennik Trials for the boat; Jormungand's Prison needs The Fremennik Exiles.",
+  "targets": [
+   {
+    "page": "Dagannoth",
+    "ver": "Level 74 (1)",
+    "name": "Dagannoth (lvl 74, Lighthouse)",
+    "loc": "Lighthouse"
+   },
+   {
+    "page": "Dagannoth",
+    "ver": "Level 92 (1)",
+    "name": "Dagannoth (lvl 92, Lighthouse)",
+    "loc": "Lighthouse"
+   },
+   {
+    "page": "Dagannoth",
+    "ver": "Level 74 (2)",
+    "name": "Dagannoth (lvl 74, Catacombs)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Dagannoth",
+    "ver": "Level 92 (1)",
+    "name": "Dagannoth (lvl 88-90, Waterbirth)",
+    "loc": "Waterbirth Island"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Lighthouse basement",
+    "region": "Fremennik",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Lunar Isle / Rellekka teleport then run north-west, or fairy ring ALP and walk; climb down inside the lighthouse.",
+    "notes": "Level 74 (ranged) and 92 (melee) dagannoth in a multi, cannon-able basement. The standard spot: cannon and Protect from Missiles or Melee depending on which you tank."
+   },
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; dagannoth are in the north-west part.",
+    "notes": "Both levels in a multi area; no cannon. 1x1 level 74s stack for bursts."
+   },
+   {
+    "name": "Waterbirth Island Dungeon",
+    "region": "Fremennik",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Waterbirth teleport (Lunar) or Jarvald's boat from Rellekka; pet rock or a friend for the doors.",
+    "notes": "Dagannoth spawns, fledgelings and the aggressive level 88-90 dagannoth around the Dagannoth Kings entrance all count. Multi, cannon-able in the first cave, deadly crowds deeper in."
+   },
+   {
+    "name": "Jormungand's Prison",
+    "region": "Fremennik",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fremennik Exiles: boat from Rellekka to the Island of Stone, through the prison.",
+    "notes": "Dagannoth with basilisk knights nearby; multi and cannon-able. Only sent here by Konar."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "No defensive bonuses on either kind: melee or a cannon destroys them. The level 74s are 1x1 and stack for Ice Burst at the Lighthouse or catacombs.",
+  "pray": "Protect from Missiles for the level 74s, Protect from Melee for the 92s",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Level 74 dagannoth hit 8 with ranged, the 92s hit 8 with melee: in multi you take both at once, so protect from the one you are not killing."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Waterbirth's deeper caves swarm with aggressive dagannoth; stay near the entrance."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "You are always under attack from one style"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "A cannon at the Lighthouse halves the task time"
+   }
+  ],
+  "mechanics": "At the Lighthouse set the cannon in the middle, pray against the kind you are not fighting, and burst or melee the rest. Dagannoth hides are worth banking; dagannoth bones are decent prayer XP.",
+  "tips": [
+   "Lighthouse basement with a cannon is the standard; the catacombs if you want to burst without a cannon.",
+   "Dagannoth Kings count for the task and are far better money if you can do them.",
+   "Konar only sends you to the four listed places; the Lighthouse is the easiest."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast cannon task with usable drops; only skip if you hate the Lighthouse run.",
+  "aoe": true
+ },
+ {
+  "slug": "dust-devils",
+  "name": "Dust devils",
+  "image": "Dust devil.png",
+  "attr": [],
+  "superior": "Choke devil",
+  "unlock": "Desert Treasure I started (Smoke Dungeon). Catacombs of Kourend needs nothing.",
+  "targets": [
+   {
+    "page": "Dust devil",
+    "ver": "Catacombs of Kourend",
+    "name": "Dust devil (lvl 110, Catacombs)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Dust devil",
+    "ver": "Smoke Dungeon",
+    "name": "Dust devil (lvl 93, Smoke Dungeon)",
+    "loc": "Smoke Dungeon"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman (Xeric's Heart) or Kourend home teleport; dust devils are in the south-west.",
+    "notes": "130 HP, 40 Defence, 1x1, multi: the burst and barrage spot. No cannon. Expect company."
+   },
+   {
+    "name": "Smoke Dungeon",
+    "region": "Kharidian Desert",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Camulet to Enakhra's Temple then walk, or Pollnivneach then south-west; facemask required in the dungeon.",
+    "notes": "Level 93 version, single-way, cannon-able, rarely busy. Slower than the catacombs but relaxed."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "1x1, 40 Defence, 0 magic defence and packed in multi at the catacombs: Smoke or Ice Burst/Barrage. Melee with a slayer helm is fine at the Smoke Dungeon. Weak to Air spells (+35%).",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Their 'ranged melee' attack hits 16 without a facemask, about 10 with one; Protect from Melee blocks it."
+   }
+  ],
+  "need": [
+   {
+    "item": "Facemask",
+    "why": "Halves their max hit; the slayer helmet includes it",
+    "helm": true
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee blocks the hits while you burst"
+   }
+  ],
+  "mechanics": "Facemask or slayer helm on, Protect from Melee, stand so several dust devils are adjacent and burst them. Pick up the alchables and the occasional dragon chainbody.",
+  "tips": [
+   "Catacombs barrage is one of the best Magic XP methods in the game.",
+   "Choke devil, the superior, hits harder (max 16) but is still blocked by Protect from Melee.",
+   "A cannon in the Smoke Dungeon makes the single-way version painless."
+  ],
+  "verdict": "do",
+  "verdictWhy": "The classic burst task: fast XP and some alchables.",
+  "aoe": true
+ },
+ {
+  "slug": "elves",
+  "name": "Elves",
+  "image": "Iorwerth Warrior (2).png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Regicide. Prifddinas and the Iorwerth Dungeon need Song of the Elves.",
+  "targets": [
+   {
+    "page": "Iorwerth Warrior",
+    "ver": "Iorwerth Dungeon",
+    "name": "Iorwerth Warrior (lvl 108)",
+    "loc": "Iorwerth Dungeon"
+   },
+   {
+    "page": "Elf Warrior",
+    "ver": "1",
+    "name": "Elf Warrior (lvl 108)",
+    "loc": "Lletya"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Iorwerth Dungeon",
+    "region": "Prifddinas",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Crystal teleport seed or Iorwerth Camp teleport, enter the cave east of the camp.",
+    "notes": "Iorwerth warriors and archers in a multi, cannon-able dungeon. Easily the best elf spot; crystal shard drops. Needs Song of the Elves."
+   },
+   {
+    "name": "Iorwerth Camp",
+    "region": "Tirannwn",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Iorwerth Camp teleport (Tirannwn diary / Elf teleport crystal) or walk from Lletya.",
+    "notes": "Elf warriors and archers around the camp; cannon-able, single-way, archers hit from range."
+   },
+   {
+    "name": "Lletya",
+    "region": "Tirannwn",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Elf teleport crystal.",
+    "notes": "A few elf warriors and archers in and around the town; slow but quiet."
+   },
+   {
+    "name": "Mourner Headquarters basement",
+    "region": "West Ardougne",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Ardougne teleport, then the Mourner HQ in West Ardougne (Mourner gear).",
+    "notes": "Mourners count as elves; single-way basement. Only if you have nothing else."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "+70 slash/crush and +60 magic defence with only +50 stab and standard-ranged: stab melee or ranged. The archers hit 10 from range, so a cannon plus a stab weapon works well.",
+  "pray": "Protect from Missiles (archers) or Protect from Melee (warriors)",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Elf archers hit up to 10 from range while you fight warriors; in multi both attack."
+   },
+   {
+    "kind": "special",
+    "text": "Iorwerth archers switch between crystal bow and melee; stay on one prayer and eat."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Two attack styles in multi"
+   }
+  ],
+  "mechanics": "Cannon in the Iorwerth Dungeon and stab the warriors while the cannon takes the archers; pray against whichever is hitting you. Bank crystal shards (Iorwerth Dungeon elves drop them).",
+  "tips": [
+   "Iorwerth Dungeon turns a mediocre task into decent XP plus crystal shards.",
+   "Enhanced crystal teleport seed and the dungeon's crystal shards make it worth doing after Song of the Elves.",
+   "Without SotE most players skip or block elves."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Good only in the Iorwerth Dungeon; slow and awkward everywhere else.",
+  "aoe": false
+ },
+ {
+  "slug": "fever-spiders",
+  "name": "Fever spiders",
+  "image": "Fever spider.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Rum Deal started (access to Braindeath Island brewery). 42 Slayer.",
+  "targets": [
+   {
+    "page": "Fever spider",
+    "ver": null,
+    "name": "Fever spider (lvl 49)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Braindeath Island brewery basement",
+    "region": "Braindeath Island",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Ectophial to Port Phasmatys, Pirate Pete at the docks takes you to Braindeath Island; climb down in the brewery.",
+    "notes": "About eight spiders in the brewery cellar. Single-way, cannon-able. The only spot."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "40 HP and 40 Defence with small bonuses: anything kills them. Weak to Fire spells (+25%) if you mage.",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "disease",
+    "text": "Without slayer gloves they inflict disease that drains stats and they hit up to 12; with the gloves the max hit is 4 and no disease."
+   }
+  ],
+  "need": [
+   {
+    "item": "Slayer gloves",
+    "why": "Prevents the disease and drops their max hit from 12 to 4",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Optional; the gloves make the task near hitless"
+   }
+  ],
+  "mechanics": "Wear the slayer gloves (from the Slayer master shop) and kill them. Nothing else to it; drops are junk, grimy herbs at best.",
+  "tips": [
+   "Only Vannaka and Chaeldar assign them; short 30-90 or 70-130 tasks.",
+   "Bring the gloves. People who forget wonder why they are hitting 12s."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Trivial with slayer gloves, just a boat trip away.",
+  "aoe": false
+ },
+ {
+  "slug": "fire-giants",
+  "name": "Fire giants",
+  "image": "Fire giant.png",
+  "attr": [
+   "fiery"
+  ],
+  "superior": null,
+  "unlock": "None. Karuulm needs boots of stone (or the elite Kourend & Kebos diary); Waterfall Dungeon needs Waterfall Quest items (rope, Glarial's amulet).",
+  "targets": [
+   {
+    "page": "Fire giant",
+    "ver": "Level 109",
+    "name": "Fire giant (lvl 109, Catacombs / Giants' Den)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Fire giant",
+    "ver": "Level 86",
+    "name": "Fire giant (lvl 86)",
+    "loc": null
+   },
+   {
+    "page": "Fire giant",
+    "ver": "Level 104",
+    "name": "Fire giant (lvl 104)",
+    "loc": "Karuulm"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; fire giants are in the north-east.",
+    "notes": "Level 109 giants with 150 HP and only 65 Defence, multi: AFK melee or a venator bow. No cannon."
+   },
+   {
+    "name": "Giants' Den",
+    "region": "Kourend",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman (Xeric's Glade) or Kourend home teleport, run south-west to the den.",
+    "notes": "The same level 109 giants as the catacombs, single-way, cannon-able. Quiet."
+   },
+   {
+    "name": "Stronghold Slayer Cave",
+    "region": "Gnome Stronghold",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (cave entrance) or spirit tree.",
+    "notes": "Level 86 giants in a cannon-able cave; the usual Nieve/Duradel choice."
+   },
+   {
+    "name": "Brimhaven Dungeon",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Karamja gloves 3/4 or Brimhaven house, pay 875 coins; 'Brimhaven Dungeon' fairy.",
+    "notes": "Giants spread over a few floors with steps and vines: inefficient."
+   },
+   {
+    "name": "Waterfall Dungeon",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Games necklace to Barbarian Outpost, boat and raft; rope and Glarial's amulet to enter.",
+    "notes": "Several giants in the far rooms; cannon-able but awkward to reach."
+   },
+   {
+    "name": "Karuulm Slayer Dungeon",
+    "region": "Kebos",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring CIR or Rada's blessing to Mount Karuulm, down the elevator.",
+    "notes": "Level 104 giants with 120 Defence, the tankiest version. Boots of stone needed in the dungeon unless you have the elite diary."
+   },
+   {
+    "name": "Isle of Souls Dungeon",
+    "region": "Isle of Souls",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Soul Wars portal then the dungeon.",
+    "notes": "Fire giants in a cannon-able, quiet dungeon."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Essentially no defensive bonuses and 65 Defence (except Karuulm's 120): melee with a slayer helm. 100% Water weakness makes Water Wave/Surge accurate and strong for magers. 2x2 so bursts do not stack well.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "They hit up to 13 with melee and several will pile on in the catacombs; Protect from Melee or decent armour."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Or just tank them with food; they are inaccurate against good melee armour"
+   }
+  ],
+  "mechanics": "Melee them with Protect from Melee or in good armour. Catacombs giants are the best XP (150 HP, low Defence); Giants' Den with a cannon if you want singles. Pick up rune scimitars and ranarr seeds.",
+  "tips": [
+   "Prefer the level 109 giants (Catacombs, Giants' Den): more HP for XP and the same low Defence.",
+   "Avoid Brimhaven and Karuulm unless Konar forces you there.",
+   "Branda the Fire Queen (Royal Titans) counts, if you fancy a boss."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy AFK melee XP with decent alchables.",
+  "aoe": false
+ },
+ {
+  "slug": "gargoyles",
+  "name": "Gargoyles",
+  "image": "Gargoyle.png",
+  "attr": [
+   "golem"
+  ],
+  "superior": "Marble gargoyle",
+  "unlock": "Priest in Peril and 75 Slayer. The Grotesque Guardians roof needs the Morytania Hard diary.",
+  "targets": [
+   {
+    "page": "Gargoyle",
+    "ver": "Upstairs",
+    "name": "Gargoyle (lvl 111)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Slayer Tower (top floor)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring, Kharyrll teleport, or the Slayer Tower teleport from Morytania legs 4, then climb to the top floor.",
+    "notes": "About 8 gargoyles on the top floor, single-way, cannon-able. Everyone's gargoyle spot; hop if it is full."
+   },
+   {
+    "name": "Slayer Tower roof (Grotesque Guardians)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Climb to the top floor and use the brittle key on the roof door (Morytania Hard diary).",
+    "notes": "The Grotesque Guardians boss pair counts toward the task. Instanced fight with its own mechanics; far better drops than the floor gargoyles. Only with the brittle key and the Morytania Hard diary."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "-20 crush defence against +50 stab and +60 slash: use a crush weapon (Zamorakian hasta on crush, abyssal bludgeon, Inquisitor's mace, granite maul). Weak to Earth spells (+40%) but melee is far better.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "They cannot be killed by normal damage: under 9 HP you must use a rock hammer (or granite hammer) on them, or unlock 'Gargoyle smasher' (120 points) to do it automatically."
+   }
+  ],
+  "need": [
+   {
+    "item": "Rock hammer",
+    "why": "Finishes a gargoyle under 9 HP; buy 'Gargoyle smasher' (120 Slayer points) to skip this step",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee makes them hitless"
+   },
+   {
+    "item": "Divine super combat potion(4)",
+    "why": "Crush accuracy matters against 107 Defence"
+   }
+  ],
+  "mechanics": "Crush weapon on, Protect from Melee. Hit them to under 9 HP and smash with the rock hammer, or just keep attacking with Gargoyle smasher unlocked. Alch the rune full helms and bank granite mauls and mystic robe tops.",
+  "tips": [
+   "Buy Gargoyle smasher before your first task; it removes the only annoying part.",
+   "Granite maul (and ornate handle) drops plus rune alchables make this one of the better money tasks.",
+   "Grotesque Guardians (Morytania Hard diary, brittle key from a gargoyle) count toward the task and are better loot.",
+   "Marble gargoyle superior still needs the hammer (or smasher) under 9 HP."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Profitable, cannon-able, hitless with Protect from Melee.",
+  "aoe": false
+ },
+ {
+  "slug": "gryphons",
+  "name": "Gryphons",
+  "image": "Gryphon.png",
+  "attr": [],
+  "superior": "Dire gryphon",
+  "unlock": "Troubled Tortugans and 45 Sailing to reach the Great Conch. Nieve and Duradel only assign them after 'Wings Spread' (80 points); Vannaka, Chaeldar and Mortimer need no unlock.",
+  "targets": [
+   {
+    "page": "Gryphon",
+    "ver": null,
+    "name": "Gryphon (lvl 95)",
+    "loc": null
+   },
+   {
+    "page": "Shellbane gryphon",
+    "ver": null,
+    "name": "Shellbane gryphon (lvl 235, boss)",
+    "loc": "Shellbane Gryphon Cave"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Great Conch: western gryphon cave",
+    "region": "Great Conch (Sailing)",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Sail to the Great Conch (45 Sailing, Troubled Tortugans), then the western cave.",
+    "notes": "Single-way caverns with one multi, cannon-able room in the south. Attackable off task too. A safespot cave on the west side avoids all attacks."
+   },
+   {
+    "name": "Great Conch: eastern gryphon cave",
+    "region": "Great Conch (Sailing)",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": true,
+    "masters": [],
+    "tele": "Sail to the Great Conch, then the eastern cave.",
+    "notes": "Task-only cave with the same layout: single-way plus a southern multi room where a cannon works."
+   },
+   {
+    "name": "Shellbane Gryphon Cave",
+    "region": "Great Conch (Sailing)",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": true,
+    "masters": [],
+    "tele": "The lair in the centre of the island; on task only.",
+    "notes": "Solo instanced boss (400 HP, melee and ranged, two avoidable specials). Tortugan shield required or you take frequent damage through prayer."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "+10 stab against +100 magic and +60 ranged defence: stab melee is clearly best, and heavy melee armour also passes the 30 kg weight check. They are weak to Air spells (+50%) but still resist magic overall.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Knockback special: with under 30 kg of worn equipment you are knocked back and hit 20+. At 30 kg or more the gryphon is stunned instead; click it within 2 ticks to knock it back and get a free attack."
+   },
+   {
+    "kind": "special",
+    "text": "Dire gryphons (superior) and the Shellbane boss deal steady damage through prayer unless a tortugan shield is equipped."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee blocks the normal attacks"
+   }
+  ],
+  "mechanics": "Wear 30 kg or more (plate melee gear, or the tortugan shield) so their special stuns them instead of you, then counter-click for a free hit. Stab them down on Protect from Melee. Bring the tortugan shield if superiors are unlocked or you plan the boss.",
+  "tips": [
+   "Weight matters: check the equipment stats screen shows 30 kg+ before you go.",
+   "Vannaka weights gryphons highest (10) if you want the task; Nieve and Duradel need Wings Spread first, and most players leave it off there.",
+   "Drops are poor; do it for the boss or variety, not money.",
+   "'Gryphon and on' (50 points) adds 80 to the task if you like them."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "New content with poor drops and a boat trip; fine once, not worth unlocking at Nieve or Duradel.",
+  "aoe": false
+ },
+ {
+  "slug": "hellhounds",
+  "name": "Hellhounds",
+  "image": "Hellhound.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": null,
+  "unlock": "None. Cerberus needs 91 Slayer and a key master teleport; Karuulm needs boots of stone or the elite Kourend & Kebos diary.",
+  "targets": [
+   {
+    "page": "Hellhound",
+    "ver": "Level 122",
+    "name": "Hellhound (lvl 122)",
+    "loc": null
+   },
+   {
+    "page": "Hellhound",
+    "ver": "Level 127",
+    "name": "Hellhound (lvl 127, Catacombs / Karuulm)",
+    "loc": "Catacombs of Kourend"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; hellhounds are in the north-east.",
+    "notes": "Level 127 hounds in multi: pile them with Protect from Melee and a venator bow or melee. No cannon; the burst stack is spoiled by 2x2."
+   },
+   {
+    "name": "Stronghold Slayer Cave",
+    "region": "Gnome Stronghold",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (cave entrance) or spirit tree.",
+    "notes": "Hellhounds in a cannon-able room; the default Nieve/Duradel spot."
+   },
+   {
+    "name": "Taverley Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Falador or Taverley then the 70 Agility pipe, or Cerberus key master; hounds are near the blue dragons.",
+    "notes": "Several hounds, cannon-able, next to Cerberus' lair."
+   },
+   {
+    "name": "Karuulm Slayer Dungeon",
+    "region": "Kebos",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring CIR or Rada's blessing, elevator down.",
+    "notes": "Hellhounds in a multi, cannon-able area, aggressive. Boots of stone unless elite diary. Brimstone keys from Konar tasks."
+   },
+   {
+    "name": "Witchaven Dungeon",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Ardougne teleport, walk east to Witchaven, enter the dungeon.",
+    "notes": "A few hounds in a quiet dungeon. Only when Konar sends you."
+   },
+   {
+    "name": "Cerberus' lair",
+    "region": "Taverley Dungeon",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Key master teleport (Cerberus unlocked) or the Taverley route; 91 Slayer.",
+    "notes": "Cerberus counts: hits with all three styles plus ghost and lava specials. Boss gear and guide needed."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Zero defensive bonuses; Arclight or Emberlight with the demonbane bonus is best, any slayer-helm melee works. Weak to Water spells (+50%). 2x2 so bursts only hit about two.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Hits up to 13 with melee and they are aggressive in the catacombs; Protect from Melee makes it hitless."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Hitless on Protect from Melee"
+   },
+   {
+    "item": "Bonecrusher",
+    "why": "Hound bones have no value; crush them for prayer or just leave them"
+   }
+  ],
+  "mechanics": "Protect from Melee, Arclight, attack. There is no loot apart from hard clues and ensouled heads; this is a pure XP task. Catacombs for AFK multi, Stronghold cave with a cannon for singles.",
+  "tips": [
+   "Hard clue scrolls drop fairly often; a clue box is pointless outside the Wilderness, just do them.",
+   "Cerberus for the task if you have 91 Slayer: primordial, pegasian and eternal crystals.",
+   "Many players block hellhounds when they have better tasks unlocked; others keep them as an AFK break."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "AFK XP but no drops; keep it if you want hard clues or Cerberus, block it otherwise.",
+  "aoe": false
+ },
+ {
+  "slug": "jellies",
+  "name": "Jellies",
+  "image": "Jelly.png",
+  "attr": [],
+  "superior": "Vitreous Jelly",
+  "unlock": "52 Slayer. Fremennik Slayer Dungeon has no requirement.",
+  "targets": [
+   {
+    "page": "Jelly",
+    "ver": "Regular",
+    "name": "Jelly (lvl 78)",
+    "loc": "Fremennik Slayer Dungeon"
+   },
+   {
+    "page": "Warped Jelly",
+    "ver": null,
+    "name": "Warped Jelly (lvl 112)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Chilled jelly",
+    "ver": null,
+    "name": "Chilled jelly (lvl 112)",
+    "loc": "Ruins of Tapoyauik"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend (Warped Jellies)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; jellies are in the south-east.",
+    "notes": "Warped jellies: 140 HP, 70 Defence, 1x1 and multi: the burst spot. No cannon."
+   },
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (Rellekka slayer cave) or fairy ring AJR and walk west.",
+    "notes": "Regular jellies, 120 Defence, in a cannon-able single-way room beyond the cockatrice."
+   },
+   {
+    "name": "Ruins of Tapoyauik (Chilled jellies)",
+    "region": "Varlamore",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Quetzal to Ralos' Rise, then into the ruins.",
+    "notes": "Chilled jellies, same stats as warped ones but weak to Fire (+50%). Multi, no cannon."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "Jellies have 120 Defence but zero bonuses and only 1 Magic: any spell lands. Warped jellies in the catacombs are 1x1 in multi, so Ice/Blood Burst; a cannon plus melee works in the Fremennik dungeon.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "'Magical melee': a magic attack with melee range. Protect from Magic blocks it, Protect from Melee does not. Warped jellies hit 10."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic makes it hitless"
+   }
+  ],
+  "mechanics": "Protect from Magic (not Melee), stack warped jellies in the catacombs and burst them. Regular jellies: cannon in the Fremennik dungeon and melee with a slayer helm. Drops are alchables (gold ore, rune items occasionally).",
+  "tips": [
+   "Warped jellies in the catacombs are the only version worth bursting.",
+   "Pray Magic even though the animation looks like melee.",
+   "Vitreous Jelly (superior) also uses magic; same prayer."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Cheap burst or cannon task with a few alchables.",
+  "aoe": true
+ },
+ {
+  "slug": "jungle-horrors",
+  "name": "Jungle horrors",
+  "image": "Jungle horror.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Cabin Fever (Mos Le'Harmless). No witchwood icon needed for jungle horrors.",
+  "targets": [
+   {
+    "page": "Jungle horror",
+    "ver": "Worker",
+    "name": "Jungle horror (lvl 70)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mos Le'Harmless jungle",
+    "region": "Mos Le'Harmless",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Bill Teach's ship from Port Phasmatys (Ectophial) or a charter ship to Mos Le'Harmless.",
+    "notes": "Horrors everywhere on the island, multi and cannon-able. They are aggressive and weak."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "45 HP and no defensive bonuses: melee or a cannon in multi flattens them. Weak to Fire spells (+25%).",
+  "pray": "None needed",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Dozens are aggressive; they hit 8, so a cannon set-up draws a crowd. Trivial in decent armour."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Steel cannonball",
+    "why": "A cannon turns 130 horrors into a few minutes"
+   }
+  ],
+  "mechanics": "Set up a cannon in the jungle and melee whatever reaches you. Jungle horrors do not need the witchwood icon (cave horrors do).",
+  "tips": [
+   "Only Vannaka and Chaeldar assign them; quick points.",
+   "Sacrifice the drops; nothing is worth picking up."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast cannon task once you own a boat ticket.",
+  "aoe": true
+ },
+ {
+  "slug": "kurask",
+  "name": "Kurask",
+  "image": "Kurask.png",
+  "attr": [
+   "leafy"
+  ],
+  "superior": "King kurask",
+  "unlock": "70 Slayer. Iorwerth Dungeon needs Song of the Elves.",
+  "targets": [
+   {
+    "page": "Kurask",
+    "ver": "Normal",
+    "name": "Kurask (lvl 106)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (Rellekka slayer cave) or fairy ring AJR; kurask are in the far west room.",
+    "notes": "About 8 kurask in a single-way room; no cannon (they are immune to cannons). The classic spot."
+   },
+   {
+    "name": "Iorwerth Dungeon",
+    "region": "Prifddinas",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Crystal teleport seed or Iorwerth Camp teleport, enter the dungeon east of the camp.",
+    "notes": "Kurask in a multi area; also cannon-immune. Needs Song of the Elves. Rarely crowded."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Only leaf-bladed weapons, broad ammunition or Magic Dart can hurt them. Leaf-bladed battleaxe (or sword) on melee is strongest; broad bolts in a rune/dragon crossbow or Magic Dart work. 0 stab defence.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Immune to anything that is not a leaf-bladed weapon, broad arrows/bolts or Magic Dart; immune to cannons and thralls. They regenerate 1 HP every 5 ticks."
+   }
+  ],
+  "need": [
+   {
+    "item": "Leaf-bladed battleaxe",
+    "why": "Or leaf-bladed sword/spear, broad bolts/arrows (55 Slayer, 'Broader fletching'), or Magic Dart from a Slayer's staff",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee blocks their crush attack"
+   }
+  ],
+  "mechanics": "Leaf-bladed battleaxe (crush) with Protect from Melee, or broad bolts with a dragon crossbow and Protect from Melee; chip through their 1 HP/5 tick regeneration quickly. Loot the leaf-bladed swords, battleaxes and mystic robe tops.",
+  "tips": [
+   "Their drop table is good for the level: leaf-bladed weapons, mystic robe top, ranarr seeds.",
+   "Blowpipe/godsword specials still trigger their healing effects but do no damage.",
+   "King kurask (superior) hits up to 29: keep Protect from Melee on."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Hitless with the right weapon and the drops are good.",
+  "aoe": false
+ },
+ {
+  "slug": "nechryael",
+  "name": "Nechryael",
+  "image": "Nechryael.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": "Nechryarch",
+  "unlock": "Priest in Peril and 80 Slayer. Iorwerth Dungeon needs Song of the Elves.",
+  "targets": [
+   {
+    "page": "Greater Nechryael",
+    "ver": "Regular",
+    "name": "Greater Nechryael (lvl 200)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Nechryael",
+    "ver": "Normal",
+    "name": "Nechryael (lvl 115)",
+    "loc": "Slayer Tower"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend (Greater Nechryael)",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; nechryael are in the south.",
+    "notes": "Greater nechryael: 205 HP, 0 magic defence, 1x1, multi: Blood Barrage or Ice Barrage heaven. No cannon. Death spawns swarm you."
+   },
+   {
+    "name": "Slayer Tower (2nd floor)",
+    "region": "Morytania",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring, Kharyrll teleport or Morytania legs 4, up to the second floor.",
+    "notes": "Regular nechryael, cannon-able, single-way. Fine for melee with Arclight."
+   },
+   {
+    "name": "Iorwerth Dungeon (Greater Nechryael)",
+    "region": "Prifddinas",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Crystal teleport seed or Iorwerth Camp teleport.",
+    "notes": "Greater nechryael in a multi area where a cannon is allowed: cannon plus barrage or Arclight. Needs Song of the Elves."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "Greater nechryael have 0 magic defence and are 1x1 in multi: Blood Barrage heals you through the task, Ice Barrage freezes the death spawns. Melee with Arclight or Emberlight (demonbane) on Protect from Melee is the alternative.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Each nechryael summons two death spawns that hit up to 5 with melee and tele-aggro to you; they die with the nechryael or on their own after a while."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Greater nechryael hit 21 with melee."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee covers the nechryael and their spawns"
+   },
+   {
+    "item": "Blood rune",
+    "why": "Blood Barrage out-heals the chip damage in the catacombs"
+   }
+  ],
+  "mechanics": "In the catacombs stand in the spawn pack, Protect from Melee, and barrage. The death spawns are melee too so the same prayer covers everything. Alch the rune items and keep the ranarr and snapdragon seeds.",
+  "tips": [
+   "Greater nechryael in the catacombs are one of the best Magic XP and money combinations in Slayer.",
+   "Nechryarch (superior) hits 35 with magic: switch to Protect from Magic when it spawns.",
+   "Arclight melee on the Slayer Tower floor is fine without Ancients."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Great XP and good seed and rune drops; one of the tasks to extend.",
+  "aoe": true
+ },
+ {
+  "slug": "shadow-warriors",
+  "name": "Shadow warriors",
+  "image": "Shadow warrior.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "Legends' Quest (Legends' Guild basement).",
+  "targets": [
+   {
+    "page": "Shadow warrior",
+    "ver": null,
+    "name": "Shadow warrior (lvl 48)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Legends' Guild basement",
+    "region": "Kandarin",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [],
+    "tele": "Legends' cape, Ardougne cloak (Legends' Guild), or fairy ring BLR; go down the ladder in the guild.",
+    "notes": "A dozen shadow warriors in a cannon-able single-way basement. The only spot."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "67 HP, +43 stab but only +15 magic and +19 crush defence: Fire Bolt/Blast or a crush weapon. Honestly anything kills them.",
+  "pray": "None needed",
+  "hazards": [],
+  "need": [],
+  "bring": [],
+  "mechanics": "Set a cannon in the basement and melee or mage the rest. Nothing to loot.",
+  "tips": [
+   "Only Vannaka and Chaeldar assign them; a quick points task.",
+   "Cannon makes 130 of them take ten minutes."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Harmless and quick with a cannon, but no reward beyond points.",
+  "aoe": false
+ },
+ {
+  "slug": "spiritual-creatures",
+  "name": "Spiritual creatures",
+  "image": "Spiritual warrior (Zamorak).png",
+  "attr": [
+   "spectral"
+  ],
+  "superior": null,
+  "unlock": "Death Plateau and 60 Agility or 60 Strength (God Wars Dungeon). 63 Slayer for rangers, 68 warriors, 83 mages. Zaros versions are in the Ancient Prison (Desert Treasure II).",
+  "targets": [
+   {
+    "page": "Spiritual ranger",
+    "ver": "Zamorak",
+    "name": "Spiritual ranger (lvl 118)",
+    "loc": null
+   },
+   {
+    "page": "Spiritual warrior",
+    "ver": "Zamorak",
+    "name": "Spiritual warrior (lvl 115)",
+    "loc": null
+   },
+   {
+    "page": "Spiritual mage",
+    "ver": "Zamorak",
+    "name": "Spiritual mage (lvl 121)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "God Wars Dungeon (Zamorak / Armadyl side)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport, run north-east to the dungeon; 60 Agility or Strength to enter.",
+    "notes": "Zamorak and Armadyl spiritual creatures count for Zamorak and Armadyl killcount. Multi, no cannon; aggressive followers unless you wear god items. Protect by the type you fight."
+   },
+   {
+    "name": "God Wars Dungeon (Saradomin / Bandos side)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport; 70 Agility for the Saradomin area, 70 Strength for Bandos.",
+    "notes": "Same creatures on the other sides; combine with killcount for a boss trip."
+   },
+   {
+    "name": "Ancient Prison (Zaros)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Desert Treasure II: the frozen door in the God Wars Dungeon.",
+    "notes": "Zaros spiritual creatures; same mechanics, same drops, more aggression."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "All three have zero defensive bonuses: melee with a slayer helm. Rangers hit 15, mages hit 19 with magic, warriors melee. 1x1 but spread out, and cannons are destroyed in GWD.",
+  "pray": "Protect by type: Missiles for rangers, Magic for mages, Melee for warriors",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Every follower of other gods attacks you unless you wear their items; wearing a Zamorak item at the Zamorak side keeps the Zamorak side calm."
+   },
+   {
+    "kind": "magic",
+    "text": "Spiritual mages hit up to 19 with magic and need 83 Slayer; rangers hit 15."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "You will be praying the whole time"
+   },
+   {
+    "item": "Saradomin brew(4)",
+    "why": "Long trips in GWD"
+   }
+  ],
+  "mechanics": "Pick a side you need killcount for, wear that god's item, pray against the type you are fighting and kill rangers (63) and mages (83) for dragon boots. Warriors drop nothing special.",
+  "tips": [
+   "Spiritual mages drop dragon boots (1/128); the task is only worth doing for them and killcount.",
+   "Universally blocked by players chasing points: slow, no cannon, aggressive dungeon.",
+   "The Wilderness God Wars Dungeon version is separate (Krystilia)."
+  ],
+  "verdict": "block",
+  "verdictWhy": "Slow tanky kills in an aggressive dungeon with no cannon; dragon boots are the only upside.",
+  "aoe": false
+ },
+ {
+  "slug": "trolls",
+  "name": "Trolls",
+  "image": "Mountain troll.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "None for Death Plateau trolls; Troll Stronghold for its trolls; The Fremennik Isles for ice trolls; Wyrmscraig Cavern (Fallen From Grace) and Keldagrim for Konar's other spots.",
+  "targets": [
+   {
+    "page": "Mountain troll",
+    "ver": "Level 69",
+    "name": "Mountain troll (lvl 69)",
+    "loc": null
+   },
+   {
+    "page": "Ice troll",
+    "ver": "Level 120",
+    "name": "Ice troll (lvl 120-124)",
+    "loc": "Fremennik Isles"
+   },
+   {
+    "page": "Troll general",
+    "ver": "Sword",
+    "name": "Troll general (lvl 113)",
+    "loc": "Troll Stronghold"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Death Plateau / Trollheim path",
+    "region": "Trollheim",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport and run south, or Burthorpe (games necklace) and walk up Death Plateau.",
+    "notes": "Mountain trolls along the path and on the plateau; cannon-able, single-way. Thrower trolls on Death Plateau hit from range."
+   },
+   {
+    "name": "Troll Stronghold",
+    "region": "Trollheim",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport, enter the stronghold from the Trollheim side.",
+    "notes": "Mountain trolls and troll generals (140 HP, hit 38!) inside; cannon-able."
+   },
+   {
+    "name": "Fremennik Isles (Ice trolls)",
+    "region": "Fremennik",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fremennik Isles boat from Rellekka (Jatizso/Neitiznot); Fremennik sea boots teleport.",
+    "notes": "Ice trolls: 100 HP, 120 Defence, hit 21, aggressive in multi. Cannon-able on the island. Only with good armour."
+   },
+   {
+    "name": "South of Mount Quidamortem",
+    "region": "Kourend",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring BJP or Xeric's talisman (Xeric's Honour) and walk down.",
+    "notes": "Mountain trolls in a cannon-able area; quiet."
+   },
+   {
+    "name": "Keldagrim entrance (Trollweiss)",
+    "region": "Fremennik",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Keldagrim via the mine cart or the Trollweiss mountain entrance north of Rellekka.",
+    "notes": "Trolls around the Keldagrim entrance cave; cannon-able."
+   },
+   {
+    "name": "Wyrmscraig Cavern",
+    "region": "Varlamore",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fallen From Grace: the cavern beneath Wyrmscraig; Mortimer is here.",
+    "notes": "Trolls among wyrms and strykewyrms; new Varlamore area."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Mountain trolls have 40 Defence and +200 magic defence: melee only. Ice trolls carry +60 slash, so stab or crush there. Weak to Fire spells but their magic defence makes it pointless.",
+  "pray": "Protect from Melee (Protect from Missiles for thrower trolls)",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Thrower trolls on Death Plateau throw rocks for 10+ from range."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Troll generals hit up to 38 and ice trolls hit 21 in multi: pray Melee."
+   },
+   {
+    "kind": "special",
+    "text": "Ice troll females and runts count as ice trolls; mountain troll 'Dad' and the Ice Troll King count too."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee near the generals and ice trolls"
+   }
+  ],
+  "mechanics": "Cannon and melee on the Trollheim path for the easy version. Protect from Melee near troll generals. Drops are junk; it is a points and XP task.",
+  "tips": [
+   "Mountain trolls on the Trollheim path with a cannon: the painless version.",
+   "Ice trolls give far more XP per kill but hit hard and are far away.",
+   "Many players block trolls; low priority either way."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Harmless but slow and dropless unless you cannon the path.",
+  "aoe": false
+ },
+ {
+  "slug": "turoth",
+  "name": "Turoth",
+  "image": "Turoth (lv 83).png",
+  "attr": [
+   "leafy"
+  ],
+  "superior": "Spiked Turoth",
+  "unlock": "55 Slayer.",
+  "targets": [
+   {
+    "page": "Turoth",
+    "ver": "Baby",
+    "name": "Turoth (lvl 83-89)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Fremennik Slayer Dungeon",
+    "region": "Rellekka",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Slayer ring (Rellekka slayer cave) or fairy ring AJR; turoth are in the middle rooms.",
+    "notes": "Turoth of levels 83 to 89 in two single-way rooms. Cannon-immune. The only place."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "Only leaf-bladed weapons, broad ammo or Magic Dart damage them. Leaf-bladed battleaxe or sword, broad bolts, or Magic Dart from a Slayer's staff. 0 stab and magic defence.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "Immune to everything except leaf-bladed weapons, broad arrows/bolts and Magic Dart; immune to cannons and thralls."
+   }
+  ],
+  "need": [
+   {
+    "item": "Leaf-bladed battleaxe",
+    "why": "Or leaf-bladed sword/spear, broad bolts/arrows, or Magic Dart (Slayer's staff, 50 Magic, 55 Slayer)",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Optional; they hit 9 with stab and are inaccurate"
+   }
+  ],
+  "mechanics": "Leaf-bladed battleaxe and hit them; Protect from Melee if you want it hitless. Herb drops and the leaf-bladed sword are the loot. Spiked turoth (superior) hits 15 and needs the same weapons.",
+  "tips": [
+   "Broad bolts in a rune crossbow are the cheap ranged option (Broader fletching, 300 points).",
+   "Good herb and seed drops for the level; keep the grimy herbs.",
+   "Konar and Nieve/Duradel all use the same room, so hop if it is busy."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy with a leaf-bladed weapon and the herbs pay.",
+  "aoe": false
+ },
+ {
+  "slug": "aviansie",
+  "name": "Aviansie",
+  "image": "Aviansie (level 89).png",
+  "attr": [
+   "flying"
+  ],
+  "superior": null,
+  "unlock": "'Watch the birdie' (80 Slayer points) to be assigned. Troll Stronghold and 60 Agility or 60 Strength for the God Wars Dungeon; 70 Ranged or Agility for the Armadyl area.",
+  "targets": [
+   {
+    "page": "Aviansie",
+    "ver": "Level 89",
+    "name": "Aviansie (lvl 69-148)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "God Wars Dungeon (main cave)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Trollheim teleport, run north-east; 60 Agility or 60 Strength to enter.",
+    "notes": "Aviansie fly around the whole main cave; multi, cannons are destroyed here. Wear an Armadyl item (e.g. Armadyl pendant) so they are not aggressive. Armadyl killcount."
+   },
+   {
+    "name": "God Wars Dungeon (Armadyl's Eyrie entrance)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Same, then north; 70 Ranged (or Agility) for the crossbow rope.",
+    "notes": "Higher-level aviansie near Kree'arra's door, also Armadyl killcount. Kree'arra and his bodyguards count."
+   }
+  ],
+  "style": "ranged",
+  "styleWhy": "They fly, so melee cannot reach them: ranged (or magic, they are weak to Air spells +45%). Zero defensive bonuses, so a blowpipe or rune crossbow with Protect from Missiles is enough.",
+  "pray": "Protect from Missiles",
+  "hazards": [
+   {
+    "kind": "ranged",
+    "text": "Ranged attack hitting up to 12 at higher levels; blocked by Protect from Missiles."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Everything in the main cave is aggressive unless you wear items of each god; at minimum an Armadyl item for the aviansie."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Missiles the whole task"
+   },
+   {
+    "item": "Ranging potion(4)",
+    "why": "Ranged only"
+   }
+  ],
+  "mechanics": "Protect from Missiles, stand where the melee followers cannot reach, and range aviansie for adamant bars and Armadyl killcount. Alch or bank the noted adamantite bars.",
+  "tips": [
+   "Mostly done for Armadyl killcount or adamantite bars; slow for points.",
+   "Kree'arra and the three bodyguards count toward the task.",
+   "Do not unlock 'Watch the birdie' unless you want these; most players leave it off."
+  ],
+  "verdict": "block",
+  "verdictWhy": "Slow, ranged only, in an aggressive dungeon; keep it toggled off.",
+  "aoe": false
+ },
+ {
+  "slug": "black-demons",
+  "name": "Black demons",
+  "image": "Black demon.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": null,
+  "unlock": "80 Combat. Chasm of Fire needs nothing but is in Kebos; Demonic gorillas need Monkey Madness II.",
+  "targets": [
+   {
+    "page": "Black demon",
+    "ver": "Level 172",
+    "name": "Black demon (lvl 172)",
+    "loc": null
+   },
+   {
+    "page": "Black demon",
+    "ver": "Level 184",
+    "name": "Black demon (lvl 184, Catacombs)",
+    "loc": "Catacombs of Kourend"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; black demons are in the north-west.",
+    "notes": "Level 184 demons in multi; AFK Arclight on Protect from Melee or a venator bow. No cannon."
+   },
+   {
+    "name": "Chasm of Fire (top floor)",
+    "region": "Kebos",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring DJR or Rada's blessing (Chasm of Fire) and climb down.",
+    "notes": "Black demons on the top floor in a multi, cannon-able area: the fastest version with a cannon and Arclight."
+   },
+   {
+    "name": "Taverley Dungeon",
+    "region": "Asgarnia",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Falador or Taverley; 70 Agility pipe, then past the blue dragons.",
+    "notes": "A handful of demons in a cannon-able single-way area."
+   },
+   {
+    "name": "Brimhaven Dungeon",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Karamja gloves or Brimhaven house, 875 coins to enter.",
+    "notes": "Demons on the lower floor near the steel dragons; cannon-able."
+   },
+   {
+    "name": "Crash Site Cavern (Demonic gorillas)",
+    "region": "Ape Atoll",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Monkey Madness II: Grand Tree then the crash site cavern.",
+    "notes": "Demonic gorillas count: switching prayers and styles, 380 HP, Zenyte shards. A real fight, not an AFK task."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "-10 magic and 0 melee defence bonuses but 152+ Defence: Arclight or Emberlight (demonbane +70%) is far ahead of anything else. 3x3, so no AoE stacking. Weak to Water spells (+40%).",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Melee hits up to 17; aggressive in the catacombs and Chasm. Hitless on Protect from Melee."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee all task"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "A cannon at the Chasm of Fire cuts the time by half"
+   }
+  ],
+  "mechanics": "Arclight, Protect from Melee, kill. Chasm of Fire with a cannon for speed, catacombs for AFK. Pick up the hard clues and the rune drops; demon ashes with an ash sanctifier.",
+  "tips": [
+   "Demonic gorillas count and are the profitable way to do this task (zenyte).",
+   "Long tasks (up to 200) for mediocre XP without Arclight; a common block otherwise.",
+   "Skotizo (dark totem) counts and gives Arclight charges."
+  ],
+  "verdict": "skip",
+  "verdictWhy": "Fine AFK XP with Arclight and a cannon, but long and dropless; block it if you do not do gorillas.",
+  "aoe": false
+ },
+ {
+  "slug": "cave-horrors",
+  "name": "Cave horrors",
+  "image": "Cave horror (1).png",
+  "attr": [],
+  "superior": "Cave abomination",
+  "unlock": "Cabin Fever and 58 Slayer. A light source is needed in the Mos Le'Harmless caves.",
+  "targets": [
+   {
+    "page": "Cave horror",
+    "ver": "Worker",
+    "name": "Cave horror (lvl 80)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Mos Le'Harmless Caves",
+    "region": "Mos Le'Harmless",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Bill Teach's ship from Port Phasmatys (Ectophial) or a charter ship; the cave entrance is in the jungle east of the town.",
+    "notes": "Dark caves full of horrors; multi and cannon-able. The only spot. Witchwood icon and a light source are mandatory."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "55 HP and no defensive bonuses: melee with a slayer helm, or a cannon in the multi caves. Weak to Fire spells (+30%).",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "'Magical melee': blocked by Protect from Magic, not Melee. Hits 9."
+   },
+   {
+    "kind": "special",
+    "text": "Their scream hits 10% of your HP unless you wear a witchwood icon (the slayer helmet does NOT cover it)."
+   },
+   {
+    "kind": "special",
+    "text": "The caves are dark: a lit light source or you take damage from the dark."
+   }
+  ],
+  "need": [
+   {
+    "item": "Witchwood icon",
+    "why": "Blocks the scream (10% of your HP); the slayer helmet does not include it",
+    "helm": false
+   },
+   {
+    "item": "Light source",
+    "why": "The Mos Le'Harmless caves are dark; bring a lit lantern or bullseye lantern",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic for the hits"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "Cannon in the multi parts"
+   }
+  ],
+  "mechanics": "Witchwood icon round your neck (so no amulet of fury here), lit lantern in the inventory, Protect from Magic, cannon and melee. Loot black masks (1/512) and keep the ensouled heads if you want prayer.",
+  "tips": [
+   "Black mask drops make cave horrors worth doing early on; the task pays off eventually.",
+   "The witchwood icon takes the neck slot: budget around losing your amulet.",
+   "Cave abomination (superior) screams too; same icon."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Easy with the icon and a light source, and black masks can drop.",
+  "aoe": true
+ },
+ {
+  "slug": "cave-kraken",
+  "name": "Cave kraken",
+  "image": "Cave kraken.png",
+  "attr": [],
+  "superior": null,
+  "unlock": "87 Slayer. 50 Magic to use a trident. Kraken Cove is west of Piscatoris.",
+  "targets": [
+   {
+    "page": "Cave kraken",
+    "ver": "Cave kraken",
+    "name": "Cave kraken (lvl 127)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Kraken Cove",
+    "region": "Piscatoris",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 1,
+    "task_only": true,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring AKQ or Piscatoris teleport (Western banner), walk to the cove and climb in; task only.",
+    "notes": "Whirlpools that become krakens when you attack them. Single-way, no cannon, task only. The Kraken boss is through the inner pool."
+   }
+  ],
+  "style": "magic",
+  "styleWhy": "Can only be attacked with Magic (ranged and melee do no damage). -63 magic defence and 150 Defence: a trident or any spell hits often. Weak to Earth spells (+50%) for the regular ones.",
+  "pray": "Protect from Magic",
+  "hazards": [
+   {
+    "kind": "magic",
+    "text": "Magic attack hitting 13; Protect from Magic blocks it."
+   },
+   {
+    "kind": "special",
+    "text": "Immune to melee and ranged; disturb the whirlpool with a spell (or a fishing explosive) to make the kraken appear."
+   }
+  ],
+  "need": [
+   {
+    "item": "Trident of the Seas",
+    "why": "Or any staff and spell: Magic is the only way to damage them; 50 Magic for the trident",
+    "helm": false
+   }
+  ],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Magic and Mystic Might"
+   },
+   {
+    "item": "Magic potion(4)",
+    "why": "Accuracy against 150 Defence"
+   }
+  ],
+  "mechanics": "Cast at a whirlpool to raise the kraken, Protect from Magic on, trident it down. Collect kraken tentacles and seaweed spores; the boss Kraken is the real money.",
+  "tips": [
+   "The Kraken boss counts for the task and is the reason to do it: trident drops and tentacles.",
+   "Cheap trident charges (death, chaos, fire runes) are the only cost.",
+   "Only 30 to 50 from Chaeldar, 80 to 120 from Konar/Nieve/Duradel: short tasks."
+  ],
+  "verdict": "do",
+  "verdictWhy": "AFK Magic XP and the boss funds it; one of the best 87 Slayer unlocks.",
+  "aoe": false
+ },
+ {
+  "slug": "custodian-stalker",
+  "name": "Custodian stalker",
+  "image": "Elder custodian stalker.png",
+  "attr": [],
+  "superior": "Ancient Custodian",
+  "unlock": "Shadows of Custodia and 54 Slayer (67 for mature, 76 for elder stalkers). 59 Agility for the southern entrance, 64 for the stepping stone to the elders.",
+  "targets": [
+   {
+    "page": "Elder custodian stalker",
+    "ver": null,
+    "name": "Elder custodian stalker (lvl 142)",
+    "loc": "Stalker Den north"
+   },
+   {
+    "page": "Mature custodian stalker",
+    "ver": null,
+    "name": "Mature custodian stalker (lvl 117)",
+    "loc": null
+   },
+   {
+    "page": "Juvenile custodian stalker",
+    "ver": null,
+    "name": "Juvenile custodian stalker (lvl 93)",
+    "loc": null
+   }
+  ],
+  "locations": [
+   {
+    "name": "Stalker Den (south-west, multi)",
+    "region": "Varlamore",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Quetzal to Auburnvale then west and north to the southern entrance (59 Agility), or fairy ring BLS / Xeric's talisman (Xeric's Honour) and the northern entrance.",
+    "notes": "The south-western caves are multi and cannon-able: juvenile and mature stalkers pile on while a cannon shreds them. Protect from Melee."
+   },
+   {
+    "name": "Stalker Den north (elder stalkers, singles)",
+    "region": "Varlamore",
+    "multi": false,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [],
+    "tele": "Northern entrance, or the 64 Agility stepping stone across the spring.",
+    "notes": "Elder stalkers (250 HP, 76 Slayer) in two single-way caves. Only elders can spawn the superior Ancient Custodian and drop the antler guard more often."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "-10 slash defence against +50 crush and +35 magic: slash melee (whip, rapier is stab... use a slash weapon like the abyssal whip, tentacle, saeldor or scimitar). 45 Defence, so anything slash lands. Weak to Fire spells (+30%) if you must mage.",
+  "pray": "Protect from Melee (Protect from Magic when they bleed)",
+  "hazards": [
+   {
+    "kind": "special",
+    "text": "At low HP they use a bleed special attack that Protect from Melee does not stop; Protect from Magic blocks it. Changing prayers mid-pile is awkward, so eat through it or wear high magic defence (d'hide)."
+   },
+   {
+    "kind": "aggressive",
+    "text": "Mature and elder stalkers hit 8 to 10 with melee, several at once in the multi caves."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee most of the time"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "Cannon in the south-west multi caves"
+   }
+  ],
+  "mechanics": "Slash weapon, Protect from Melee, cannon in the multi cave. When a stalker drops low and starts bleeding you, flick to Protect from Magic or just eat. Keep broken antlers (atlatl dart tips) and the antler guard, a strong off-hand for all styles with no Defence requirement.",
+  "tips": [
+   "Get 76 Slayer first: elders have the best drops and are the only ones that spawn the superior Ancient Custodian.",
+   "Chaeldar, Nieve and Mortimer assign them; 'Un-restraining Order' (100 points) extends to 200-250.",
+   "They drop cooked fish, which can keep you going without food."
+  ],
+  "verdict": "do",
+  "verdictWhy": "New cannon-able multi task with good XP and a useful unique (antler guard).",
+  "aoe": true
+ },
+ {
+  "slug": "greater-demons",
+  "name": "Greater demons",
+  "image": "Greater demon.png",
+  "attr": [
+   "demon"
+  ],
+  "superior": null,
+  "unlock": "70-75 Combat. Chasm of Fire needs nothing; Karuulm needs boots of stone or the elite diary; K'ril Tsutsaroth needs the GWD entry.",
+  "targets": [
+   {
+    "page": "Greater demon",
+    "ver": "Level 92",
+    "name": "Greater demon (lvl 92)",
+    "loc": null
+   },
+   {
+    "page": "Greater demon",
+    "ver": "Level 101",
+    "name": "Greater demon (lvl 101, Catacombs)",
+    "loc": "Catacombs of Kourend"
+   },
+   {
+    "page": "Greater demon",
+    "ver": "Level 100",
+    "name": "Greater demon (lvl 100, Chasm of Fire)",
+    "loc": "Chasm of Fire"
+   },
+   {
+    "page": "Greater demon",
+    "ver": "Level 113",
+    "name": "Greater demon (lvl 113, Karuulm)",
+    "loc": "Karuulm"
+   }
+  ],
+  "locations": [
+   {
+    "name": "Chasm of Fire (middle floor)",
+    "region": "Kebos",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring DJR or Rada's blessing (Chasm of Fire), down two floors.",
+    "notes": "Greater demons in a multi, cannon-able floor: cannon plus Arclight is the quickest version."
+   },
+   {
+    "name": "Catacombs of Kourend",
+    "region": "Kourend",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Xeric's talisman or Kourend home teleport; greater demons are in the north.",
+    "notes": "Level 101 demons (120 HP, 50 Defence) in multi; AFK Arclight on Protect from Melee. No cannon."
+   },
+   {
+    "name": "Karuulm Slayer Dungeon",
+    "region": "Kebos",
+    "multi": true,
+    "cannon": true,
+    "wildy": false,
+    "danger": 2,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Fairy ring CIR or Rada's blessing, elevator down.",
+    "notes": "Level 113 demons, multi and cannon-able; boots of stone unless elite diary. Brimstone keys on Konar tasks."
+   },
+   {
+    "name": "Brimhaven Dungeon",
+    "region": "Karamja",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Karamja gloves or Brimhaven house, 875 coins.",
+    "notes": "Demons near the entrance; cannon-able single-way."
+   },
+   {
+    "name": "Isle of Souls Dungeon",
+    "region": "Isle of Souls",
+    "multi": false,
+    "cannon": true,
+    "wildy": false,
+    "danger": 1,
+    "task_only": false,
+    "masters": [
+     "konar"
+    ],
+    "tele": "Soul Wars portal, then the dungeon.",
+    "notes": "Greater demons in a quiet cannon-able dungeon."
+   },
+   {
+    "name": "God Wars Dungeon (K'ril Tsutsaroth)",
+    "region": "Trollheim",
+    "multi": true,
+    "cannon": false,
+    "wildy": false,
+    "danger": 3,
+    "task_only": false,
+    "masters": [],
+    "tele": "Trollheim teleport, GWD, Zamorak area (70 Hitpoints and a Zamorak item).",
+    "notes": "K'ril, his bodyguards and tormented demons count. A boss trip, not a Slayer task."
+   }
+  ],
+  "style": "melee",
+  "styleWhy": "0 melee and -10 magic defence bonuses with low Defence: Arclight or Emberlight (demonbane) with a slayer helm. 3x3, so no AoE. Weak to Water spells (+40%) if you mage.",
+  "pray": "Protect from Melee",
+  "hazards": [
+   {
+    "kind": "aggressive",
+    "text": "Melee hitting 8 to 10; aggressive in the catacombs and Chasm. Hitless with Protect from Melee."
+   }
+  ],
+  "need": [],
+  "bring": [
+   {
+    "item": "Prayer potion(4)",
+    "why": "Protect from Melee"
+   },
+   {
+    "item": "Steel cannonball",
+    "why": "Cannon at the Chasm of Fire or Karuulm"
+   }
+  ],
+  "mechanics": "Arclight on Protect from Melee; cannon where allowed. Pick up the rune full helms and hard clues. Chasm of Fire middle floor is the standard choice.",
+  "tips": [
+   "The Chasm of Fire with a cannon is quick; the catacombs if you want to AFK without one.",
+   "Tormented demons and K'ril count if you want to turn the task into profit.",
+   "Decent XP, no notable drops: many players keep it as a cannon task, others block it."
+  ],
+  "verdict": "do",
+  "verdictWhy": "Fast with a cannon and Arclight; harmless on Protect from Melee.",
+  "aoe": false
+ }
+]
