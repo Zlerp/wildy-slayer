@@ -34,6 +34,14 @@ ask whether to deploy.
   Exporter JSON/CSV, Bank Memory TSV) as a synthetic `SYNC.player` with
   `source: "import"` (localStorage `wildy:import`); polling never clears it,
   a real plugin sync overrides it.
+  Accounts: `web/vendor/supabase.js` (UMD, anon key in app.js by design,
+  storageKey `wildy-auth`), table `slayer_profiles` in the shared Supabase
+  project `opfnasumfsdvfyzytqlv` (user_id PK, rsn, levels, bank, names,
+  bank_at, setups, state, updated_at; RLS `auth.uid() = user_id`, created
+  through the management API). `loadProfile()` on sign-in (newer import wins,
+  setups unioned), `saveProfile()` after every import, clear or setups change.
+  Email autoconfirm is on for the project, so sign-up logs straight in. The
+  pairing code UI lives in a collapsed `<details id="rl-pair">`.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep

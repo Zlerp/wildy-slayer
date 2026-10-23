@@ -797,7 +797,7 @@ function saveSetups(list, { push = true } = {}) {
   list = list.slice(0, MAX_SETUPS);
   try { localStorage.setItem(SETUPS_KEY, JSON.stringify(list)); } catch (_) {}
   renderPresets();
-  if (push) pushSetups();
+  if (push) { pushSetups(); saveProfile(); }
 }
 function snapshot() { return { rsn: S.rsn, levels: { ...S.levels }, master: S.master, task: S.task, loc: S.loc, target: S.target, style: S.style, tier: S.tier, protect: S.protect, cannon: S.cannon, offPray: S.offPray, pots: S.pots, spell: S.spell, amount: S.amount, overrides: { ...S.overrides } }; }
 // what makes two states "the same setup" (levels and rsn do not count)
@@ -1166,7 +1166,7 @@ function parseExport(text) {
   return out;
 }
 function applyImport(parsed, { merge = true } = {}) {
-  const prev = merge && SYNC.player?.source === "import" ? SYNC.player : null;
+  const prev = merge === true && SYNC.player?.source === "import" ? SYNC.player : null;
   const levels = { ...(prev?.levels || {}), ...parsed.levels };
   const bank = parsed.bank.length ? parsed.bank : (prev?.bank || []);
   const names = { ...(prev?.names || {}), ...parsed.names };
@@ -1174,14 +1174,15 @@ function applyImport(parsed, { merge = true } = {}) {
   const player = { source: "import", rsn: parsed.rsn || prev?.rsn || S.rsn || null, levels: Object.keys(levels).length ? levels : null, bank, inventory: [], equipment: [], names, bankAt: bank.length ? Date.now() : prev?.bankAt || null, importedAt: Date.now() };
   try { localStorage.setItem(IMPORT_KEY, JSON.stringify(player)); } catch (_) {}
   SYNC.playerAt = null; onPlayer(player);
+  if (merge !== "cloud") saveProfile();
   return player;
 }
-function clearImport() { try { localStorage.removeItem(IMPORT_KEY); } catch (_) {} if (SYNC.player?.source === "import") { SYNC.player = null; rebuildOwned(); if (S.ownOnly) S.ownOnly = null; persist(); renderLevels(); renderTasks(); renderAll(); renderRl(); } renderImport(); }
+function clearImport() { try { localStorage.removeItem(IMPORT_KEY); } catch (_) {} if (SYNC.player?.source === "import") { SYNC.player = null; rebuildOwned(); if (S.ownOnly) S.ownOnly = null; persist(); renderLevels(); renderTasks(); renderAll(); renderRl(); } renderImport(); saveProfile({ clear: true }); }
 function restoreImport() { try { const p = JSON.parse(localStorage.getItem(IMPORT_KEY) || "null"); if (p && p.source === "import") { SYNC.player = p; rebuildOwned(); if (S.useRl !== false) adoptLevels(p); } } catch (_) {} }
 function renderImport() {
   const msg = $("#import-msg"), clr = $("#import-clear"); if (!msg) return;
   const p = SYNC.player;
-  if (p?.source === "import") { msg.innerHTML = `<span class="ok">Imported${p.rsn ? " " + esc(p.rsn) : ""}:</span> ${p.levels ? Object.keys(p.levels).length + " skills" : "no skills (use the hiscores lookup)"}, ${cnt(p.bank)} bank items, ${agoLong(p.importedAt)}. Gear below is built from what you own; untick "Only gear I own" to see everything.`; clr.classList.remove("hidden"); }
+  if (p?.source === "import") { msg.innerHTML = `<span class="ok">Imported${p.rsn ? " " + esc(p.rsn) : ""}:</span> ${p.levels ? Object.keys(p.levels).length + " skills" : "no skills (use the hiscores lookup)"}, ${cnt(p.bank)} bank items, ${agoLong(p.importedAt)}. Gear below is built from what you own; untick "Only gear I own" to see everything.${AUTH.user ? "" : " <b>Sign in above to keep it on every device.</b>"}`; clr.classList.remove("hidden"); }
   else { msg.textContent = ""; clr.classList.add("hidden"); }
 }
 function initImport() {
@@ -1212,6 +1213,75 @@ function initImport() {
   $("#import-clear").addEventListener("click", clearImport);
   renderImport();
 }
+/* ---------- account (Supabase auth, shared playground project; row-level security keeps each profile private) ----------
+   slayer_profiles: one row per user with the imported rsn/levels/bank/names and the saved setups. Signing in loads it
+   (newer side wins for the import, setups are unioned); every import or setup change saves it. */
+const SUPABASE_URL = "https://opfnasumfsdvfyzytqlv.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wZm5hc3VtZnNkdmZ5enl0cWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjgxMjAsImV4cCI6MjEwNzUwNDEyMH0.HMzgp_QJGItFmy7LH6C2N1r9QrLD8k602bEhEGdwTOk"; // public anon key by design
+const AUTH = { sb: null, user: null, profile: null, saving: null, msg: "" };
+try { AUTH.sb = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { storageKey: "wildy-auth" } }) || null; } catch (_) { AUTH.sb = null; }
+window.__wildy.auth = () => ({ user: AUTH.user ? { id: AUTH.user.id, email: AUTH.user.email } : null, profile: AUTH.profile, msg: AUTH.msg });
+function profileFromLocal() {
+  const p = SYNC.player?.source === "import" ? SYNC.player : null;
+  return { rsn: p?.rsn || S.rsn || null, levels: p?.levels || null, bank: p?.bank || null, names: p?.names || null, bank_at: p?.bankAt ? new Date(p.bankAt).toISOString() : null, setups: setups() };
+}
+async function saveProfile(opts = {}) {
+  if (!AUTH.sb || !AUTH.user) return null;
+  const row = { user_id: AUTH.user.id, ...profileFromLocal(), updated_at: new Date().toISOString() };
+  if (opts.clear) { row.levels = null; row.bank = null; row.names = null; row.bank_at = null; }
+  try {
+    const { data, error } = await AUTH.sb.from("slayer_profiles").upsert(row, { onConflict: "user_id" }).select().single();
+    if (error) throw error;
+    AUTH.profile = data; AUTH.msg = ""; renderAccount();
+    return data;
+  } catch (e) { AUTH.msg = "Could not save to your account: " + (e.message || e); renderAccount(); return null; }
+}
+async function loadProfile() {
+  if (!AUTH.sb || !AUTH.user) return null;
+  try {
+    const { data, error } = await AUTH.sb.from("slayer_profiles").select("*").eq("user_id", AUTH.user.id).maybeSingle();
+    if (error) throw error;
+    AUTH.profile = data || null;
+    const local = SYNC.player?.source === "import" ? SYNC.player : null;
+    const cloudAt = data?.updated_at ? new Date(data.updated_at).getTime() : 0;
+    const cloudHas = data && (cnt(data.bank) || (data.levels && Object.keys(data.levels).length));
+    if (cloudHas && (!local || cloudAt > (local.importedAt || 0))) {
+      applyImport({ levels: data.levels || {}, bank: Array.isArray(data.bank) ? data.bank : [], names: data.names || {}, rsn: data.rsn || null }, { merge: "cloud" });
+      if (data.bank_at) { SYNC.player.bankAt = new Date(data.bank_at).getTime(); try { localStorage.setItem(IMPORT_KEY, JSON.stringify(SYNC.player)); } catch (_) {} }
+    }
+    // setups: union by id, newest first
+    const cloudSetups = (Array.isArray(data?.setups) ? data.setups : []).map(migrateSetup).filter(Boolean);
+    const mine = setups(); const have = new Set(mine.map((x) => x.id));
+    const merged = [...mine, ...cloudSetups.filter((x) => !have.has(x.id))].sort((a, b) => b.at - a.at).slice(0, MAX_SETUPS);
+    if (merged.length !== mine.length) { try { localStorage.setItem(SETUPS_KEY, JSON.stringify(merged)); } catch (_) {} renderPresets(); pushSetups(); }
+    if (!data || (local && (local.importedAt || 0) > cloudAt) || merged.length !== cloudSetups.length) await saveProfile();
+    renderImport(); renderAccount();
+    return data;
+  } catch (e) { AUTH.msg = "Could not load your account: " + (e.message || e); renderAccount(); return null; }
+}
+function renderAccount() {
+  const form = $("#auth-form"), box = $("#auth-user"), msg = $("#auth-msg"); if (!form) return;
+  if (!AUTH.sb) { form.classList.add("hidden"); box.classList.add("hidden"); msg.textContent = "Accounts are unavailable right now (the auth library did not load)."; return; }
+  if (!AUTH.user) { form.classList.remove("hidden"); box.classList.add("hidden"); msg.innerHTML = AUTH.msg ? `<span class="err">${esc(AUTH.msg)}</span>` : "Email and a password (6+ characters). No confirmation email."; return; }
+  form.classList.add("hidden"); box.classList.remove("hidden");
+  const p = AUTH.profile;
+  box.innerHTML = `<span>Signed in as <b>${esc(AUTH.user.email || "")}</b></span><span class="muted">${p ? `${cnt(p.bank)} bank items · ${p.levels ? Object.keys(p.levels).length : 0} skills · ${cnt(p.setups)} setups · saved ${agoLong(new Date(p.updated_at).getTime())}` : "nothing saved yet: import a file or save a setup"}</span>${AUTH.msg ? `<span class="err">${esc(AUTH.msg)}</span>` : ""}<button class="btn small" type="button" id="auth-out">Sign out</button>`;
+  $("#auth-out").onclick = async () => { await AUTH.sb.auth.signOut(); };
+}
+function initAuth() {
+  renderAccount(); if (!AUTH.sb) return;
+  const form = $("#auth-form");
+  const creds = () => ({ email: $("#auth-email").value.trim(), password: $("#auth-pass").value });
+  const busy = (on) => { $("#auth-in").disabled = on; $("#auth-up").disabled = on; };
+  form.addEventListener("submit", async (e) => { e.preventDefault(); busy(true); AUTH.msg = ""; const { error } = await AUTH.sb.auth.signInWithPassword(creds()); busy(false); if (error) { AUTH.msg = error.message; renderAccount(); } });
+  $("#auth-up").addEventListener("click", async () => { const c = creds(); if (!c.email || c.password.length < 6) { AUTH.msg = "Enter an email and a password of at least 6 characters."; renderAccount(); return; } busy(true); AUTH.msg = ""; const { data, error } = await AUTH.sb.auth.signUp(c); busy(false); if (error) { AUTH.msg = error.message; renderAccount(); return; } if (!data.session) { AUTH.msg = "Account created. Check your email to confirm, then sign in."; renderAccount(); } });
+  AUTH.sb.auth.onAuthStateChange((event, session) => {
+    const was = AUTH.user?.id; AUTH.user = session?.user || null;
+    if (AUTH.user && AUTH.user.id !== was) { AUTH.msg = ""; renderAccount(); loadProfile(); toast("Signed in as " + (AUTH.user.email || "")); }
+    else if (!AUTH.user && was) { AUTH.profile = null; AUTH.msg = ""; renderAccount(); toast("Signed out. Your import stays in this browser."); }
+    else renderAccount();
+  });
+}
 function initSync() {
   const url = new URL(location.href), qc = url.searchParams.get("code");
   if (qc != null) { url.searchParams.delete("code"); try { history.replaceState(null, "", url.pathname + url.search + url.hash); } catch (_) {} }
@@ -1219,7 +1289,7 @@ function initSync() {
   if (!validCode(code)) { try { code = normCode(localStorage.getItem("wildy:code")); } catch (_) { code = ""; } }
   if (!validCode(code)) code = genCode();
   restoreImport();
-  setCode(code, { render: false }); renderRl(); renderPresets(); initImport(); // the restored active setup marks its row "current"
+  setCode(code, { render: false }); renderRl(); renderPresets(); initImport(); initAuth(); // the restored active setup marks its row "current"
   $("#rl-copy").addEventListener("click", async () => { const c = fmtCode(SYNC.code); try { await navigator.clipboard.writeText(c); toast("Code copied: " + c); } catch (_) { try { const r = document.createRange(); r.selectNodeContents($("#rl-code")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (__) {} toast("Select the code and copy it: " + c); } });
   $("#rl-new").addEventListener("click", () => { setCode(genCode()); toast("New code: " + fmtCode(SYNC.code) + ". Update the plugin's settings."); });
   $("#rl-form").addEventListener("submit", (e) => { e.preventDefault(); const v = normCode($("#rl-input").value); if (!validCode(v)) { toast("A code is 8 letters or digits, like ABCD-2345"); return; } setCode(v); $("#rl-input").value = ""; toast("Using code " + fmtCode(v)); });

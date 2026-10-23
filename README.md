@@ -18,9 +18,13 @@ plugin.
   `web/api/slayer/` proxy the hiscores, wiki pages, images and prices, and
   `web/api/slayer/sync.js` is the sync endpoint the plugin talks to (one row
   per pairing code in Supabase).
-  Without the plugin, the RuneLite card imports a **Data Exporter** JSON/CSV
-  (skills and bank) or a **Bank Memory** tab-separated item list, pasted or as
-  files, and uses it exactly like a plugin sync (stored in the browser).
+  Without the plugin, the "Your bank, levels and setups" card imports a
+  **Data Exporter** JSON/CSV (skills and bank) or a **Bank Memory** tab-separated
+  item list, dropped on the page, picked as files or pasted, and uses it exactly
+  like a plugin sync. Sign in (Supabase email and password, shared playground
+  project, table `slayer_profiles` under row-level security) and the import and
+  the saved setups follow you to every device; without an account they stay in
+  that browser.
 - **RuneLite plugin**: this repository root is a standard RuneLite plugin
   Gradle project (`build.gradle`, `src/`, `runelite-plugin.properties`),
   submitted to the Plugin Hub (pending review). Install page:

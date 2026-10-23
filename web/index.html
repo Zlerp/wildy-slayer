@@ -40,41 +40,55 @@
     </section>
 
     <section class="card" id="runelite">
-      <h2>RuneLite <span class="badge info">optional</span></h2>
-      <p class="hint" style="margin:0">Two ways to get your real levels and bank in here: pair the Wildy Slayer plugin (also syncs your current task and outlines the picked gear in your bank), or import a file from the <b>Data Exporter</b> / <b>Bank Memory</b> plugins below.</p>
-      <div class="pair">
-        <div class="code" id="rl-code" aria-label="Pairing code">————</div>
-        <div class="row">
-          <button class="btn" type="button" id="rl-copy">Copy</button>
-          <button class="btn" type="button" id="rl-new">New code</button>
-        </div>
+      <h2>Your bank, levels and setups</h2>
+      <p class="hint" style="margin:0">Sign in and whatever you import or save here follows you to every device. No account needed to try it: an import still works in this browser on its own.</p>
+      <div id="account" class="account">
+        <form id="auth-form" class="row wrap" autocomplete="on">
+          <input id="auth-email" type="email" inputmode="email" autocomplete="email" placeholder="Email" aria-label="Email" required />
+          <input id="auth-pass" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" minlength="6" required />
+          <button class="btn primary" type="submit" id="auth-in">Sign in</button>
+          <button class="btn" type="button" id="auth-up">Create account</button>
+        </form>
+        <p class="hint" id="auth-msg"></p>
+        <div id="auth-user" class="hidden"></div>
       </div>
-      <p class="hint" id="rl-status">Waiting for the plugin…</p>
       <p class="sr-only" id="rl-live" aria-live="polite"></p>
       <div id="rl-player" class="hidden"></div>
-      <form id="rl-form" class="row" autocomplete="off">
-        <input id="rl-input" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="16" placeholder="Have a code? Enter it" aria-label="Pairing code to use" />
-        <button class="btn" type="submit">Use code</button>
-      </form>
-      <details id="rl-import" open>
-        <summary>No plugin? Import a RuneLite export instead</summary>
-        <p class="hint" style="margin:0 0 8px">Two Plugin Hub plugins export what this page needs. <b>Data Exporter</b>: open your bank, click <b>Export All</b> (or Export Bank and Export Skills), then drag the JSON files from <code>~/.runelite/data-exports/</code> onto this page (or pick them below) (the similar <b>Data Export</b> plugin works too: its files are in <code>~/.runelite/Data Exports/&lt;name&gt;/</code>). <b>Bank Memory</b>: right-click your bank list, <b>Copy item data to clipboard</b>, paste below (levels then come from the hiscores lookup above). CSV from Data Exporter works too.</p>
+      <h3 style="margin-top:14px">Import from RuneLite</h3>
+      <p class="hint" style="margin:0 0 8px">Install <b>Data Exporter</b> from the Plugin Hub, open your bank in game, click <b>Export All</b>, then drag the files from <code>~/.runelite/data-exports/</code> onto this page (all of them at once is fine) or pick them below. <b>Bank Memory</b>'s "Copy item data to clipboard" pastes in too.</p>
+      <div id="rl-import">
         <div class="drop" id="import-drop">Drag the export files here (or anywhere on the page)</div>
-        <textarea id="import-text" rows="4" placeholder='Paste the export here: JSON ({"bank": [...], "skills": {...}}) or the Bank Memory tab-separated list' aria-label="Pasted export"></textarea>
+        <textarea id="import-text" rows="3" placeholder="Or paste an export here" aria-label="Pasted export"></textarea>
         <div class="row wrap" style="margin-top:8px">
           <label class="btn file">Choose files<input id="import-file" type="file" accept=".json,.csv,.tsv,.txt,application/json,text/plain,text/csv" multiple hidden /></label>
           <button class="btn primary" type="button" id="import-go">Import</button>
           <button class="btn hidden" type="button" id="import-clear">Clear import</button>
         </div>
         <p class="hint" id="import-msg"></p>
-      </details>
-      <details id="rl-help">
-        <summary>How to install the plugin</summary>
-        <ol class="steps">
-          <li>In RuneLite, install <b>Wildy Slayer</b> (and <b>Shortest Path</b>, for "Show path") from the Plugin Hub. It is pending review there; until it is listed it runs only in a development client built from the <a href="https://github.com/Zlerp/wildy-slayer">source</a>. Details: <a href="/plugin/#install">the plugin page</a>.</li>
-          <li>Open <b>Wildy Slayer</b>'s settings, paste the code above into <b>Pairing code</b> and enable sync.</li>
-          <li>Log in and open your bank once so the plugin can read it.</li>
-        </ol>
+      </div>
+      <details id="rl-pair">
+        <summary>RuneLite plugin pairing (live sync, needs the Wildy Slayer plugin)</summary>
+        <p class="hint" style="margin:8px 0 0">The plugin syncs your levels, bank and current task live and outlines the picked gear in your bank. It is pending Plugin Hub review.</p>
+        <div class="pair">
+          <div class="code" id="rl-code" aria-label="Pairing code">————</div>
+          <div class="row">
+            <button class="btn" type="button" id="rl-copy">Copy</button>
+            <button class="btn" type="button" id="rl-new">New code</button>
+          </div>
+        </div>
+        <p class="hint" id="rl-status">Waiting for the plugin…</p>
+        <form id="rl-form" class="row" autocomplete="off">
+          <input id="rl-input" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="16" placeholder="Have a code? Enter it" aria-label="Pairing code to use" />
+          <button class="btn" type="submit">Use code</button>
+        </form>
+        <details id="rl-help">
+          <summary>How to install the plugin</summary>
+          <ol class="steps">
+            <li>In RuneLite, install <b>Wildy Slayer</b> (and <b>Shortest Path</b>, for "Show path") from the Plugin Hub. It is pending review there; until it is listed it runs only in a development client built from the <a href="https://github.com/Zlerp/wildy-slayer">source</a>. Details: <a href="/plugin/#install">the plugin page</a>.</li>
+            <li>Open <b>Wildy Slayer</b>'s settings, paste the code above into <b>Pairing code</b> and enable sync.</li>
+            <li>Log in and open your bank once so the plugin can read it.</li>
+          </ol>
+        </details>
       </details>
     </section>
 
@@ -133,6 +147,7 @@
       <p>Monster, master, location and item data from the <a href="https://oldschool.runescape.wiki/w/Slayer_task" rel="noopener">OSRS Wiki</a> (CC BY-NC-SA 3.0): every target's stats, weaknesses, poison and venom flags come straight from its infobox. Prices from the wiki's real-time price API. Hiscores from Jagex. Supply counts are estimates from the standard combat formulas; bring more than the maths says, and in the Wilderness bring a lot more.</p>
     </footer>
   </main>
+  <script src="/vendor/supabase.js"></script>
   <script src="/data.js"></script>
   <script src="/slayer.js"></script>
   <script src="/items.js"></script>
