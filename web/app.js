@@ -302,7 +302,11 @@ function score(it, style, ctx) {
   const ts = styleOf(ctx.tg?.style);
   const defv = ctx.wildy ? (st.dmagic * 0.6 + st.drange * 0.2 + st.dslash * 0.2) * 0.12
     : ((/magic/.test(ts) ? st.dmagic : 0) * 0.5 + (/ranged/.test(ts) ? st.drange : 0) * 0.5 + (/melee|stab|slash|crush/.test(ts) || !ts ? (st.dstab + st.dslash + st.dcrush) / 3 : 0) * 0.5) * 0.08;
-  if (style === "melee") s = st.str * 10 + attBest(st) * 4;
+  // melee: the item's best attack style against THIS target (its bonus minus the monster's defence on that side), so a stab
+  // weapon beats a slash one on dragons and a crush one wins on gargoyles
+  const tgd = ctx.tg || {};
+  const attVs = ctx.tg ? Math.max(st.astab - (tgd.dstab || 0), st.aslash - (tgd.dslash || 0), st.acrush - (tgd.dcrush || 0)) : attBest(st);
+  if (style === "melee") s = st.str * 10 + attVs * 4;
   else if (style === "ranged") s = st.rstr * 10 + st.arange * 4;
   else s = (st.mdmg || 0) * 25 + st.amagic * 4;
   if ((it.slot === "weapon" || it.slot === "2h") && it.speed && style !== "magic") s *= 4 / Math.max(2, style === "ranged" ? it.speed - 1 : it.speed); // a slow weapon is worth less: dark bow, 2h swords
