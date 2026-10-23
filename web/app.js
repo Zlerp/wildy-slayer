@@ -302,17 +302,28 @@ const DPS_POINTS = 250; // score units per point of modelled DPS (10 points was 
 // count), plus prayer, the defence that matters here and the task's categorical needs. `base` is the rest of the loadout
 // the item is judged in (the current pick); without it the item is judged on its own.
 function score(it, style, ctx, base) {
+  const slot = it.slot === "2h" ? "weapon" : it.slot;
+  return DPS_POINTS * rollsFor(style, judged({ ...(base || {}), [slot]: it }, style, ctx, slot), ctx).dps + extras(it, style, ctx);
+}
+// the loadout as it will be fought in: no shield with a two-hander, the shield it will get with a one-hander, a ranged
+// weapon's best ammo (fresh when the weapon itself is being judged)
+function judged(trial, style, ctx, slot) {
+  if (trial.weapon?.slot === "2h") delete trial.shield;
+  else if (!trial.shield && slot !== "shield") { const sh = provisionalShield(style, ctx); if (sh) trial.shield = sh; }
+  if (style === "ranged" && trial.weapon && (slot === "weapon" || !trial.ammo)) { const am = bestAmmoFor(trial.weapon, ctx); if (am) trial.ammo = am; else delete trial.ammo; }
+  return trial;
+}
+// a whole loadout's worth, the sum score() maximises: its modelled DPS plus every item's extras
+function worth(pick, style, ctx) {
+  return DPS_POINTS * rollsFor(style, judged({ ...pick }, style, ctx, null), ctx).dps + Object.values(pick).reduce((s, it) => s + (it ? extras(it, style, ctx) : 0), 0);
+}
+// what an item is worth beyond the DPS it adds: prayer, the defence that matters here, the task's categorical needs
+function extras(it, style, ctx) {
   const st = it.stats || {}; let s = 0;
   // Wilderness: mostly magic defence (PKers freeze and teleblock you). Elsewhere: defence against what the monster actually attacks with.
   const ts = styleOf(ctx.tg?.style);
   const defv = ctx.wildy ? (st.dmagic * 0.6 + st.drange * 0.2 + st.dslash * 0.2) * 0.12
     : ((/magic/.test(ts) ? st.dmagic : 0) * 0.5 + (/ranged/.test(ts) ? st.drange : 0) * 0.5 + (/melee|stab|slash|crush/.test(ts) || !ts ? (st.dstab + st.dslash + st.dcrush) / 3 : 0) * 0.5) * 0.08;
-  const slot = it.slot === "2h" ? "weapon" : it.slot;
-  const trial = { ...(base || {}), [slot]: it };
-  if (trial.weapon?.slot === "2h") delete trial.shield;                                                      // two-handed: no shield
-  else if (!trial.shield && slot !== "shield") { const sh = provisionalShield(style, ctx); if (sh) trial.shield = sh; }   // judged with the shield it will get
-  if (style === "ranged" && trial.weapon && (slot === "weapon" || !trial.ammo)) { const am = bestAmmoFor(trial.weapon, ctx); if (am) trial.ammo = am; else delete trial.ammo; } // a crossbow is nothing without bolts
-  s = DPS_POINTS * rollsFor(style, trial, ctx).dps;
   s += (st.prayer || 0) * 1.5 + defv;
   if (it.tags.includes("firestaff") && style === "magic") s += 10;   // free fire runes
   if (ctx.fire && it.tags.includes("dragon")) s += 80;           // dragonfire: anti-dragon / dragonfire / wyvern shields
@@ -397,29 +408,50 @@ function buildGear(style, ctx, overrides = S.overrides) {
   for (const slot of SLOTS) { if (slot === "ammo" || slot === "shield") continue; pool[slot] = candidates(slot, style, ctx).sort((a, b) => score(b, style, ctx) - score(a, style, ctx)); }
   // start cheapest viable per slot (by risk value)
   for (const slot of Object.keys(pool)) { const c = pool[slot]; if (!c.length) continue; pick[slot] = c.slice().sort((a, b) => price(a.name) - price(b.name) || score(b, style, ctx) - score(a, style, ctx))[0]; }
+  // risk (Wilderness): what dies with you beyond the kept items, every item at its replacement value.
+  // worn total: what gp buys. Untradeables (slayer helm, faceguard, fire cape...) cannot be bought with the tier's budget and
+  // outside the Wilderness are kept on death, so they never crowd a better weapon out of a tier; inside, the risk cap judges them.
   const riskOf = (p) => { const vals = Object.values(p).map((i) => price(i.name)).sort((a, b) => b - a); return vals.slice(keep).reduce((s, v) => s + v, 0); };
-  // the gear budget outside the Wilderness counts what gp buys: untradeables (slayer helm, faceguard, fire cape...) cannot be
-  // bought with it and are kept on death there, so they do not crowd a better weapon out of the tier; inside, everything is at risk
-  const totalOf = (p) => Object.values(p).reduce((s, i) => s + (ctx.wildy || i.tradeable ? price(i.name) : 0), 0);
-  // greedy upgrades: best score gain per gp of added risk, within the cap
-  for (let iter = 0; iter < 60; iter++) {
-    let best = null;
-    for (const slot of Object.keys(pool)) {
-      const cur = pick[slot]; if (!cur) continue;
-      const cs = score(cur, style, ctx, pick), baseRisk = riskOf(pick);
-      for (const c of pool[slot]) {
-        if (c === cur) continue;
-        const gain = score(c, style, ctx, pick) - cs; if (gain <= 0) continue;
-        const trial = { ...pick, [slot]: c }; const r = riskOf(trial);
-        if (r > cap || totalOf(trial) > capTotal) continue;
-        const dr = Math.max(0, r - baseRisk);
-        const eff = gain / (1 + dr / 20000);
-        if (!best || eff > best.eff) best = { slot, c, eff };
+  const totalOf = (p) => Object.values(p).reduce((s, i) => s + (i.tradeable ? price(i.name) : 0), 0);
+  const fits = (p) => riskOf(p) <= cap && totalOf(p) <= capTotal;
+  // greedy upgrades over the given slots: best score gain per gp of added risk, within the caps
+  const upgrade = (pick, slots) => {
+    for (let iter = 0; iter < 60; iter++) {
+      let best = null;
+      for (const slot of slots) {
+        const cur = pick[slot]; if (!cur) continue;
+        const cs = score(cur, style, ctx, pick), baseRisk = riskOf(pick);
+        for (const c of pool[slot]) {
+          if (c === cur) continue;
+          const gain = score(c, style, ctx, pick) - cs; if (gain <= 0) continue;
+          const trial = { ...pick, [slot]: c }; if (!fits(trial)) continue;
+          const dr = Math.max(0, riskOf(trial) - baseRisk);
+          const eff = gain / (1 + dr / 20000);
+          if (!best || eff > best.eff) best = { slot, c, eff };
+        }
       }
+      if (!best) break;
+      pick[best.slot] = best.c;
     }
-    if (!best) break;
-    pick[best.slot] = best.c;
+    return pick;
+  };
+  const start = { ...pick }, slots = Object.keys(pool);
+  // pass A: pure greedy. pass B: the best weapon that fits with the cheapest rest first, then the greedy over the other slots,
+  // because a weapon is one big purchase a gain-per-gp greedy can crowd out with many small ones (a Staff of the Dead at the
+  // mid tier). Keep whichever loadout is worth more.
+  const a = upgrade({ ...start }, slots);
+  let chosen = a;
+  if (pick.weapon && pool.weapon?.length > 1) {
+    const b0 = { ...start };
+    let bestW = null, bestS = -Infinity;
+    for (const c of pool.weapon) { if (!fits({ ...b0, weapon: c })) continue; const sc = score(c, style, ctx, b0); if (sc > bestS) { bestS = sc; bestW = c; } }
+    if (bestW && bestW !== a.weapon) {
+      b0.weapon = bestW;
+      const b = upgrade(b0, slots.filter((x) => x !== "weapon"));
+      if (worth(b, style, ctx) > worth(a, style, ctx)) chosen = b;
+    }
   }
+  for (const slot of slots) { if (chosen[slot]) pick[slot] = chosen[slot]; else delete pick[slot]; }
   // overrides
   for (const [slot, name] of Object.entries(overrides)) { if (name === "") delete pick[slot]; else if (ITEMS[name]) pick[slot] = ITEMS[name]; }
   // shield only with a one-handed weapon
