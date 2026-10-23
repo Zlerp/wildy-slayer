@@ -1125,9 +1125,11 @@ function parseExport(text) {
   const t = String(text || "").trim();
   if (!t) return out;
   let json = null; try { json = JSON.parse(t); } catch (_) {}
+  // JSON Lines (the "Data Export" plugin writes one object per line): collect the lines into an array
+  if (!json && /^\s*\{/.test(t)) { const arr = []; for (const l of t.split(/\r?\n/)) { const ln = l.trim(); if (!ln) continue; try { arr.push(JSON.parse(ln)); } catch (_) { arr.length = 0; break; } } if (arr.length) json = arr; }
   if (json) {
     const walk = (o) => {
-      if (Array.isArray(o)) { for (const x of o) { if (x && typeof x === "object" && ("id" in x || "name" in x) && ("quantity" in x || "qty" in x)) addItem(x.id ?? ITEMS[x.name]?.id, x.name, x.quantity ?? x.qty); else if (Array.isArray(x) && x.length >= 2 && Number.isFinite(+x[0])) addItem(x[0], null, x[1]); } return; }
+      if (Array.isArray(o)) { for (const x of o) { if (x && typeof x === "object" && ("id" in x || "name" in x) && ("quantity" in x || "qty" in x)) addItem(x.id ?? ITEMS[x.name]?.id, x.name, x.quantity ?? x.qty); else if (x && typeof x === "object" && "name" in x && "level" in x) addSkill(x.name, x.level); else if (Array.isArray(x) && x.length >= 2 && Number.isFinite(+x[0])) addItem(x[0], null, x[1]); } return; }
       if (!o || typeof o !== "object") return;
       if (o.skills && typeof o.skills === "object" && !Array.isArray(o.skills)) for (const [k, v] of Object.entries(o.skills)) addSkill(k, typeof v === "object" ? v.level : v);
       if (o.levels && typeof o.levels === "object") for (const [k, v] of Object.entries(o.levels)) addSkill(k, v);
@@ -1157,6 +1159,7 @@ function parseExport(text) {
     // no header: guess by shape
     const nums = c.map((x) => Number.isFinite(+x) && x !== "");
     if (c.length >= 3 && nums[0] && !nums[1]) addItem(c[0], c[1], c[2]);                 // id, name, qty
+    else if (c.length >= 3 && nums[0] && nums[1] && !nums[2]) addItem(c[0], c[2], c[1]);  // id, qty, name (Data Export CSV)
     else if (c.length >= 3 && !nums[0] && nums[1]) addItem(c[1], c[0], c[2]);           // name, id, qty
     else if (c.length === 2 && !nums[0] && nums[1]) { if (SKILLS.includes(c[0].toLowerCase())) addSkill(c[0], c[1]); else addItem(ITEMS[c[0]]?.id, c[0], c[1]); }
   }
