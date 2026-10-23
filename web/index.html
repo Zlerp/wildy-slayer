@@ -41,7 +41,7 @@
 
     <section class="card" id="runelite">
       <h2>RuneLite <span class="badge info">optional</span></h2>
-      <p class="hint" style="margin:0">Pair the Wildy Slayer plugin and this page uses your real levels, your bank and your current task; the plugin outlines the gear picked here in your bank and lists your saved setups.</p>
+      <p class="hint" style="margin:0">Two ways to get your real levels and bank in here: pair the Wildy Slayer plugin (also syncs your current task and outlines the picked gear in your bank), or import a file from the <b>Data Exporter</b> / <b>Bank Memory</b> plugins below.</p>
       <div class="pair">
         <div class="code" id="rl-code" aria-label="Pairing code">————</div>
         <div class="row">
@@ -56,6 +56,17 @@
         <input id="rl-input" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="16" placeholder="Have a code? Enter it" aria-label="Pairing code to use" />
         <button class="btn" type="submit">Use code</button>
       </form>
+      <details id="rl-import" open>
+        <summary>No plugin? Import a RuneLite export instead</summary>
+        <p class="hint" style="margin:0 0 8px">Two Plugin Hub plugins export what this page needs. <b>Data Exporter</b>: open your bank, click <b>Export All</b> (or Export Bank and Export Skills), then pick the JSON files from <code>~/.runelite/data-exports/</code>. <b>Bank Memory</b>: right-click your bank list, <b>Copy item data to clipboard</b>, paste below (levels then come from the hiscores lookup above). CSV from Data Exporter works too.</p>
+        <textarea id="import-text" rows="4" placeholder='Paste the export here: JSON ({"bank": [...], "skills": {...}}) or the Bank Memory tab-separated list' aria-label="Pasted export"></textarea>
+        <div class="row wrap" style="margin-top:8px">
+          <label class="btn file">Choose files<input id="import-file" type="file" accept=".json,.csv,.tsv,.txt,application/json,text/plain,text/csv" multiple hidden /></label>
+          <button class="btn primary" type="button" id="import-go">Import</button>
+          <button class="btn hidden" type="button" id="import-clear">Clear import</button>
+        </div>
+        <p class="hint" id="import-msg"></p>
+      </details>
       <details id="rl-help">
         <summary>How to install the plugin</summary>
         <ol class="steps">

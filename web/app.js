@@ -53,7 +53,7 @@ const persist = () => { try { localStorage.setItem("wildy:state", JSON.stringify
 if (S.task && !TASKS.some((t) => t.id === S.task)) S.task = null;
 if (S.master !== "all" && !MASTER[S.master] && S.master !== "krystilia") S.master = "all";
 window.__wildy = {
-  S, TASKS, MASTERS, ITEMS, calc: () => CALC,
+  S, TASKS, MASTERS, ITEMS, calc: () => CALC, parseExport: (t) => parseExport(t), applyImport: (p) => applyImport(p),
   sync: () => ({ code: SYNC.code, version: SYNC.version, player: SYNC.player, selection: SYNC.selection, setups: setups(), lastPushed: SYNC.lastPushedSel, lastPushedAt: SYNC.lastPushedAt, error: SYNC.error, syncedAt: SYNC.syncedAt, appliedSelectionAt: SYNC.appliedSelectionAt, setupsWrote: SYNC.setupsWrote }),
   poll: () => poll(),
   pushNow: () => pushSelection(true),
@@ -321,7 +321,7 @@ function score(it, style, ctx) {
   if (ctx.ice && it.tags.includes("wyvern")) s += 120;           // icy breath: elemental, mind, DFS or ancient wyvern shield
   if (ctx.venom && it.tags.includes("venom")) s += 60;           // serpentine helm: immune to venom
   if (ctx.task.slug === "revenants" && it.tags.includes("revenant")) s += 150;
-  if (ctx.req?.names.has(it.name)) s += 400;                     // a required item always wins its slot
+  if (ctx.req?.names.has(it.name) || (ctx.req?.helmOk && it.tags.includes("helm"))) s += 400; // a required item always wins its slot (a Slayer helmet counts for the head one)
   if (it.tags.includes("dragon") && !ctx.fire && !ctx.ice) s -= 50;
   if (it.tags.includes("wildy") && !ctx.wildy) s -= 30;         // Wilderness weapons lose their 50% outside it
   return s;
@@ -1045,7 +1045,7 @@ async function poll() {
       }
       else if (first && !d.setupsAt && setups().length) pushSetups(); // first pairing: seed the server with this browser's list
       if (d.player && d.playerAt !== SYNC.playerAt) { SYNC.playerAt = d.playerAt; onPlayer(d.player); }
-      else if (!d.player && SYNC.player) { SYNC.player = null; SYNC.playerAt = null; rebuildOwned(); renderLevels(); renderTasks(); renderAll(); renderRl(); }
+      else if (!d.player && SYNC.player && SYNC.player.source !== "import") { SYNC.player = null; SYNC.playerAt = null; rebuildOwned(); renderLevels(); renderTasks(); renderAll(); renderRl(); }
       SYNC.selection = d.selection || null; SYNC.selectionAt = d.selectionAt || null;
       if (d.selection && d.selection.source === "plugin" && d.selectionAt > SYNC.appliedSelectionAt) applyPluginSelection(d.selection, d.selectionAt);
     }
@@ -1059,7 +1059,8 @@ function setCode(code, { render = true } = {}) {
   code = normCode(code); if (!validCode(code)) return false;
   if (code === SYNC.code) return true;
   clearTimeout(SYNC.pushTimer);
-  Object.assign(SYNC, { code, version: 0, pulled: false, fresh: true, player: null, playerAt: null, selection: null, selectionAt: null, setupsAt: null, lastPushed: null, lastPushedSel: null, lastPushedAt: 0, setupsWrote: 0, appliedSelectionAt: 0, syncedAt: 0, error: null, pushTimer: null, activeSetup: null, autoTask: null });
+  const keep = SYNC.player?.source === "import" ? SYNC.player : null;
+  Object.assign(SYNC, { code, version: 0, pulled: false, fresh: true, player: keep, playerAt: null, selection: null, selectionAt: null, setupsAt: null, lastPushed: null, lastPushedSel: null, lastPushedAt: 0, setupsWrote: 0, appliedSelectionAt: 0, syncedAt: 0, error: null, pushTimer: null, activeSetup: null, autoTask: null });
   // same code as last time: this browser's setups mirror the server's, and the applied setup is still current
   const meta = syncMeta(); if (meta.code === code) { SYNC.fresh = false; SYNC.appliedSelectionAt = +meta.appliedSelectionAt || 0; SYNC.setupsWrote = +meta.setupsWrote || 0; if (meta.activeSetup && typeof meta.activeSetup.id === "string") SYNC.activeSetup = { id: meta.activeSetup.id, name: String(meta.activeSetup.name || "") }; }
   try { localStorage.setItem("wildy:code", code); } catch (_) {}
@@ -1077,6 +1078,7 @@ function renderRlStatus() {
   let html, live;
   if (!code) { live = "Pairing is off: this browser cannot store a code."; html = live; }
   else if (SYNC.error) { live = "Sync error: " + SYNC.error; html = `<span class="err">${esc(live)}</span>${SYNC.syncedAt ? ` <span class="muted">· last good sync ${ago(SYNC.syncedAt)}</span>` : ""}`; }
+  else if (p?.source === "import") { live = `Using an imported export: ${p.rsn || "?"}, ${cnt(p.bank)} bank items`; html = `<span class="ok">Using your import</span> (${cnt(p.bank)} bank items). Pairing still works: enter <b>${fmtCode(code)}</b> in the plugin to switch to live sync.`; }
   else if (!p) { live = `Waiting for the plugin: enter ${fmtCode(code)} in the plugin's settings`; html = `Waiting for the plugin… enter <b>${fmtCode(code)}</b> in the plugin's settings${SYNC.syncedAt ? ` <span class="muted">· checked ${ago(SYNC.syncedAt)}</span>` : ""}`; }
   else { live = `Connected: ${p.rsn || "?"}, ${cnt(p.bank)} bank items`; html = `<span class="ok">Connected:</span> <b>${esc(p.rsn || "?")}</b>, ${cnt(p.bank)} bank items, synced ${ago(SYNC.syncedAt)}`; }
   if (st.innerHTML !== html) st.innerHTML = html;
@@ -1094,12 +1096,12 @@ function renderRl() {
       <div class="badges">
         <span class="badge">Combat ${num(p.combat) ?? combatLevel(S.levels)}</span>
         <span class="badge">${cnt(p.bank)} bank · ${cnt(p.inventory)} inventory · ${cnt(p.equipment)} worn</span>
-        ${num(p.bankAt) ? `<span class="badge">Bank seen ${agoLong(num(p.bankAt))}</span>` : `<span class="badge warn">Bank not seen yet: open it once in game</span>`}
+        ${p.source === "import" ? `<span class="badge info">Imported file</span>` : ""}${num(p.bankAt) ? `<span class="badge">Bank seen ${agoLong(num(p.bankAt))}</span>` : `<span class="badge warn">Bank not seen yet: open it once in game</span>`}
         ${p.task?.name ? `<span class="badge info">Task: ${esc(p.task.name)} × ${num(p.task.amount) ?? "?"}</span>` : `<span class="badge">No slayer task</span>`}
         ${p.pluginVersion ? `<span class="badge">Plugin ${esc(p.pluginVersion)}</span>` : ""}
       </div>
       <div class="toggles">
-        <label class="check"><input type="checkbox" id="rl-levels"${S.useRl !== false ? " checked" : ""} />Use RuneLite levels</label>
+        <label class="check"><input type="checkbox" id="rl-levels"${S.useRl !== false ? " checked" : ""} />Use ${p.source === "import" ? "imported" : "RuneLite"} levels</label>
         <label class="check"><input type="checkbox" id="rl-own"${ownOnlyActive() ? " checked" : ""}${hasBank() ? "" : " disabled"} />Only gear I own</label>
       </div>`;
     $("#rl-levels").onchange = (e) => { S.useRl = e.target.checked; if (S.useRl) adoptLevels(p); persist(); renderStats(); renderLevels(); renderTasks(); renderAll(); };
@@ -1107,13 +1109,96 @@ function renderRl() {
   }
   renderTaskBanner();
 }
+/* ---------- import a RuneLite export (no plugin needed) ----------
+   Data Exporter (Plugin Hub): {"skills": {"Attack": {"level", "xp"}, ...}, "bank": [{"name", "id", "quantity"}], ...} per file or
+   combined; its CSV is "Name,ID,Quantity" / "Skill,Level,XP". Bank Memory: "Item id<TAB>Item name<TAB>Item quantity" lines.
+   The result becomes a synthetic player ({source: "import"}) that the gear and supply code treats exactly like a plugin sync. */
+const IMPORT_KEY = "wildy:import";
+function parseExport(text) {
+  const out = { levels: {}, bank: [], names: {}, rsn: null };
+  const addItem = (id, name, qty) => { id = +id; qty = +qty || 1; if (!Number.isFinite(id) || id < 0) return; out.bank.push([id, qty]); if (name) out.names[id] = String(name); };
+  const addSkill = (name, level) => { const k = String(name || "").toLowerCase().trim(); const v = +level; if (SKILLS.includes(k) && Number.isFinite(v) && v > 0) out.levels[k] = clamp(Math.round(v), 1, 99); };
+  const t = String(text || "").trim();
+  if (!t) return out;
+  let json = null; try { json = JSON.parse(t); } catch (_) {}
+  if (json) {
+    const walk = (o) => {
+      if (Array.isArray(o)) { for (const x of o) { if (x && typeof x === "object" && ("id" in x || "name" in x) && ("quantity" in x || "qty" in x)) addItem(x.id ?? ITEMS[x.name]?.id, x.name, x.quantity ?? x.qty); else if (Array.isArray(x) && x.length >= 2 && Number.isFinite(+x[0])) addItem(x[0], null, x[1]); } return; }
+      if (!o || typeof o !== "object") return;
+      if (o.skills && typeof o.skills === "object" && !Array.isArray(o.skills)) for (const [k, v] of Object.entries(o.skills)) addSkill(k, typeof v === "object" ? v.level : v);
+      if (o.levels && typeof o.levels === "object") for (const [k, v] of Object.entries(o.levels)) addSkill(k, v);
+      for (const key of ["bank", "inventory", "equipment", "items"]) if (Array.isArray(o[key])) walk(o[key]);
+      if (o.names && typeof o.names === "object") for (const [id, n] of Object.entries(o.names)) if (typeof n === "string") out.names[+id] = n;
+      if (typeof o.rsn === "string") out.rsn = o.rsn; if (typeof o.player === "string") out.rsn = o.player;
+      if (o.player && typeof o.player === "object") walk(o.player);
+      // a lone skills object: {"Attack": {"level": 70}, ...}
+      if (!o.skills && !o.levels) for (const [k, v] of Object.entries(o)) if (SKILLS.includes(String(k).toLowerCase()) && v && typeof v === "object" && "level" in v) addSkill(k, v.level);
+    };
+    walk(json);
+    return out;
+  }
+  // text: TSV (Bank Memory) or CSV (Data Exporter); header row optional
+  const lines = t.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const split = (l) => l.includes("\t") ? l.split("\t") : l.split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+  let head = split(lines[0]).map((h) => h.toLowerCase());
+  let cols = null;
+  if (head.some((h) => /item|name|id|quantity|skill|level/.test(h))) { cols = head; lines.shift(); }
+  for (const l of lines) {
+    const c = split(l); if (c.length < 2) continue;
+    if (cols) {
+      const g = (re) => { const i = cols.findIndex((h) => re.test(h)); return i >= 0 ? c[i] : undefined; };
+      if (cols.some((h) => /skill/.test(h))) { addSkill(g(/skill/), g(/level/)); continue; }
+      addItem(g(/id/) ?? ITEMS[g(/name/)]?.id, g(/name/), g(/quantity|qty|count/) ?? 1); continue;
+    }
+    // no header: guess by shape
+    const nums = c.map((x) => Number.isFinite(+x) && x !== "");
+    if (c.length >= 3 && nums[0] && !nums[1]) addItem(c[0], c[1], c[2]);                 // id, name, qty
+    else if (c.length >= 3 && !nums[0] && nums[1]) addItem(c[1], c[0], c[2]);           // name, id, qty
+    else if (c.length === 2 && !nums[0] && nums[1]) { if (SKILLS.includes(c[0].toLowerCase())) addSkill(c[0], c[1]); else addItem(ITEMS[c[0]]?.id, c[0], c[1]); }
+  }
+  return out;
+}
+function applyImport(parsed, { merge = true } = {}) {
+  const prev = merge && SYNC.player?.source === "import" ? SYNC.player : null;
+  const levels = { ...(prev?.levels || {}), ...parsed.levels };
+  const bank = parsed.bank.length ? parsed.bank : (prev?.bank || []);
+  const names = { ...(prev?.names || {}), ...parsed.names };
+  if (!Object.keys(levels).length && !bank.length) return null;
+  const player = { source: "import", rsn: parsed.rsn || prev?.rsn || S.rsn || null, levels: Object.keys(levels).length ? levels : null, bank, inventory: [], equipment: [], names, bankAt: bank.length ? Date.now() : prev?.bankAt || null, importedAt: Date.now() };
+  try { localStorage.setItem(IMPORT_KEY, JSON.stringify(player)); } catch (_) {}
+  SYNC.playerAt = null; onPlayer(player);
+  return player;
+}
+function clearImport() { try { localStorage.removeItem(IMPORT_KEY); } catch (_) {} if (SYNC.player?.source === "import") { SYNC.player = null; rebuildOwned(); if (S.ownOnly) S.ownOnly = null; persist(); renderLevels(); renderTasks(); renderAll(); renderRl(); } renderImport(); }
+function restoreImport() { try { const p = JSON.parse(localStorage.getItem(IMPORT_KEY) || "null"); if (p && p.source === "import") { SYNC.player = p; rebuildOwned(); if (S.useRl !== false) adoptLevels(p); } } catch (_) {} }
+function renderImport() {
+  const msg = $("#import-msg"), clr = $("#import-clear"); if (!msg) return;
+  const p = SYNC.player;
+  if (p?.source === "import") { msg.innerHTML = `<span class="ok">Imported${p.rsn ? " " + esc(p.rsn) : ""}:</span> ${p.levels ? Object.keys(p.levels).length + " skills" : "no skills (use the hiscores lookup)"}, ${cnt(p.bank)} bank items, ${agoLong(p.importedAt)}. Gear below is built from what you own; untick "Only gear I own" to see everything.`; clr.classList.remove("hidden"); }
+  else { msg.textContent = ""; clr.classList.add("hidden"); }
+}
+function initImport() {
+  const go = $("#import-go"); if (!go) return;
+  const run = async (texts) => {
+    const parsed = { levels: {}, bank: [], names: {}, rsn: null };
+    for (const tx of texts) { const p = parseExport(tx); Object.assign(parsed.levels, p.levels); parsed.bank.push(...p.bank); Object.assign(parsed.names, p.names); parsed.rsn = p.rsn || parsed.rsn; }
+    if (!Object.keys(parsed.levels).length && !parsed.bank.length) { $("#import-msg").innerHTML = `<span class="err">Nothing recognised.</span> Expected Data Exporter JSON/CSV or a Bank Memory item list.`; return; }
+    S.useRl = true; applyImport(parsed); renderImport(); toast(`Imported ${parsed.bank.length ? parsed.bank.length + " bank items" : ""}${parsed.bank.length && Object.keys(parsed.levels).length ? " and " : ""}${Object.keys(parsed.levels).length ? Object.keys(parsed.levels).length + " skills" : ""}`);
+    $("#import-text").value = "";
+  };
+  go.addEventListener("click", () => run([$("#import-text").value]));
+  $("#import-file").addEventListener("change", async (e) => { const files = [...e.target.files]; if (!files.length) return; run(await Promise.all(files.map((f) => f.text()))); e.target.value = ""; });
+  $("#import-clear").addEventListener("click", clearImport);
+  renderImport();
+}
 function initSync() {
   const url = new URL(location.href), qc = url.searchParams.get("code");
   if (qc != null) { url.searchParams.delete("code"); try { history.replaceState(null, "", url.pathname + url.search + url.hash); } catch (_) {} }
   let code = normCode(qc);
   if (!validCode(code)) { try { code = normCode(localStorage.getItem("wildy:code")); } catch (_) { code = ""; } }
   if (!validCode(code)) code = genCode();
-  setCode(code, { render: false }); renderRl(); renderPresets(); // the restored active setup marks its row "current"
+  restoreImport();
+  setCode(code, { render: false }); renderRl(); renderPresets(); initImport(); // the restored active setup marks its row "current"
   $("#rl-copy").addEventListener("click", async () => { const c = fmtCode(SYNC.code); try { await navigator.clipboard.writeText(c); toast("Code copied: " + c); } catch (_) { try { const r = document.createRange(); r.selectNodeContents($("#rl-code")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (__) {} toast("Select the code and copy it: " + c); } });
   $("#rl-new").addEventListener("click", () => { setCode(genCode()); toast("New code: " + fmtCode(SYNC.code) + ". Update the plugin's settings."); });
   $("#rl-form").addEventListener("submit", (e) => { e.preventDefault(); const v = normCode($("#rl-input").value); if (!validCode(v)) { toast("A code is 8 letters or digits, like ABCD-2345"); return; } setCode(v); $("#rl-input").value = ""; toast("Using code " + fmtCode(v)); });

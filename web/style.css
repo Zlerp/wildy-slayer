@@ -205,3 +205,5 @@ td small.own { display: inline; margin-left: 6px; font-weight: 700; }
 .amounts.targets button { font: inherit; font-size: 12px; cursor: pointer; min-height: 36px; color: var(--muted); background: var(--bg2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
 .amounts.targets button.on { border-color: var(--gold); color: var(--fg); font-weight: 700; }
 .amounts.targets button .muted { font-weight: 400; }
+textarea { font: inherit; font-size: 13px; color: var(--fg); background: var(--bg2); border: 1px solid var(--line2); border-radius: 12px; padding: 10px 12px; width: 100%; resize: vertical; }
+#rl-import code { background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: 12px; }

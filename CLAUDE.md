@@ -30,6 +30,10 @@ ask whether to deploy.
   `sync` endpoint). `web/vercel.json` sets `trailingSlash: true`, so API
   routes are called as `/api/slayer/x/`. `web/pwa.js` + `web/sw.js` make it
   installable. `web/plugin/` is the plugin's install page.
+  `app.js` `parseExport()` / `applyImport()` import Plugin Hub exports (Data
+  Exporter JSON/CSV, Bank Memory TSV) as a synthetic `SYNC.player` with
+  `source: "import"` (localStorage `wildy:import`); polling never clears it,
+  a real plugin sync overrides it.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep
