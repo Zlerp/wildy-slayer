@@ -55,7 +55,14 @@ ask whether to deploy.
   recommended a zombie axe over a whip and a Neitiznot helm over the slayer
   helm. `buildGear` is a greedy upgrade loop under the risk tier; one-handed
   weapons are judged with the best shield the player can use and ranged
-  weapons with their best ammo.
+  weapons with their best ammo. Outside the Wilderness the tier's worn-value
+  cap counts tradeable gear only (untradeables cannot be bought with it and
+  are kept on death there), so a 1.2M slayer helm never crowds a staff out of
+  the mid tier; inside, everything counts at its replacement value.
+  Verification harness (scratchpad `wildy-test/`: `sweep.mjs` over every
+  task, location, style and tier at two level sets, `compare.mjs`,
+  `scenario.mjs`): any scorer change is judged by that before/after sweep,
+  not by one task.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep

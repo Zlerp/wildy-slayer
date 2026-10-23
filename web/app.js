@@ -53,7 +53,7 @@ const persist = () => { try { localStorage.setItem("wildy:state", JSON.stringify
 if (S.task && !TASKS.some((t) => t.id === S.task)) S.task = null;
 if (S.master !== "all" && !MASTER[S.master] && S.master !== "krystilia") S.master = "all";
 window.__wildy = {
-  S, TASKS, MASTERS, ITEMS, calc: () => CALC, compute: (style, opts) => compute(style, opts), // compute: for tests (the page keeps CALC) parseExport: (t) => parseExport(t), applyImport: (p) => applyImport(p),
+  S, TASKS, MASTERS, ITEMS, calc: () => CALC, compute: (style, opts) => compute(style, opts), parseExport: (t) => parseExport(t), applyImport: (p) => applyImport(p),
   sync: () => ({ code: SYNC.code, version: SYNC.version, player: SYNC.player, selection: SYNC.selection, setups: setups(), lastPushed: SYNC.lastPushedSel, lastPushedAt: SYNC.lastPushedAt, error: SYNC.error, syncedAt: SYNC.syncedAt, appliedSelectionAt: SYNC.appliedSelectionAt, setupsWrote: SYNC.setupsWrote }),
   poll: () => poll(),
   pushNow: () => pushSelection(true),
@@ -398,7 +398,9 @@ function buildGear(style, ctx, overrides = S.overrides) {
   // start cheapest viable per slot (by risk value)
   for (const slot of Object.keys(pool)) { const c = pool[slot]; if (!c.length) continue; pick[slot] = c.slice().sort((a, b) => price(a.name) - price(b.name) || score(b, style, ctx) - score(a, style, ctx))[0]; }
   const riskOf = (p) => { const vals = Object.values(p).map((i) => price(i.name)).sort((a, b) => b - a); return vals.slice(keep).reduce((s, v) => s + v, 0); };
-  const totalOf = (p) => Object.values(p).reduce((s, i) => s + price(i.name), 0);
+  // the gear budget outside the Wilderness counts what gp buys: untradeables (slayer helm, faceguard, fire cape...) cannot be
+  // bought with it and are kept on death there, so they do not crowd a better weapon out of the tier; inside, everything is at risk
+  const totalOf = (p) => Object.values(p).reduce((s, i) => s + (ctx.wildy || i.tradeable ? price(i.name) : 0), 0);
   // greedy upgrades: best score gain per gp of added risk, within the cap
   for (let iter = 0; iter < 60; iter++) {
     let best = null;

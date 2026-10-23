@@ -20,7 +20,7 @@ NEW = {
   "Slayer gloves":     (ALL, {}, ["slayerreq"], None, "Fever spiders.", None),
   "Leaf-bladed sword": (["melee"], {"att": 50, "sla": 55}, ["leafy"], None, "Hits turoth and kurask.", None),
   "Leaf-bladed spear": (["melee"], {"att": 50, "sla": 55}, ["leafy"], None, "Hits turoth and kurask; two-handed.", None),
-  "Broad arrows":      (["ranged"], {"ran": 1, "sla": 55}, ["ammo", "leafy"], 60, "Hits turoth and kurask; Broader fletching to make.", None),
+  "Broad arrows":      (["ranged"], {"ran": 50, "sla": 55}, ["ammo", "leafy"], 60, "Hits turoth and kurask; Broader fletching to make.", None),
   "Dragon hunter lance":(["melee"], {"att": 78}, ["dragonbane"], None, "+20% accuracy and damage vs dragons, wyverns, drakes, hydras.", {"dragon": {"melee": 1.2}}),
   "Serpentine helm":   (["melee"], {"def": 75}, ["venom"], None, "Immune to poison and venom while charged.", None),
   "Dragonfire shield": (["melee"], {"def": 75}, ["dragon"], None, "Blocks dragonfire; charges from breath.", None),
@@ -28,14 +28,14 @@ NEW = {
   "Mind shield":       (ALL, {"def": 20}, ["dragon", "wyvern"], None, "Elemental Workshop II; reduces wyvern icy breath.", None),
   "Ancient wyvern shield": (["magic"], {"def": 70, "mag": 70}, ["dragon", "wyvern"], None, "Blocks dragonfire and wyvern breath; magic shield.", None),
   "Wolfbane":          (["melee"], {}, ["slayerreq"], None, "Priest in Peril reward; stops werewolves transforming.", None),
-  "Blisterwood flail": (["melee"], {"att": 70}, ["vampyre"], 0, "Sins of the Father; the only weapon that fully hurts vyres.", None),
-  "Ivandis flail":     (["melee"], {"att": 50}, ["vampyre"], 0, "A Taste of Hope; hurts vyres (vampyre juvinates with the sickle).", None),
+  "Blisterwood flail": (["melee"], {"att": 50}, ["vampyre"], 0, "Sins of the Father; the only weapon that fully hurts vyres.", None),
+  "Ivandis flail":     (["melee"], {"att": 40}, ["vampyre"], 0, "A Taste of Hope; hurts vyres (vampyre juvinates with the sickle).", None),
   # high tier staples (the Max budget tier)
   "Neitiznot faceguard":(["melee"], {"def": 70}, [], None, "Basilisk Knight jaw on a Neitiznot helm.", None),
   "Bandos chestplate": (["melee"], {"def": 65}, [], None, None, None),
   "Bandos tassets":    (["melee"], {"def": 65}, [], None, None, None),
   "Primordial boots":  (["melee"], {"def": 75, "str": 75}, [], None, None, None),
-  "Ferocious gloves":  (["melee"], {"def": 80}, [], None, "Needs a hydra leather and the Alchemical Hydra's... just 80 Defence to wear.", None),
+  "Ferocious gloves":  (["melee"], {"def": 80, "att": 80}, [], None, "Needs a hydra leather and the Alchemical Hydra's... just 80 Defence to wear.", None),
   "Amulet of torture": (["melee"], {}, [], None, None, None),
   "Infernal cape":     (["melee"], {}, [], 0, "Inferno reward.", None),
   "Abyssal tentacle":  (["melee"], {"att": 75}, [], None, "Degrades: 10,000 hits per kraken tentacle.", None),
@@ -114,9 +114,21 @@ for name, (styles, req, tags, untrade, note, bonus) in NEW.items():
     obj = {"name": name, "slot": "inv", "image": img, "id": iid, "tradeable": tradeable, "styles": styles, "req": req, "tags": tags}
     if b and styles:
         p = parse_params(b)
-        st = {k: tonum(p.get(k)) for k in ["astab","aslash","acrush","amagic","arange","dstab","dslash","dcrush","dmagic","drange","str","rstr","mdmg","prayer"]}
+        KEYS = ["astab","aslash","acrush","amagic","arange","dstab","dslash","dcrush","dmagic","drange","str","rstr","mdmg","prayer"]
+        # Versioned infoboxes (dstab1/dstab2 ...: Uncharged/Charged, Undamaged/100/75/...): take the version a player wears,
+        # the one labelled Charged/Undamaged/Active (else the one with the most defence), never the bare key that is absent.
+        vers = sorted(int(m.group(1)) for m in (re.match(r"version(\d+)$", k) for k in p) if m)
+        best = None
+        if vers:
+            labels = {v: clean(p.get("version%d" % v, "")).lower() for v in vers}
+            pref = [v for v in vers if re.search(r"charged|undamaged|active|new|^100$", labels[v]) and not re.search(r"uncharged|inactive|broken", labels[v])]
+            best = pref[0] if pref else max(vers, key=lambda v: sum(abs(tonum(p.get(k + str(v)))) for k in KEYS))
+        def field(k):
+            if p.get(k) not in (None, ""): return p.get(k)
+            return p.get(k + str(best)) if best is not None else None
+        st = {k: tonum(field(k)) for k in KEYS}
         slot = clean(p.get("slot")) or "inv"
-        obj.update({"slot": slot, "stats": st, "speed": num(p["speed"]) if p.get("speed") else None, "untrade": untrade if not tradeable else None, "note": note, "bonus": bonus})
+        obj.update({"slot": slot, "stats": st, "speed": num(field("speed")) if field("speed") else None, "untrade": untrade if not tradeable else None, "note": note, "bonus": bonus})
     else:
         if note: obj["note"] = note
         if not tradeable: obj["untrade"] = untrade or 0
