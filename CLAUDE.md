@@ -42,6 +42,20 @@ ask whether to deploy.
   setups unioned), `saveProfile()` after every import, clear or setups change.
   Email autoconfirm is on for the project, so sign-up logs straight in. The
   pairing code UI lives in a collapsed `<details id="rl-pair">`.
+- Gear engine (`app.js`): `rollsFor(style, pick, ctx)` is the one combat model
+  (max hit, attack and defence rolls against the target's defence on each
+  melee side, weapon speed, the slayer helm's 16.7% and salve's 20% which do
+  not stack, Wilderness/demonbane/dragonbane weapons, the fang's double
+  accuracy roll, the best spell or built-in staff spell, prayer and potions).
+  `compute()` displays it and `score(item, style, ctx, base)` ranks every
+  candidate by the loadout's modelled DPS with that item in its slot
+  (`DPS_POINTS` per DPS, plus prayer, defence and the task's categorical
+  needs), so the recommender and the numbers on screen are the same maths.
+  Never go back to linear "strength x 10 + attack x 4" points: that is what
+  recommended a zombie axe over a whip and a Neitiznot helm over the slayer
+  helm. `buildGear` is a greedy upgrade loop under the risk tier; one-handed
+  weapons are judged with the best shield the player can use and ranged
+  weapons with their best ammo.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep

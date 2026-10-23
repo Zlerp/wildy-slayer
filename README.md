@@ -10,7 +10,8 @@ plugin.
   defence), what it does to you (poison, venom, dragonfire, icy breath, stat
   drains), what you must bring (nose peg, mirror shield, boots of stone,
   antifire, anti-venom...), what to do, the spots (Konar's assignable ones
-  flagged), the gear for your levels and what you own, the supplies and the
+  flagged), the gear for your levels and what you own (ranked by the same DPS maths the
+  page shows, against that monster's defences), the supplies and the
   cost at today's prices. Krystilia's Wilderness tasks are hand-curated in
   `web/data.js`; every other master's tasks are in `web/slayer.js`, built by
   `scripts/slayer-data/` from curated JSON plus each target's OSRS Wiki

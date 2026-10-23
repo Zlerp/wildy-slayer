@@ -40,7 +40,7 @@ NEW = {
   "Infernal cape":     (["melee"], {}, [], 0, "Inferno reward.", None),
   "Abyssal tentacle":  (["melee"], {"att": 75}, [], None, "Degrades: 10,000 hits per kraken tentacle.", None),
   "Ghrazi rapier":     (["melee"], {"att": 80}, [], None, "Stab.", None),
-  "Osmumten's fang":   (["melee"], {"att": 82}, [], None, "Stab; rolls accuracy twice.", None),
+  "Osmumten's fang":   (["melee"], {"att": 82}, ["fang"], None, "Stab; rolls accuracy twice.", None),
   "Armadyl helmet":    (["ranged"], {"def": 70, "ran": 70}, [], None, None, None),
   "Armadyl chestplate":(["ranged"], {"def": 70, "ran": 70}, [], None, None, None),
   "Armadyl chainskirt":(["ranged"], {"def": 70, "ran": 70}, [], None, None, None),

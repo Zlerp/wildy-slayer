@@ -53,7 +53,7 @@ const persist = () => { try { localStorage.setItem("wildy:state", JSON.stringify
 if (S.task && !TASKS.some((t) => t.id === S.task)) S.task = null;
 if (S.master !== "all" && !MASTER[S.master] && S.master !== "krystilia") S.master = "all";
 window.__wildy = {
-  S, TASKS, MASTERS, ITEMS, calc: () => CALC, parseExport: (t) => parseExport(t), applyImport: (p) => applyImport(p),
+  S, TASKS, MASTERS, ITEMS, calc: () => CALC, compute: (style, opts) => compute(style, opts), // compute: for tests (the page keeps CALC) parseExport: (t) => parseExport(t), applyImport: (p) => applyImport(p),
   sync: () => ({ code: SYNC.code, version: SYNC.version, player: SYNC.player, selection: SYNC.selection, setups: setups(), lastPushed: SYNC.lastPushedSel, lastPushedAt: SYNC.lastPushedAt, error: SYNC.error, syncedAt: SYNC.syncedAt, appliedSelectionAt: SYNC.appliedSelectionAt, setupsWrote: SYNC.setupsWrote }),
   poll: () => poll(),
   pushNow: () => pushSelection(true),
@@ -296,39 +296,47 @@ Object.assign(WEAPON_AMMO, { "Armadyl crossbow": "bolt", "Twisted bow": "arrow" 
 function meets(it, l) { const r = it.req || {}; return (!r.att || l.attack >= r.att) && (!r.str || l.strength >= r.str) && (!r.def || l.defence >= r.def) && (!r.ran || l.ranged >= r.ran) && (!r.mag || l.magic >= r.mag) && (!r.pra || l.prayer >= r.pra) && (!r.sla || l.slayer >= r.sla) && (!r.hp || l.hitpoints >= r.hp); }
 function attBest(st) { return Math.max(st.astab, st.aslash, st.acrush); }
 function styleKey(style, st) { return style === "melee" ? attBest(st) : style === "ranged" ? st.arange : st.amagic; }
-function score(it, style, ctx) {
+const DPS_POINTS = 250; // score units per point of modelled DPS (10 points was one Strength bonus in the old linear scale)
+// Ranks one item for its slot: the loadout's modelled DPS with it worn (rollsFor, so the target's defence on each melee
+// side, the weapon's speed, the slayer helm's 16.7%, salve, dragonbane/demonbane/Wilderness bonuses, ammo and spells all
+// count), plus prayer, the defence that matters here and the task's categorical needs. `base` is the rest of the loadout
+// the item is judged in (the current pick); without it the item is judged on its own.
+function score(it, style, ctx, base) {
   const st = it.stats || {}; let s = 0;
   // Wilderness: mostly magic defence (PKers freeze and teleblock you). Elsewhere: defence against what the monster actually attacks with.
   const ts = styleOf(ctx.tg?.style);
   const defv = ctx.wildy ? (st.dmagic * 0.6 + st.drange * 0.2 + st.dslash * 0.2) * 0.12
     : ((/magic/.test(ts) ? st.dmagic : 0) * 0.5 + (/ranged/.test(ts) ? st.drange : 0) * 0.5 + (/melee|stab|slash|crush/.test(ts) || !ts ? (st.dstab + st.dslash + st.dcrush) / 3 : 0) * 0.5) * 0.08;
-  // melee: the item's best attack style against THIS target (its bonus minus the monster's defence on that side), so a stab
-  // weapon beats a slash one on dragons and a crush one wins on gargoyles
-  const tgd = ctx.tg || {};
-  const attVs = ctx.tg ? Math.max(st.astab - (tgd.dstab || 0), st.aslash - (tgd.dslash || 0), st.acrush - (tgd.dcrush || 0)) : attBest(st);
-  if (style === "melee") s = st.str * 10 + attVs * 4;
-  else if (style === "ranged") s = st.rstr * 10 + st.arange * 4;
-  else s = (st.mdmg || 0) * 25 + st.amagic * 4;
-  if ((it.slot === "weapon" || it.slot === "2h") && it.speed && style !== "magic") s *= 4 / Math.max(2, style === "ranged" ? it.speed - 1 : it.speed); // a slow weapon is worth less: dark bow, 2h swords
+  const slot = it.slot === "2h" ? "weapon" : it.slot;
+  const trial = { ...(base || {}), [slot]: it };
+  if (trial.weapon?.slot === "2h") delete trial.shield;                                                      // two-handed: no shield
+  else if (!trial.shield && slot !== "shield") { const sh = provisionalShield(style, ctx); if (sh) trial.shield = sh; }   // judged with the shield it will get
+  if (style === "ranged" && trial.weapon && (slot === "weapon" || !trial.ammo)) { const am = bestAmmoFor(trial.weapon, ctx); if (am) trial.ammo = am; else delete trial.ammo; } // a crossbow is nothing without bolts
+  s = DPS_POINTS * rollsFor(style, trial, ctx).dps;
   s += (st.prayer || 0) * 1.5 + defv;
-  if (it.bonus) {
-    const b = it.bonus;
-    const mult = (b[style] || 1) * ((ctx.attr.includes("undead") && b.undead?.[style]) || 1) * ((ctx.attr.includes("demon") && b.demon?.[style]) || 1) * ((ctx.attr.includes("dragon") && b.dragon?.[style]) || 1) * ((ctx.wildy && b.wildy?.[style]) || 1) * ((ctx.multi && b.multi?.[style]) || 1);
-    if (mult > 1) s += 120 * (mult - 1) * (it.slot === "weapon" || it.slot === "2h" ? 3 : 1);
-  }
-  if (it.tags.includes("powered") && style === "magic") s += 60 + (it.name.includes("Accursed") ? 70 : it.name.includes("Thammaron") ? 20 : it.name.includes("Swamp") ? 25 : 0);
-  if (it.tags.includes("firestaff") && style === "magic") s += 10;
-  if (style === "magic" && ctx.tg?.elem && it.tags.includes(ctx.tg.elem.type.toLowerCase() + "staff") && S.levels.magic >= 47) s += ctx.tg.elem.pct * 1.5; // elemental weakness: the matching staff beats a trident when the weakness is big
-  if (it.tags.includes("iban") && style === "magic") s += 45;
-  if (it.name.includes("Smoke battlestaff")) s += 15;
+  if (it.tags.includes("firestaff") && style === "magic") s += 10;   // free fire runes
   if (ctx.fire && it.tags.includes("dragon")) s += 80;           // dragonfire: anti-dragon / dragonfire / wyvern shields
   if (ctx.ice && it.tags.includes("wyvern")) s += 120;           // icy breath: elemental, mind, DFS or ancient wyvern shield
   if (ctx.venom && it.tags.includes("venom")) s += 60;           // serpentine helm: immune to venom
   if (ctx.task.slug === "revenants" && it.tags.includes("revenant")) s += 150;
   if (ctx.req?.names.has(it.name) || (ctx.req?.helmOk && it.tags.includes("helm"))) s += 400; // a required item always wins its slot (a Slayer helmet counts for the head one)
   if (it.tags.includes("dragon") && !ctx.fire && !ctx.ice) s -= 50;
-  if (it.tags.includes("wildy") && !ctx.wildy) s -= 30;         // Wilderness weapons lose their 50% outside it
   return s;
+}
+// the shield a one-handed weapon is judged with before the real shield is chosen: the best offensive one the player can use
+function provisionalShield(style, ctx) {
+  const m = ctx.shieldBest || (ctx.shieldBest = {});
+  if (!(style in m)) {
+    const off = (x) => { const t = x.stats; return style === "melee" ? t.str * 10 + Math.max(t.astab, t.aslash, t.acrush) * 4 : style === "ranged" ? t.rstr * 10 + t.arange * 4 : (t.mdmg || 0) * 25 + t.amagic * 4; };
+    m[style] = candidates("shield", style, ctx).sort((a, b) => off(b) - off(a))[0];
+  }
+  return m[style];
+}
+// the ammo a ranged weapon is judged with: its strongest compatible bolts, arrows or darts (ammo is bought, never risked)
+function bestAmmoFor(weapon, ctx) {
+  const m = ctx.ammoBest || (ctx.ammoBest = new Map());
+  if (!m.has(weapon.name)) m.set(weapon.name, ammoFor(weapon, "ranged", ctx).sort((a, b) => (b.stats.rstr - a.stats.rstr) || (b.stats.arange - a.stats.arange))[0]);
+  return m.get(weapon.name);
 }
 // equipment the task makes mandatory (need[] entries that are wearable). helm: a Slayer helmet satisfies the head item.
 function requiredEquipment(t) {
@@ -396,10 +404,10 @@ function buildGear(style, ctx, overrides = S.overrides) {
     let best = null;
     for (const slot of Object.keys(pool)) {
       const cur = pick[slot]; if (!cur) continue;
-      const cs = score(cur, style, ctx), baseRisk = riskOf(pick);
+      const cs = score(cur, style, ctx, pick), baseRisk = riskOf(pick);
       for (const c of pool[slot]) {
         if (c === cur) continue;
-        const gain = score(c, style, ctx) - cs; if (gain <= 0) continue;
+        const gain = score(c, style, ctx, pick) - cs; if (gain <= 0) continue;
         const trial = { ...pick, [slot]: c }; const r = riskOf(trial);
         if (r > cap || totalOf(trial) > capTotal) continue;
         const dr = Math.max(0, r - baseRisk);
@@ -414,17 +422,80 @@ function buildGear(style, ctx, overrides = S.overrides) {
   for (const [slot, name] of Object.entries(overrides)) { if (name === "") delete pick[slot]; else if (ITEMS[name]) pick[slot] = ITEMS[name]; }
   // shield only with a one-handed weapon
   if (pick.weapon && pick.weapon.slot === "2h") delete pick.shield;
-  else if (!overrides.shield) { const sh = candidates("shield", style, ctx).sort((a, b) => score(b, style, ctx) - score(a, style, ctx)).filter((s) => (riskOf({ ...pick, shield: s }) <= cap && totalOf({ ...pick, shield: s }) <= capTotal) || price(s.name) === 0); if (sh[0]) pick.shield = sh[0]; }
+  else if (!overrides.shield) { const sh = candidates("shield", style, ctx).sort((a, b) => score(b, style, ctx, pick) - score(a, style, ctx, pick)).filter((s) => (riskOf({ ...pick, shield: s }) <= cap && totalOf({ ...pick, shield: s }) <= capTotal) || price(s.name) === 0); if (sh[0]) pick.shield = sh[0]; }
   if (overrides.shield && ITEMS[overrides.shield] && pick.weapon?.slot !== "2h") pick.shield = ITEMS[overrides.shield];
   // ammo
-  if (!overrides.ammo) { const am = ammoFor(pick.weapon, style, ctx).sort((a, b) => score(b, style, ctx) - score(a, style, ctx)); if (am[0]) pick.ammo = am[0]; }
+  if (!overrides.ammo) { const am = ammoFor(pick.weapon, style, ctx).sort((a, b) => score(b, style, ctx, pick) - score(a, style, ctx, pick)); if (am[0]) pick.ammo = am[0]; }
   else if (ITEMS[overrides.ammo]) pick.ammo = ITEMS[overrides.ammo];
   return { pick, pool, risk: riskOf(pick), keep };
 }
 
 /* ---------- combat maths ---------- */
-function sumStats(pick) { const o = { astab: 0, aslash: 0, acrush: 0, amagic: 0, arange: 0, dstab: 0, dslash: 0, dcrush: 0, dmagic: 0, drange: 0, str: 0, rstr: 0, mdmg: 0, prayer: 0 }; for (const it of Object.values(pick)) for (const k in o) o[k] += (it.stats?.[k] || 0); return o; }
+function sumStats(pick) { const o = { astab: 0, aslash: 0, acrush: 0, amagic: 0, arange: 0, dstab: 0, dslash: 0, dcrush: 0, dmagic: 0, drange: 0, str: 0, rstr: 0, mdmg: 0, prayer: 0 }; for (const it of Object.values(pick)) { if (!it) continue; for (const k in o) o[k] += (it.stats?.[k] || 0); } return o; }
 function accuracy(atk, def) { return atk > def ? 1 - (def + 2) / (2 * (atk + 1)) : atk / (2 * (def + 1)); }
+// The combat model for one loadout against ctx.tg: max hit, attack and defence rolls, speed, accuracy and DPS, with the
+// slayer helm's and salve's multipliers (they do not stack), Wilderness, demonbane and dragonbane weapons, the best spell or
+// the staff's built-in one, and prayer and potions as set. compute() shows it and score() ranks gear with it, so what the
+// recommender prefers and the numbers on screen are the same maths.
+function rollsFor(style, pick, ctx, st = sumStats(pick)) {
+  const tg = ctx.tg, l = S.levels, items = Object.values(pick).filter(Boolean);
+  let label = "";
+  const pray = S.offPray ? bestPrayer(style, l.prayer) : null;
+  const onTask = items.some((i) => i.tags.includes("slayer"));
+  const helmMult = onTask ? (style === "melee" ? 7 / 6 : 1.15) : 1;
+  const salve = items.find((i) => i.name.includes("Salve"));
+  const salveMult = salve && ctx.attr.includes("undead") ? 1.2 : 1;
+  const specialMult = Math.max(helmMult, salveMult);
+  const wildyW = ctx.wildy && items.find((i) => i.tags.includes("wildy"));
+  const demonbane = items.find((i) => i.tags.includes("demonbane")) && ctx.attr.includes("demon");
+  const dragonbane = items.find((i) => i.tags.includes("dragonbane")) && ctx.attr.includes("dragon");
+  const dragonMult = dragonbane ? (pick.weapon?.bonus?.dragon?.[style] || 1) : 1;
+  let maxHit = 0, atkRoll = 0, defRoll = 0, speed = 4, spell = null, aoeTargets = 1;
+  if (style === "melee") {
+    const boost = S.pots ? Math.floor(5 + l.strength * 0.15) : 0, boostA = S.pots ? Math.floor(5 + l.attack * 0.15) : 0;
+    const effStr = Math.floor((l.strength + boost) * (pray?.dmg || 1)) + 3 + 8;
+    const effAtt = Math.floor((l.attack + boostA) * (pray?.acc || 1)) + 8;
+    maxHit = Math.floor(0.5 + effStr * (st.str + 64) / 640);
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (demonbane) maxHit = Math.floor(maxHit * 1.7); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
+    const bonus = { stab: st.astab, slash: st.aslash, crush: st.acrush };
+    const best = Object.entries(bonus).sort((a, b) => (b[1] - tg["d" + b[0]]) - (a[1] - tg["d" + a[0]]))[0];
+    atkRoll = Math.floor(effAtt * (best[1] + 64) * specialMult * (wildyW ? 1.5 : 1) * (demonbane ? 1.7 : 1) * dragonMult);
+    defRoll = (tg.def + 9) * (tg["d" + best[0]] + 64);
+    speed = pick.weapon?.speed || 4;
+    label = best[0];
+  } else if (style === "ranged") {
+    const boost = S.pots ? Math.floor(4 + l.ranged * 0.10) : 0;
+    const eff = Math.floor((l.ranged + boost) * (pray?.dmg || 1)) + 8;
+    const effA = Math.floor((l.ranged + boost) * (pray?.acc || 1)) + 8;
+    maxHit = Math.floor(0.5 + eff * (st.rstr + 64) / 640);
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
+    atkRoll = Math.floor(effA * (st.arange + 64) * specialMult * (wildyW ? 1.5 : 1) * (dragonMult > 1 ? dragonMult + 0.05 : 1));
+    if (pick.weapon?.name === "Twisted bow") { const mg = Math.min(250, tg.mage || 1); maxHit = Math.floor(maxHit * Math.min(2.5, Math.max(0.5, (250 + (3 * mg - 14) / 100 - Math.pow((3 * mg / 10 - 140), 2) / 100) / 100))); } // tbow scaling (wiki formula, capped)
+    defRoll = (tg.def + 9) * (tg.drange + 64);
+    speed = (pick.weapon?.speed || 5) - 1; // rapid
+    if (pick.weapon?.name === "Webweaver bow") maxHit = Math.floor(maxHit * 1.1); // multi-hit spec-less approximation
+    if (pick.weapon?.name === "Venator bow" && ctx.multi && tg.size <= 2) aoeTargets = 2.2;
+    label = "ranged";
+  } else {
+    const boost = S.pots ? 4 : 0;
+    const opts = spellOptions(pick, ctx);
+    spell = opts.find((o) => o.name === S.spell) || opts[0];
+    const effA = Math.floor((l.magic + boost) * (pray?.acc || 1)) + 8;
+    const mdmg = (st.mdmg || 0) / 100 + (pick.weapon?.name === "Staff of the Dead" ? 0.15 : 0) + (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 0.10 : 0) + (pick.shield?.name === "Tome of Fire" && /Fire/.test(spell?.name || "") ? 0.10 : 0);
+    const elemB = 1 + (spell?.bonus || 0); // elemental weakness: +pct% accuracy and damage with the matching element
+    maxHit = spell ? Math.floor(spell.max * (1 + mdmg) * (onTask ? 1.15 : 1) * salveMult * (spell.wildy && ctx.wildy ? 1.5 : 1) * elemB) : 0;
+    atkRoll = Math.floor(effA * (st.amagic + 64) * (onTask ? 1.15 : 1) * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy && ctx.wildy ? 1.5 : 1) * elemB);
+    defRoll = (tg.mage + 9) * (tg.dmagic + 64);
+    speed = spell?.speed || 5;
+    if (spell?.aoe && ctx.multi && tg.size === 1) aoeTargets = /Barrage/.test(spell.name) ? 3 : 2.5;
+    label = spell?.name || "magic";
+  }
+  let acc = accuracy(atkRoll, defRoll);
+  if (style === "melee" && pick.weapon?.tags.includes("fang")) acc = 1 - (1 - acc) * (1 - acc); // Osmumten's fang rolls accuracy twice
+  const dpsSingle = acc * (maxHit + 1) / 2 / (speed * 0.6);
+  const dps = dpsSingle * aoeTargets;
+  return { maxHit, atkRoll, defRoll, speed, spell, aoeTargets, label, acc, dpsSingle, dps, pray, onTask };
+}
 function bestPrayer(style, lvl) {
   if (style === "melee") return lvl >= 70 ? { name: "Piety", acc: 1.2, dmg: 1.23, drain: 40 } : lvl >= 60 ? { name: "Chivalry", acc: 1.15, dmg: 1.18, drain: 24 } : lvl >= 34 ? { name: "Ultimate Strength + Incredible Reflexes", acc: 1.15, dmg: 1.15, drain: 40 } : lvl >= 31 ? { name: "Ultimate Strength", acc: 1, dmg: 1.15, drain: 20 } : null;
   if (style === "ranged") return lvl >= 74 ? { name: "Rigour", acc: 1.2, dmg: 1.23, drain: 40 } : lvl >= 44 ? { name: "Eagle Eye", acc: 1.15, dmg: 1.15, drain: 20 } : lvl >= 26 ? { name: "Hawk Eye", acc: 1.1, dmg: 1.1, drain: 10 } : null;
@@ -471,60 +542,8 @@ function compute(styleArg, opts = {}) {
   }
   const gear = buildGear(style, ctx, opts.overrides || S.overrides);
   const pick = gear.pick, st = sumStats(pick), l = S.levels;
-  let label = "";
-  const pray = S.offPray ? bestPrayer(style, l.prayer) : null;
-  const onTask = Object.values(pick).some((i) => i.tags.includes("slayer"));
-  const helmMult = onTask ? (style === "melee" ? 7 / 6 : 1.15) : 1;
-  const salve = Object.values(pick).find((i) => i.name.includes("Salve"));
-  const salveMult = salve && t.attr.includes("undead") ? 1.2 : 1;
-  const specialMult = Math.max(helmMult, salveMult);
-  const wildyW = ctx.wildy && Object.values(pick).find((i) => i.tags.includes("wildy"));
-  const demonbane = Object.values(pick).find((i) => i.tags.includes("demonbane")) && t.attr.includes("demon");
-  const dragonbane = Object.values(pick).find((i) => i.tags.includes("dragonbane")) && t.attr.includes("dragon");
-  const dragonMult = dragonbane ? (pick.weapon?.bonus?.dragon?.[style] || 1) : 1;
-  let maxHit = 0, atkRoll = 0, defRoll = 0, speed = 4, spell = null, aoeTargets = 1;
-  if (style === "melee") {
-    const boost = S.pots ? Math.floor(5 + l.strength * 0.15) : 0, boostA = S.pots ? Math.floor(5 + l.attack * 0.15) : 0;
-    const effStr = Math.floor((l.strength + boost) * (pray?.dmg || 1)) + 3 + 8;
-    const effAtt = Math.floor((l.attack + boostA) * (pray?.acc || 1)) + 8;
-    maxHit = Math.floor(0.5 + effStr * (st.str + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (demonbane) maxHit = Math.floor(maxHit * 1.7); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
-    const bonus = { stab: st.astab, slash: st.aslash, crush: st.acrush };
-    const best = Object.entries(bonus).sort((a, b) => (b[1] - tg["d" + b[0]]) - (a[1] - tg["d" + a[0]]))[0];
-    atkRoll = Math.floor(effAtt * (best[1] + 64) * specialMult * (wildyW ? 1.5 : 1) * (demonbane ? 1.7 : 1) * dragonMult);
-    defRoll = (tg.def + 9) * (tg["d" + best[0]] + 64);
-    speed = pick.weapon?.speed || 4;
-    label = best[0];
-  } else if (style === "ranged") {
-    const boost = S.pots ? Math.floor(4 + l.ranged * 0.10) : 0;
-    const eff = Math.floor((l.ranged + boost) * (pray?.dmg || 1)) + 8;
-    const effA = Math.floor((l.ranged + boost) * (pray?.acc || 1)) + 8;
-    maxHit = Math.floor(0.5 + eff * (st.rstr + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
-    atkRoll = Math.floor(effA * (st.arange + 64) * specialMult * (wildyW ? 1.5 : 1) * (dragonMult > 1 ? dragonMult + 0.05 : 1));
-    if (pick.weapon?.name === "Twisted bow") { const mg = Math.min(250, tg.mage || 1); maxHit = Math.floor(maxHit * Math.min(2.5, Math.max(0.5, (250 + (3 * mg - 14) / 100 - Math.pow((3 * mg / 10 - 140), 2) / 100) / 100))); } // tbow scaling (wiki formula, capped)
-    defRoll = (tg.def + 9) * (tg.drange + 64);
-    speed = (pick.weapon?.speed || 5) - 1; // rapid
-    if (pick.weapon?.name === "Webweaver bow") maxHit = Math.floor(maxHit * 1.1); // multi-hit spec-less approximation
-    if (pick.weapon?.name === "Venator bow" && loc.multi && tg.size <= 2) aoeTargets = 2.2;
-    label = "ranged";
-  } else {
-    const boost = S.pots ? 4 : 0;
-    const opts = spellOptions(pick, ctx);
-    spell = opts.find((o) => o.name === S.spell) || opts[0];
-    const effA = Math.floor((l.magic + boost) * (pray?.acc || 1)) + 8;
-    const mdmg = (st.mdmg || 0) / 100 + (pick.weapon?.name === "Staff of the Dead" ? 0.15 : 0) + (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 0.10 : 0) + (pick.shield?.name === "Tome of Fire" && /Fire/.test(spell?.name || "") ? 0.10 : 0);
-    const elemB = 1 + (spell?.bonus || 0); // elemental weakness: +pct% accuracy and damage with the matching element
-    maxHit = spell ? Math.floor(spell.max * (1 + mdmg) * (onTask ? 1.15 : 1) * salveMult * (spell.wildy && ctx.wildy ? 1.5 : 1) * elemB) : 0;
-    atkRoll = Math.floor(effA * (st.amagic + 64) * (onTask ? 1.15 : 1) * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy && ctx.wildy ? 1.5 : 1) * elemB);
-    defRoll = (tg.mage + 9) * (tg.dmagic + 64);
-    speed = spell?.speed || 5;
-    if (spell?.aoe && loc.multi && tg.size === 1) aoeTargets = /Barrage/.test(spell.name) ? 3 : 2.5;
-    label = spell?.name || "magic";
-  }
-  const acc = accuracy(atkRoll, defRoll);
-  const dpsSingle = acc * (maxHit + 1) / 2 / (speed * 0.6);
-  const dps = dpsSingle * aoeTargets;
+  const r = rollsFor(style, pick, ctx, st);
+  const { maxHit, atkRoll, speed, spell, aoeTargets, pray, onTask, acc, dpsSingle, dps } = r, label = r.label;
   // cannon
   const cannonOn = S.cannon && loc.cannon && !tg.immune?.cannon;
   let cannon = null;
@@ -693,7 +712,7 @@ function renderLoadout() {
   $("#equip").innerHTML = SLOTS.map((slot) => {
     const it = c.pick[slot];
     const opts = slot === "ammo" ? ammoFor(c.pick.weapon, c.style, ctx) : slot === "shield" ? candidates("shield", c.style, ctx) : (c.gear.pool[slot] || []);
-    const sorted = opts.slice().sort((a, b) => score(b, c.style, ctx) - score(a, c.style, ctx));
+    const sorted = opts.slice().sort((a, b) => score(b, c.style, ctx, c.pick) - score(a, c.style, ctx, c.pick));
     const disabled = slot === "shield" && c.pick.weapon?.slot === "2h";
     if (ownF && !it && !disabled && slot !== "ammo" && !sorted.length) emptyOwn.push(slot);
     const mark = bank && it ? (owns(it) ? `<span class="own ok" title="In your bank, inventory or worn">✓</span>` : `<span class="own no" title="Not in your bank">✗</span>`) : "";
@@ -955,7 +974,7 @@ function buildSelection(c) {
     if (it) gear[slot] = { name: it.name, ids: idsFor(it) };
     if (slot === "shield" && c.pick.weapon?.slot === "2h") continue;
     const opts = slot === "ammo" ? ammoFor(c.pick.weapon, c.style, ctx) : slot === "shield" ? candidates("shield", c.style, ctx) : (c.gear.pool[slot] || []);
-    const next = opts.filter((o) => o !== it).sort((a, b) => score(b, c.style, ctx) - score(a, c.style, ctx)).slice(0, 2);
+    const next = opts.filter((o) => o !== it).sort((a, b) => score(b, c.style, ctx, c.pick) - score(a, c.style, ctx, c.pick)).slice(0, 2);
     if (next.length) alts[slot] = next.map((o) => ({ name: o.name, ids: idsFor(o) }));
   }
   const a = activeSetup(), wp = c.loc.wp;
