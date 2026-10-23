@@ -58,7 +58,8 @@
       </form>
       <details id="rl-import" open>
         <summary>No plugin? Import a RuneLite export instead</summary>
-        <p class="hint" style="margin:0 0 8px">Two Plugin Hub plugins export what this page needs. <b>Data Exporter</b>: open your bank, click <b>Export All</b> (or Export Bank and Export Skills), then pick the JSON files from <code>~/.runelite/data-exports/</code> (the similar <b>Data Export</b> plugin works too: its files are in <code>~/.runelite/Data Exports/&lt;name&gt;/</code>). <b>Bank Memory</b>: right-click your bank list, <b>Copy item data to clipboard</b>, paste below (levels then come from the hiscores lookup above). CSV from Data Exporter works too.</p>
+        <p class="hint" style="margin:0 0 8px">Two Plugin Hub plugins export what this page needs. <b>Data Exporter</b>: open your bank, click <b>Export All</b> (or Export Bank and Export Skills), then drag the JSON files from <code>~/.runelite/data-exports/</code> onto this page (or pick them below) (the similar <b>Data Export</b> plugin works too: its files are in <code>~/.runelite/Data Exports/&lt;name&gt;/</code>). <b>Bank Memory</b>: right-click your bank list, <b>Copy item data to clipboard</b>, paste below (levels then come from the hiscores lookup above). CSV from Data Exporter works too.</p>
+        <div class="drop" id="import-drop">Drag the export files here (or anywhere on the page)</div>
         <textarea id="import-text" rows="4" placeholder='Paste the export here: JSON ({"bank": [...], "skills": {...}}) or the Bank Memory tab-separated list' aria-label="Pasted export"></textarea>
         <div class="row wrap" style="margin-top:8px">
           <label class="btn file">Choose files<input id="import-file" type="file" accept=".json,.csv,.tsv,.txt,application/json,text/plain,text/csv" multiple hidden /></label>
@@ -126,6 +127,7 @@
     </section>
 
     <div class="toast" id="rl-toast" role="status" aria-live="polite"></div>
+    <div class="drop-zone" id="drop-zone" aria-hidden="true"><div>Drop your RuneLite export<small>Data Exporter JSON or CSV, Bank Memory list</small></div></div>
 
     <footer>
       <p>Monster, master, location and item data from the <a href="https://oldschool.runescape.wiki/w/Slayer_task" rel="noopener">OSRS Wiki</a> (CC BY-NC-SA 3.0): every target's stats, weaknesses, poison and venom flags come straight from its infobox. Prices from the wiki's real-time price API. Hiscores from Jagex. Supply counts are estimates from the standard combat formulas; bring more than the maths says, and in the Wilderness bring a lot more.</p>

@@ -1195,6 +1195,20 @@ function initImport() {
   };
   go.addEventListener("click", () => run([$("#import-text").value]));
   $("#import-file").addEventListener("change", async (e) => { const files = [...e.target.files]; if (!files.length) return; run(await Promise.all(files.map((f) => f.text()))); e.target.value = ""; });
+  // drag and drop: files dropped anywhere on the page import; the overlay shows while something is being dragged over
+  const zone = $("#drop-zone"); let depth = 0;
+  const hasFiles = (e) => e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
+  document.addEventListener("dragenter", (e) => { if (!hasFiles(e)) return; e.preventDefault(); depth++; zone.classList.add("show"); });
+  document.addEventListener("dragover", (e) => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+  document.addEventListener("dragleave", (e) => { if (!hasFiles(e)) return; depth = Math.max(0, depth - 1); if (!depth) zone.classList.remove("show"); });
+  document.addEventListener("drop", async (e) => {
+    if (!hasFiles(e)) return; e.preventDefault(); depth = 0; zone.classList.remove("show");
+    const files = [...e.dataTransfer.files].filter((f) => f.size < 20e6); if (!files.length) return;
+    $("#rl-import").open = true;
+    run(await Promise.all(files.map((f) => f.text())));
+    $("#runelite").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  window.__wildy.importTexts = run;
   $("#import-clear").addEventListener("click", clearImport);
   renderImport();
 }
