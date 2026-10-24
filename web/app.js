@@ -472,7 +472,7 @@ function accuracy(atk, def) { return atk > def ? 1 - (def + 2) / (2 * (atk + 1))
 // the staff's built-in one, and prayer and potions as set. compute() shows it and score() ranks gear with it, so what the
 // recommender prefers and the numbers on screen are the same maths.
 function rollsFor(style, pick, ctx, st = sumStats(pick)) {
-  const tg = ctx.tg, l = S.levels, items = Object.values(pick).filter(Boolean);
+  const tg = ctx.tg || { def: 0, mage: 1, dstab: 0, dslash: 0, dcrush: 0, dmagic: 0, drange: 0, size: 1 }, l = S.levels, items = Object.values(pick).filter(Boolean); // no target: a dummy, never a throw
   let label = "";
   const pray = S.offPray ? bestPrayer(style, l.prayer) : null;
   const onTask = items.some((i) => i.tags.includes("slayer"));
@@ -1002,7 +1002,7 @@ function toast(msg) { const el = $("#rl-toast"); if (!el) return; el.textContent
 
 // --- selection: what this page pushes to the plugin
 function buildSelection(c) {
-  const t = c.t, ctx = { task: t, attr: t.attr, multi: c.loc.multi }, gear = {}, alts = {};
+  const t = c.t, ctx = c.ctx, gear = {}, alts = {}; // the calc's own context: the scorer needs the target, Wilderness and required-item flags
   for (const slot of SLOTS) {
     const it = c.pick[slot];
     if (it) gear[slot] = { name: it.name, ids: idsFor(it) };
