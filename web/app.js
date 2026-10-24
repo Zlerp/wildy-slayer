@@ -303,7 +303,7 @@ const DPS_POINTS = 250; // score units per point of modelled DPS (10 points was 
 // the item is judged in (the current pick); without it the item is judged on its own.
 function score(it, style, ctx, base) {
   const slot = it.slot === "2h" ? "weapon" : it.slot;
-  return DPS_POINTS * rollsFor(style, judged({ ...(base || {}), [slot]: it }, style, ctx, slot), ctx).dps + extras(it, style, ctx);
+  return DPS_POINTS * rollsFor(style, judged({ ...(base || {}), [slot]: it }, style, ctx, slot), ctx).dpsRank + extras(it, style, ctx);
 }
 // the loadout as it will be fought in: no shield with a two-hander, the shield it will get with a one-hander, a ranged
 // weapon's best ammo (fresh when the weapon itself is being judged)
@@ -315,7 +315,7 @@ function judged(trial, style, ctx, slot) {
 }
 // a whole loadout's worth, the sum score() maximises: its modelled DPS plus every item's extras
 function worth(pick, style, ctx) {
-  return DPS_POINTS * rollsFor(style, judged({ ...pick }, style, ctx, null), ctx).dps + Object.values(pick).reduce((s, it) => s + (it ? extras(it, style, ctx) : 0), 0);
+  return DPS_POINTS * rollsFor(style, judged({ ...pick }, style, ctx, null), ctx).dpsRank + Object.values(pick).reduce((s, it) => s + (it ? extras(it, style, ctx) : 0), 0);
 }
 // what an item is worth beyond the DPS it adds: prayer, the defence that matters here, the task's categorical needs
 function extras(it, style, ctx) {
@@ -355,6 +355,7 @@ function requiredEquipment(t) {
   for (const n of t.need || []) {
     const it = ITEMS[n.item]; if (!it || !it.stats) continue;
     const slot = it.slot === "2h" ? "weapon" : it.slot;
+    if ((slot === "weapon" || slot === "ammo") && /^or\b/i.test(n.why || "")) continue; // "Or any staff and spell": advice, not a required item
     names.add(it.name);
     if (slot === "weapon" || slot === "ammo") continue;           // a required weapon (leaf-bladed, Wolfbane) only matters for its own style; candidates() handles those
     (bySlot[slot] = bySlot[slot] || new Set()).add(it.name);
@@ -367,7 +368,7 @@ function candidates(slot, style, ctx) {
   const l = S.levels;
   return Object.values(ITEMS).filter((it) => {
     if (!it.stats) return false;
-    const sl = it.slot === "2h" ? "weapon" : it.slot;
+    const sl = it.tags.includes("dart") ? "ammo" : it.slot === "2h" ? "weapon" : it.slot; // darts load a blowpipe: ammo, whatever items.js calls their slot
     if (sl !== slot) return false;
     if (!it.styles.includes(style)) return false;
     if (it.tags.includes("ammo") || it.tags.includes("dart") || it.tags.includes("blessing") || it.tags.includes("util") || it.tags.includes("teleport") || it.tags.includes("escape")) return slot === "ammo";
@@ -456,7 +457,7 @@ function buildGear(style, ctx, overrides = S.overrides) {
   for (const [slot, name] of Object.entries(overrides)) { if (name === "") delete pick[slot]; else if (ITEMS[name]) pick[slot] = ITEMS[name]; }
   // shield only with a one-handed weapon
   if (pick.weapon && pick.weapon.slot === "2h") delete pick.shield;
-  else if (!overrides.shield) { const sh = candidates("shield", style, ctx).sort((a, b) => score(b, style, ctx, pick) - score(a, style, ctx, pick)).filter((s) => (riskOf({ ...pick, shield: s }) <= cap && totalOf({ ...pick, shield: s }) <= capTotal) || price(s.name) === 0); if (sh[0]) pick.shield = sh[0]; }
+  else if (!overrides.shield) { const sh = candidates("shield", style, ctx).sort((a, b) => score(b, style, ctx, pick) - score(a, style, ctx, pick)).filter((s) => (riskOf({ ...pick, shield: s }) <= cap && totalOf({ ...pick, shield: s }) <= capTotal) || price(s.name) <= 10000); if (sh[0]) pick.shield = sh[0]; }
   if (overrides.shield && ITEMS[overrides.shield] && pick.weapon?.slot !== "2h") pick.shield = ITEMS[overrides.shield];
   // ammo
   if (!overrides.ammo) { const am = ammoFor(pick.weapon, style, ctx).sort((a, b) => score(b, style, ctx, pick) - score(a, style, ctx, pick)); if (am[0]) pick.ammo = am[0]; }
@@ -484,13 +485,13 @@ function rollsFor(style, pick, ctx, st = sumStats(pick)) {
   const demonbane = items.find((i) => i.tags.includes("demonbane")) && ctx.attr.includes("demon");
   const dragonbane = items.find((i) => i.tags.includes("dragonbane")) && ctx.attr.includes("dragon");
   const dragonMult = dragonbane ? (pick.weapon?.bonus?.dragon?.[style] || 1) : 1;
-  let maxHit = 0, atkRoll = 0, defRoll = 0, speed = 4, spell = null, aoeTargets = 1;
+  let maxHit = 0, raw = 0, atkRoll = 0, defRoll = 0, speed = 4, spell = null, aoeTargets = 1; // raw: the max hit before flooring, for ranking (a +1% piece must count even when the floor hides it)
   if (style === "melee") {
     const boost = S.pots ? Math.floor(5 + l.strength * 0.15) : 0, boostA = S.pots ? Math.floor(5 + l.attack * 0.15) : 0;
     const effStr = Math.floor((l.strength + boost) * (pray?.dmg || 1)) + 3 + 8;
     const effAtt = Math.floor((l.attack + boostA) * (pray?.acc || 1)) + 8;
-    maxHit = Math.floor(0.5 + effStr * (st.str + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (demonbane) maxHit = Math.floor(maxHit * 1.7); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
+    maxHit = Math.floor(0.5 + effStr * (st.str + 64) / 640); raw = (0.5 + effStr * (st.str + 64) / 640) * specialMult;
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) { maxHit = Math.floor(maxHit * 1.5); raw *= 1.5; } if (demonbane) { maxHit = Math.floor(maxHit * 1.7); raw *= 1.7; } if (dragonMult > 1) { maxHit = Math.floor(maxHit * dragonMult); raw *= dragonMult; }
     const bonus = { stab: st.astab, slash: st.aslash, crush: st.acrush };
     const best = Object.entries(bonus).sort((a, b) => (b[1] - tg["d" + b[0]]) - (a[1] - tg["d" + a[0]]))[0];
     atkRoll = Math.floor(effAtt * (best[1] + 64) * specialMult * (wildyW ? 1.5 : 1) * (demonbane ? 1.7 : 1) * dragonMult);
@@ -501,13 +502,13 @@ function rollsFor(style, pick, ctx, st = sumStats(pick)) {
     const boost = S.pots ? Math.floor(4 + l.ranged * 0.10) : 0;
     const eff = Math.floor((l.ranged + boost) * (pray?.dmg || 1)) + 8;
     const effA = Math.floor((l.ranged + boost) * (pray?.acc || 1)) + 8;
-    maxHit = Math.floor(0.5 + eff * (st.rstr + 64) / 640);
-    maxHit = Math.floor(maxHit * specialMult); if (wildyW) maxHit = Math.floor(maxHit * 1.5); if (dragonMult > 1) maxHit = Math.floor(maxHit * dragonMult);
+    maxHit = Math.floor(0.5 + eff * (st.rstr + 64) / 640); raw = (0.5 + eff * (st.rstr + 64) / 640) * specialMult;
+    maxHit = Math.floor(maxHit * specialMult); if (wildyW) { maxHit = Math.floor(maxHit * 1.5); raw *= 1.5; } if (dragonMult > 1) { maxHit = Math.floor(maxHit * dragonMult); raw *= dragonMult; }
     atkRoll = Math.floor(effA * (st.arange + 64) * specialMult * (wildyW ? 1.5 : 1) * (dragonMult > 1 ? dragonMult + 0.05 : 1));
-    if (pick.weapon?.name === "Twisted bow") { const mg = Math.min(250, tg.mage || 1); maxHit = Math.floor(maxHit * Math.min(2.5, Math.max(0.5, (250 + (3 * mg - 14) / 100 - Math.pow((3 * mg / 10 - 140), 2) / 100) / 100))); } // tbow scaling (wiki formula, capped)
+    if (pick.weapon?.name === "Twisted bow") { const mg = Math.min(250, tg.mage || 1); const tb = Math.min(2.5, Math.max(0.5, (250 + (3 * mg - 14) / 100 - Math.pow((3 * mg / 10 - 140), 2) / 100) / 100)); maxHit = Math.floor(maxHit * tb); raw *= tb; } // tbow scaling (wiki formula, capped)
     defRoll = (tg.def + 9) * (tg.drange + 64);
     speed = (pick.weapon?.speed || 5) - 1; // rapid
-    if (pick.weapon?.name === "Webweaver bow") maxHit = Math.floor(maxHit * 1.1); // multi-hit spec-less approximation
+    if (pick.weapon?.name === "Webweaver bow") { maxHit = Math.floor(maxHit * 1.1); raw *= 1.1; } // multi-hit spec-less approximation
     if (pick.weapon?.name === "Venator bow" && ctx.multi && tg.size <= 2) aoeTargets = 2.2;
     label = "ranged";
   } else {
@@ -517,8 +518,10 @@ function rollsFor(style, pick, ctx, st = sumStats(pick)) {
     const effA = Math.floor((l.magic + boost) * (pray?.acc || 1)) + 8;
     const mdmg = (st.mdmg || 0) / 100 + (pick.weapon?.name === "Staff of the Dead" ? 0.15 : 0) + (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 0.10 : 0) + (pick.shield?.name === "Tome of Fire" && /Fire/.test(spell?.name || "") ? 0.10 : 0);
     const elemB = 1 + (spell?.bonus || 0); // elemental weakness: +pct% accuracy and damage with the matching element
-    maxHit = spell ? Math.floor(spell.max * (1 + mdmg) * (onTask ? 1.15 : 1) * salveMult * (spell.wildy && ctx.wildy ? 1.5 : 1) * elemB) : 0;
-    atkRoll = Math.floor(effA * (st.amagic + 64) * (onTask ? 1.15 : 1) * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy && ctx.wildy ? 1.5 : 1) * elemB);
+    const mageSpecial = Math.max(onTask ? 1.15 : 1, salveMult); // the helm's 15% and the salve (ei)'s 20% do not stack: the larger applies, to damage and accuracy
+    raw = spell ? spell.max * (1 + mdmg) * mageSpecial * (spell.wildy && ctx.wildy ? 1.5 : 1) * elemB : 0;
+    maxHit = spell ? Math.floor(raw) : 0;
+    atkRoll = Math.floor(effA * (st.amagic + 64) * mageSpecial * (pick.weapon?.name === "Smoke battlestaff" && spell?.book === "Normal" ? 1.1 : 1) * (spell?.wildy && ctx.wildy ? 1.5 : 1) * elemB);
     defRoll = (tg.mage + 9) * (tg.dmagic + 64);
     speed = spell?.speed || 5;
     if (spell?.aoe && ctx.multi && tg.size === 1) aoeTargets = /Barrage/.test(spell.name) ? 3 : 2.5;
@@ -528,7 +531,8 @@ function rollsFor(style, pick, ctx, st = sumStats(pick)) {
   if (style === "melee" && pick.weapon?.tags.includes("fang")) acc = 1 - (1 - acc) * (1 - acc); // Osmumten's fang rolls accuracy twice
   const dpsSingle = acc * (maxHit + 1) / 2 / (speed * 0.6);
   const dps = dpsSingle * aoeTargets;
-  return { maxHit, atkRoll, defRoll, speed, spell, aoeTargets, label, acc, dpsSingle, dps, pray, onTask };
+  const dpsRank = acc * (raw + 1) / 2 / (speed * 0.6) * aoeTargets; // continuous: what score() and worth() rank by
+  return { maxHit, atkRoll, defRoll, speed, spell, aoeTargets, label, acc, dpsSingle, dps, dpsRank, pray, onTask };
 }
 function bestPrayer(style, lvl) {
   if (style === "melee") return lvl >= 70 ? { name: "Piety", acc: 1.2, dmg: 1.23, drain: 40 } : lvl >= 60 ? { name: "Chivalry", acc: 1.15, dmg: 1.18, drain: 24 } : lvl >= 34 ? { name: "Ultimate Strength + Incredible Reflexes", acc: 1.15, dmg: 1.15, drain: 40 } : lvl >= 31 ? { name: "Ultimate Strength", acc: 1, dmg: 1.15, drain: 20 } : null;
@@ -720,7 +724,7 @@ function renderLoadout() {
       <div class="styles" id="style-segs">${cards}</div>
       ${c.fallback ? `<p class="err hint" style="margin:6px 0 0">${cap(c.fallback)} is recommended here, but ${ownOnlyActive() ? "nothing in your bank" : "your levels"} cannot use it yet, so this is a ${c.style} setup.</p>` : ""}
     </div>
-    <label>${c.wildy ? "Risk tier" : "Gear budget"}<select id="tier">${(c.wildy ? [["budget", "Budget: risk under 150k"], ["mid", "Mid: risk under 750k"], ["high", "High: risk under 3m"], ["max", "Max: best you can wear"]] : [["budget", "Budget: under 600k worn"], ["mid", "Mid: under 5m worn"], ["high", "High: under 30m worn"], ["max", "Max: best you can wear"]]).map(([k, v]) => `<option value="${k}"${S.tier === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+    <label>${c.wildy ? "Risk tier" : "Gear budget"}<select id="tier">${(c.wildy ? [["budget", "Budget: risk under 150k"], ["mid", "Mid: risk under 750k"], ["high", "High: risk under 3m"], ["max", "Max: best you can wear"]] : [["budget", "Budget: under 600k of tradeable gear"], ["mid", "Mid: under 5m of tradeable gear"], ["high", "High: under 30m of tradeable gear"], ["max", "Max: best you can wear"]]).map(([k, v]) => `<option value="${k}"${S.tier === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
     ${c.style === "magic" ? `<label>Spell<select id="spell">${spellOpts.map((o) => `<option value="${esc(o.name)}"${c.spell?.name === o.name ? " selected" : ""}>${esc(o.name)} (max ${o.max}${o.bonus ? ", +" + Math.round(o.bonus * 100) + "% weakness" : ""}${o.aoe ? ", AoE" : ""})</option>`).join("")}</select></label>` : ""}
     <label>Task amount<input id="amount" type="number" min="1" max="400" value="${c.amount}" style="width:100%" /></label>
     ${c.wildy ? `<label class="check"><input type="checkbox" id="protect"${S.protect ? " checked" : ""} />Protect Item (keep 4)</label>` : ""}
@@ -764,11 +768,13 @@ function renderLoadout() {
   else if (ownF) { eh.classList.remove("hidden"); eh.innerHTML = `Only gear you own (${(SYNC.player?.rsn ? esc(SYNC.player.rsn) + "'s" : "your")} bank, inventory and worn items, synced from RuneLite). ✓ owned · ✗ missing.`; }
   else { eh.classList.add("hidden"); eh.innerHTML = ""; }
   const total = Object.values(c.pick).reduce((s, i) => s + price(i.name), 0);
+  const tradeableTotal = Object.values(c.pick).reduce((a, i) => a + (i.tradeable ? price(i.name) : 0), 0); // what the tier's cap counts
+  const salveWorn = Object.values(c.pick).some((i) => i.name.includes("Salve")) && c.ctx.attr.includes("undead");
   const st = c.st;
   const atkLabel = c.style === "melee" ? `stab ${st.astab} · slash ${st.aslash} · crush ${st.acrush}` : c.style === "ranged" ? `ranged ${st.arange}` : `magic ${st.amagic}`;
   const strLabel = c.style === "melee" ? `strength ${st.str}` : c.style === "ranged" ? `ranged str ${st.rstr}` : `magic dmg +${st.mdmg}%`;
   $("#totals").innerHTML = `
-    ${c.wildy ? `<div class="wide"><span>Risk if you die (${c.gear.keep} items kept${S.protect ? ", Protect Item on" : ""})</span><b class="big">${gp(c.gear.risk)}</b> <span class="muted" style="display:inline">of ${gp(total)} worn</span></div>` : `<div class="wide"><span>Worn value</span><b class="big">${gp(total)}</b> <span class="muted" style="display:inline">kept on death outside the Wilderness (Death's fee aside)</span></div>`}
+    ${c.wildy ? `<div class="wide"><span>Risk if you die (${c.gear.keep} items kept${S.protect ? ", Protect Item on" : ""})</span><b class="big">${gp(c.gear.risk)}</b> <span class="muted" style="display:inline">of ${gp(total)} worn</span></div>` : `<div class="wide"><span>Worn value</span><b class="big">${gp(total)}</b> <span class="muted" style="display:inline">${gp(tradeableTotal)} of it tradeable (what the tier caps); all kept on death outside the Wilderness (Death's fee aside)</span></div>`}
     <div><span>Attack bonus</span>${atkLabel}</div>
     <div><span>Damage</span>${strLabel} · prayer +${st.prayer}</div>
     <div><span>Max hit</span><b class="big">${c.maxHit}</b> <span class="muted" style="display:inline">${esc(c.styleLabel)}</span></div>
@@ -780,7 +786,7 @@ function renderLoadout() {
     ${c.wildy ? `<div class="wide"><span>Magic defence (PKers freeze and TB you)</span>${st.dmagic >= 40 ? '<b class="ok">' : st.dmagic >= 0 ? "<b>" : '<b class="err">'}${st.dmagic}</b> <span class="muted" style="display:inline">· ranged def ${st.drange} · melee def ${Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</span></div>` : `<div class="wide"><span>Your defence vs their ${esc(c.tg.style)}</span><b>${/magic/.test(styleOf(c.tg.style)) ? "magic " + st.dmagic : /ranged/.test(styleOf(c.tg.style)) ? "ranged " + st.drange : "melee " + Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</b> <span class="muted" style="display:inline">· magic ${st.dmagic} · ranged ${st.drange} · melee ${Math.round((st.dstab + st.dslash + st.dcrush) / 3)}</span></div>`}
     ${c.spell?.bonus ? `<div class="wide muted">${esc(c.spell.name)} gets +${Math.round(c.spell.bonus * 100)}% accuracy and damage from the target's ${esc(c.tg.elem.type)} weakness.</div>` : ""}
     ${c.ctx.req?.names.size ? `<div class="wide muted">Required for this task: ${[...c.ctx.req.names].filter((n) => n !== "V's shield").map(esc).join(", ")}${c.ctx.req.helmOk ? " (a Slayer helmet covers the head item)" : ""}.</div>` : ""}
-    ${c.onTask ? "" : `<div class="wide muted">No slayer helm or black mask in this setup: that is 15–17% of your damage. Add one if you own it.</div>`}`;
+    ${c.onTask ? "" : salveWorn ? `<div class="wide muted">Salve amulet worn: it outranks the slayer helm on undead (the two do not stack), so the head slot goes to the next best helm.</div>` : `<div class="wide muted">No slayer helm or black mask in this setup: that is 15–17% of your damage. Add one if you own it.</div>`}`;
   renderSupplies(c);
   renderPresets(); // keeps the "current" marker honest: a changed control means the state no longer matches the loaded setup
   schedulePush();

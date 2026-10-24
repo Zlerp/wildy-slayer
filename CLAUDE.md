@@ -61,10 +61,19 @@ ask whether to deploy.
   player can use and ranged weapons with their best ammo. The worn-value cap
   counts tradeable gear only (untradeables cannot be bought with it); the
   Wilderness risk cap counts everything at its replacement value.
+  Ranking uses the model's unfloored max hit (`dpsRank`), so a +1% damage
+  piece beats a prayer bonus even when the displayed max hit does not move.
+  Darts count as ammo (they load the blowpipe) whatever slot items.js gives
+  them. In the magic branch the helm's 15% and the salve (ei)'s 20% take the
+  larger, as in melee and ranged.
   Verification harness (scratchpad `wildy-test/`: `sweep.mjs` over every
   task, location, style and tier at two level sets, `compare.mjs`,
   `scenario.mjs`): any scorer change is judged by that before/after sweep,
-  not by one task.
+  not by one task. The sweep only exercises `compute()`: also drive the
+  plugin push and "Save setup" (`__wildy.pushNow()` must resolve with a
+  selection carrying every slot, `#preset-form` must add a setup) because
+  `buildSelection` scores the alternatives too and once threw on a context
+  without a target, which silently broke both.
 - Repository root: the RuneLite plugin, laid out exactly like
   runelite/example-plugin (`build.gradle`, `settings.gradle`, Gradle wrapper,
   `runelite-plugin.properties`, `src/main/java/com/zlerp/wildyslayer/`). Keep
